@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="styles/categories.css">
+    <link rel="icon" href="img/icon.PNG">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <meta charset="utf-8">
+    <meta name="authors" content="kisevt, ikuzne">
+    <title>Categories•FinCheck</title>
+</head>
+<body>
+    <header>
+        <img src="img/logo.png" width="200px">
+    </header>
+    <div class="sidebar">
+        <ul>
+          <li>
+            <a href="dashboard.html">
+              <i class='bx bxs-home'></i>
+              <span>Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="expenses.html">
+              <i class='bx bxs-category'></i>
+              <span>Categories</span>
+            </a>
+          </li>
+          <li>
+            <a href="bills.html">
+              <i class='bx bxs-calendar'></i>
+              <span>Recurring</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class='bx bxs-bank' ></i>
+              <span>Savings</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class='bx bx-table'></i>
+              <span>Table</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class='bx bxs-cog' ></i>
+              <span>Settings</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class='bx bxs-user' ></i>
+              <span>Profile</span>
+            </a>
+          </li>
+          <li>
+            <a href="index.html">
+              <i class='bx bx-run'></i>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+    </div>
+    <div class="content">
+        <div class="flex-zone">
+            <h2>Expenses</h2>
+            <label for="expenseAmount">Amount:</label>
+            <input class="expenseAmount-input"type="number" id="expenseAmount" name="expenseAmount" min="0">
+            <label class="expenseTypeLabel"for="expenseType">Select Expense Type:</label>
+            <select class="expenseType-select"id="expenseType">
+                <option id="$Transport">Transport</option>
+                <option id="$Groceries">Groceries</option>
+                <option id="$Eating out">Eating out</option>
+                <option id="$Coffee">Coffee</option>
+                <option id="$Fuel">Fuel</option>
+                <option id="$Health">Health</option>
+                <option id="$Beauty">Beauty</option>
+                <option id="$Clothes">Clothes</option>
+                <option id="$Gifts">Gifts</option>
+                <option id="$Entertainment">Entertainment</option>
+                <option id="$Other">Other</option>
+            </select> 
+            <label class="expenseTypeLabel"for="expenseDate">Date:</label>    
+            <input type="date" id="expenseDate">
+        </div>
+        <div class="flex-zone">
+            <div class="flex-container">
+                
+            </div>
+            <div class="flex-container">
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
