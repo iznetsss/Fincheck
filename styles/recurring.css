@@ -22,7 +22,7 @@
 
 .flex-zone {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 }
 
 #add-recurring-payment {
@@ -70,17 +70,30 @@
     z-index: 1;
 }
 
-#add-recurring-payment, .bills-table {
-    width: 100%;
+#add-recurring-payment {
     max-width: unset;
+}
+
+.bills-name-table {
+    margin: 20px;
+    background-color: rgb(250, 250, 250);
+    border-radius: 5px;
+    box-shadow: 0 0 5px grey;
+    padding: 10px;
+    flex-grow: 1;
+    width: 40vw;
 }
 
 @media only screen and (max-width: 768px) {
     .flex-container {
       flex-direction: column;
     }
-    .flex-item {
-        max-width: 100%;
+
+    .flex-zone {
+        display: flex;
+        flex-direction: column;
     }
-  }
-  
+    .bills-name-table, #add-recurring-payment {
+        width: 100%;
+    }
+}
