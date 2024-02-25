@@ -1,1 +1,25 @@
+@charset "utf-8";
+@font-face {
+    font-family: Rubik;
+    src: url(../fonts/Rubik-VariableFont_wght.ttf);
+}
+
+header {
+    background-color: rgb(0, 114, 206);
+    color: rgb(250, 250, 250);
+    padding: 10px 0;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+}
+
+body {
+    font-family: Rubik;
+    margin: 0;
+    padding: 69.86px 0 0 0;
+    background-color: rgb(253, 255, 255);
+    height: 100vh;
+    box-sizing: border-box;
+}
 
