@@ -64,6 +64,8 @@ h3 {
     width: 85%;
     float: right;
     display: flex;
+    padding: 0 2% 2% 0;
+    box-sizing: border-box;
 }
 /*TABLE DESIGN*/
 table {
