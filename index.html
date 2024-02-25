@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/log_reg.css">
     <link rel="icon" href="img/icon.PNG">
     <meta charset="utf-8">
     <meta name="authors" content="kisevt, ikuzne">
-    <title>Welcome•FinCheck</title>
+    <title>Login•FinCheck</title>
 </head>
-<body>
+<body class="content-center">
     <header>
         <img src="img/logo.png" width="200px">
     </header>
-    <div class="content-center">
-        <div class="welcome_div">
-            <form id="welcome_frm" action="dashboard.html">
+        <div class="flex-container">
+            <form class="login_form" action="dashboard.html">
                 <h1 class="welcome-txt">Welcome to FinCheck</h1>
                 <input class="form_field" type="text" placeholder="email" required>
                 <br>
@@ -21,12 +20,12 @@
                 <br>
                 <input type="submit" class="btn" value="Login">
             </form>
-            <div id="sign-up-container" class="sign-up-text">
-                <span id="sign-up-text">Don't have an account?</span>
-                <a href="registration.html" class="sign-up-link">Sign Up</a>
+            <div class="flex-item">
+                <span>Don't have an account?</span>
+                <a href="registration.html">Sign Up</a>
             </div>
         </div>
-    </div>
+
     
 </body>
 </html>
