@@ -1,0 +1,86 @@
+@charset "utf-8";
+@import url(main.css);
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; 
+    justify-items: flex-start;
+    align-content: flex-start;
+    align-items: flex-start; 
+}
+.flex-item {
+    flex-grow: 1;
+    margin: 20px;
+    background-color: rgb(250, 250, 250);
+    border-radius: 5px;
+    box-shadow: 0 0 5px grey;
+    padding: 10px;
+    width:90%;
+    max-width: 70%
+}
+
+.flex-zone {
+    display: flex;
+    flex-direction: column;
+}
+
+#add-recurring-payment {
+    padding: 20px;
+    background-color: rgb(250, 250, 250);
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px grey;
+    margin: 20px;
+    position: relative;
+    max-width: 30%;
+  }
+
+  .billName-input, .billDue-select, .billActual-input, .billBudget-input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+
+
+.billName-input, .billActual-input, .billBudget-input {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.billDue-select {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.billDue {
+    margin-bottom: 15px;
+}
+
+#submit-button-recurring {
+    padding: 10px;
+    border: none;
+  } 
+
+.bills-table-name {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+#header-recurring {
+    z-index: 1;
+}
+
+#add-recurring-payment, .bills-table {
+    width: 100%;
+    max-width: unset;
+}
+
+@media only screen and (max-width: 768px) {
+    .flex-container {
+      flex-direction: column;
+    }
+    .flex-item {
+        max-width: 100%;
+    }
+  }
+  
