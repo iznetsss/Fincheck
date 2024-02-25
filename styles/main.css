@@ -22,6 +22,16 @@ body {
     height: 100vh;
     box-sizing: border-box;
 }
+/*HEADERS*/
+h1 {
+  font-size: calc(1.2vw + 1.2vh + 0.6vmin);
+}
+h2 {
+  font-size: calc(1vw + 1vh + 0.5vmin);
+}
+h3 {
+  font-size: calc(0.8vw + 0.8vh + 0.4vmin);
+}
 /*SIDEBAR*/
 .sidebar {
     width: 15%;
@@ -90,7 +100,6 @@ table thead tr {
 .btn:hover {
     background-color: rgb(0, 69, 206);
 }
-
 .btn:active {
     box-shadow: none;
 }
@@ -98,4 +107,11 @@ table thead tr {
     text-decoration: none;
     color: white;
 }
-
+/*LINKS*/
+a {
+    text-decoration: none;
+    color: rgb(5, 5, 5);
+}
+a:hover {
+    text-shadow: 1px 0 0 black;
+}
