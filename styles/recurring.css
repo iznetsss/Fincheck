@@ -66,10 +66,6 @@
     font-size: 24px;
 }
 
-#header-recurring {
-    z-index: 1;
-}
-
 #add-recurring-payment {
     max-width: unset;
 }
