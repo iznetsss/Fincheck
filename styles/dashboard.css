@@ -2,15 +2,18 @@
 @import url(main.css);
 
 .flex-zone {
+    display: flex;
     flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-around;
     flex-grow: 1;
 }
 
-#right.flex-container {
+.flex-container-right {
     display: flex;
     flex-direction: column;
 }
-#left.flex-container {
+.flex-container-left {
     display: flex;
     align-items: center;
 }
@@ -19,9 +22,41 @@
     flex-direction: column;
     margin: 0 2% 0 2%;
 }
-#left.flex-zone {
+.flex-zone-left {
     width: 60%;
 }
 .balance-div {
     margin: 0 2% 0 2%;
+}
+
+@media screen and (max-width: 970px) {
+    .content {
+        flex-direction: column;
+    }
+    .flex-zone-right {
+        flex-direction: row;
+    }
+    .simple {
+        flex-grow: 1;
+    }
+    .flex-zone-left {
+        display: flex;
+        flex-grow: 1;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 765px) {
+    .flex-zone-right {
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 675px) {
+    .sidebar span {
+        display: none;
+    }
+    .sidebar {
+        font-size: calc(2vw + 2vh + 1vmin);
+    }
 }
