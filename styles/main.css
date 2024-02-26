@@ -39,6 +39,10 @@ footer {
 /*CALENDER*/
 .calender {
     font-family: Rubik;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
 }
 
 /*HEADERS*/
