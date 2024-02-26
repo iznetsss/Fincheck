@@ -90,6 +90,10 @@
         flex-direction: column;
     }
 
+    .flex-zone {
+        flex-direction: column;
+    }
+
     #add-recurring-payment {
         max-width: unset;
         width: 100%;
