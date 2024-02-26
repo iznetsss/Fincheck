@@ -35,6 +35,12 @@ footer {
     z-index: -1;
     display: none;
 }
+
+/*CALENDER*/
+.calender {
+    font-family: Rubik;
+}
+
 /*HEADERS*/
 .header1 {
     font-size: calc(1.5vw + 1.5vh + 0.5vmin);
