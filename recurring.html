@@ -65,15 +65,15 @@
         </ul>
       </div>
     <div class="content">
-            <div class="flex-container" id="add-recurring-payment">
-                <label for="billName">Name:</label>
-                <input class="billName-input" type="text" id="billAmount" name="billAmount">
-                <label for="billDue">Due:</label>
-                <input type="date" class="billDue-select"id="day">
-                <label for="billActual">Amount:</label>
-                <input class="billActual-input"type="number" id="billActual" name="billActual" min="0">
-                <label for="billDue">Repeat:</label>
-                <select class="billDue-select"id="day">
+            <div class="flex-container" id="flex-input-bill">
+                <label for="bill-name">Name:</label>
+                <input class="bill-name-input" type="text" id="bill-amount" name="bill-amount">
+                <label for="bill-due">Due:</label>
+                <input type="date" class="bill-due-select"id="day">
+                <label for="bill-actual">Amount:</label>
+                <input class="bill-actual-input"type="number" id="bill-actual" name="bill-actual" min="0">
+                <label for="bill-due">Repeat:</label>
+                <select class="bill-due-select"id="day">
                       <option value="monthly">Every Month</option>
                       <option value="annualy">Every Year</option>
                       <option value="Weekly">Every Week</option>
@@ -82,7 +82,7 @@
                 </select>
                 <input class="btn" type="submit" id="submit-button-recurring">
             </div>
-            <div class="flex-container"id="add-recurring-payment"> 
+            <div class="flex-container" id="flex-table-bills"> 
                     <table class="bills-table">
                     <h3 class="bills-table-name">Bills</h3>
                     <thead>

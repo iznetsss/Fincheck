@@ -36,7 +36,25 @@
 .flex-zone-left {
     width: 60%;
 }
+.balance-div {
+    margin: 0 2% 0 2%;
+}
 
+.spending-graph-btn {
+    background-color: transparent; 
+    border: none; 
+    padding: 0; 
+    width: 20px; 
+    height: 20px; 
+    cursor: pointer; 
+    background-size: cover; 
+    display: none;
+  }
+  
+  
+.spending-graph-btn.icon-search {
+    background-image: url(../img/graph-button-refresh.png);
+  }
 
 @media screen and (max-width: 970px) {
     .content {
