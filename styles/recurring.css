@@ -80,13 +80,10 @@
     width: 40vw;
 }
 
-@media screen and (max-width: 768px) {
-    .flex-container {
+@media screen and (max-width: 747px) {
+    .content {
         flex-direction: column;
-    }
-
-    .flex-zone {
-        flex-direction: column;
+        flex-wrap: nowrap;
     }
 
     #add-recurring-payment {
