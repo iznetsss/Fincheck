@@ -12,10 +12,15 @@
     background-color: rgb(250, 250 ,250);
     box-shadow: 0 0 5px grey;
     border-radius: 5px;
-    padding: 1%;
-    margin: 1%;
+    padding: 5px;
+    margin: 5px;
 }
-
+.simple {
+    flex-grow: 1;
+}
+.flex-zone-right>* {
+    flex-grow: 1;
+}
 
 
 .flex-container-right {
