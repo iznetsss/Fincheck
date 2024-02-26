@@ -39,6 +39,14 @@
     background-size: cover; 
     display: none;
   }
+.spending-graph {
+    margin-top: 10px;
+    margin-bottom: 10px;;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
   
   
 .spending-graph-btn.icon-search {
