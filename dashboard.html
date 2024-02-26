@@ -85,8 +85,8 @@
                 <label class="spending-container">
                 <input class="spending-graph" type="date" id="spending-graph-start"/>
                 <input class="spending-graph" type="date" id="spending-graph-end"/>
-                </label>
                 <button class="spending-graph-btn icon-search" aria-label="spending-graph-btn"></button>
+                </label>
                 <canvas id="line-chart"></canvas>
                 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.umd.min.js"></script>
                 <script>
@@ -109,6 +109,11 @@
                             }]
                         },
                         options : {
+                          plugins : {
+                            legend : {
+                            display: false,
+                          }
+                        },
                         aspectRatio: 2,
                         title : {
                             display : true,
