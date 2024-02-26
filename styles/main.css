@@ -60,7 +60,15 @@ h3 {
     text-decoration: none;
     color: rgb(5, 5, 5);
 }
-
+@media screen and (max-width: 675px) {
+    .sidebar span {
+        display: none;
+    }
+    .sidebar {
+        font-size: calc(2vw + 2vh + 1vmin);
+    }
+}
+/*CONTENT*/
 .content {
     width: 85%;
     float: right;
@@ -118,3 +126,4 @@ a {
 a:hover {
     text-shadow: 1px 0 0 black;
 }
+
