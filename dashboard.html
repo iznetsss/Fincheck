@@ -67,27 +67,29 @@
     <div class="content">
         <div class="flex-zone flex-zone-left">
             <div class="flex-container flex-container-left">
+              <!--Hide Balance-->
                 <div class="balance-div">
-                    <h2>Balance</h2>
-                    <h1>788.98</h1>
+                    <span class="header2">Balance</span>
+                    <span class="header1">788.98</span>
                 </div>
                 <div class="balance-div">
-                    <h3><a href="#" title="New spending">Spent<i class='bx bx-minus' ></i></a></h3>
-                    <h2>1251.86</h2>
+                    <span class="header2"><a href="#" title="New spending">Spent<i class='bx bx-minus' ></i></a></span>
+                    <span class="header1">1251.86</span class="header1">
                 </div>
                 <div class="balance-div">
-                    <h3><a href="#" title="New income">Earned<i class='bx bx-plus' ></i></a></h3>
-                    <h2>1651.07</h2>
+                    <span class="header2"><a href="#" title="New income">Earned<i class='bx bx-plus' ></i></a></span>
+                    <span class="header1">1651.07</span>
                 </div>
             </div>
             <div class="simple">
-                <h3 class="spending-by-text"><a href="expenses.html" title="See more">Spendings by</a></h3>
+                <span class="header2"><a href="expenses.html" title="See more">Spendings by</a></span>
                 <label class="spending-container">
                 <input class="spending-graph" type="date" id="spending-graph-start"/>
                 <input class="spending-graph" type="date" id="spending-graph-end"/>
                 <button class="spending-graph-btn icon-search" aria-label="spending-graph-btn"></button>
                 </label>
                 <canvas id="line-chart"></canvas>
+                <!--Hide recurring payments-->
                 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.umd.min.js"></script>
                 <script>
                     new Chart(document.getElementById("line-chart"), {
@@ -126,7 +128,7 @@
         </div>
         <div class="flex-zone flex-zone-right">
             <div class="flex-container flex-container-right">
-                <h3><a href="#">Latest spendings</a></h3>
+                <span class="header2"><a href="#">Latest spendings</a></span>
                 <table class="right-table">
             <thead>
               <tr>
@@ -148,42 +150,50 @@
               </tr>
               <tr>
                 <td>27.02</td>
-                <td>4.00</td>
+                <td>1.00</td>
+                <td>Snacks</td>
+              </tr>
+              <tr>
+                <td>27.02</td>
+                <td>3.00</td>
                 <td>Snacks</td>
               </tr>
             </tbody>
                 </table>
             </div>
             <div class="flex-container flex-container-right">
-                <h3><a href="bills.html">Upcoming payments</a></h3>
+                <span class="header2"><a href="bills.html">Upcoming payments</a></span>
                 <table class="right-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Amount</th>
-                <th>Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>29.02</td>
-                <td>5.99</td>
-                <td>Telegram premium</td>
-              </tr>
-              <tr>
-                <td>10.03</td>
-                <td>600.00</td>
-                <td>Rent</td>
-              </tr>
-              <tr>
-                <td>13.03</td>
-                <td>8.99</td>
-                <td>Netflix</td>
-              </tr>
-            </tbody>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Amount</th>
+                      <th>Type</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>29.02</td>
+                      <td>5.99</td>
+                      <td>Telegram premium</td>
+                    </tr>
+                    <tr>
+                      <td>10.03</td>
+                      <td>600.00</td>
+                      <td>Rent</td>
+                    </tr>
+                    <tr>
+                      <td>13.03</td>
+                      <td>8.99</td>
+                      <td>Netflix</td>
+                    </tr>
+                  </tbody>
                 </table>
             </div>
         </div>
     </div>
+    <footer>
+      
+    </footer>
 </body>
 </html>

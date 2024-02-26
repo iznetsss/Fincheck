@@ -24,14 +24,22 @@ body {
     box-sizing: border-box;
 }
 /*HEADERS*/
+.header1 {
+    font-size: calc(1.7vw + 1.7vh + 0.5vmin);
+    font-weight: bold;
+}
+.header2 {
+    font-size: calc(1.6vw + 1.6vh + 0.5vmin);
+    font-weight: bold;
+}
 h1 {
-  font-size: calc(1.2vw + 1.2vh + 0.6vmin);
+  font-size: calc(1.7vw + 1.7vh + 0.5vmin);
 }
 h2 {
-  font-size: calc(1vw + 1vh + 0.5vmin);
+  font-size: calc(1.6vw + 1.6vh + 1.6vmin);
 }
 h3 {
-  font-size: calc(0.8vw + 0.8vh + 0.4vmin);
+  font-size: calc(1.2vw + 1.2vh + 1.2vmin);
 }
 /*SIDEBAR*/
 .sidebar {
@@ -40,6 +48,8 @@ h3 {
     font-size: calc(0.7vw + 0.7vh + 0.35vmin);
     position: fixed;
     height: calc(100% - 69.86px);
+    box-shadow: 0 0 5px grey;
+
 }
 .sidebar ul {
     display: flex;
@@ -71,9 +81,10 @@ h3 {
 /*CONTENT*/
 .content {
     width: 85%;
+    height: 100%;
     float: right;
     display: flex;
-    padding: 0 2% 2% 0;
+    padding: 2%;
     box-sizing: border-box;
 }
 /*TABLE DESIGN*/
@@ -82,7 +93,8 @@ table {
     overflow: hidden;
     box-shadow: 0 0 5px grey;
     border-collapse: collapse;
-    width: 100%;
+    width: 80%;
+    min-width: unset;
 }
 table td, table th {
     border-bottom: 1px solid rgb(5, 5, 5);
