@@ -52,11 +52,3 @@
     }
 }
 
-@media screen and (max-width: 675px) {
-    .sidebar span {
-        display: none;
-    }
-    .sidebar {
-        font-size: calc(2vw + 2vh + 1vmin);
-    }
-}
