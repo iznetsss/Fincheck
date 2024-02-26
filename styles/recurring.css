@@ -4,6 +4,8 @@
 .content {
     display: flex;
     flex-direction: row;
+    height: unset;
+
 }
 
 .flex-container {
@@ -54,16 +56,28 @@
 .bills-table-name {
     font-weight: bold;
     font-size: 24px;
+    width: 50%;
 }
+
+.bills-table {
+    width: 100%;
+}
+
+#flex-input-bill {
+    width: 50%;
+}
+
+
+
 
 
 @media screen and (max-width: 768px) {
     .content {
         display: flex;
-        flex-direction: column;
+        flex-direction: column !important;
     }
     .flex-container {
-        flex-direction: column;
+        flex-direction: column !important;
     }
 
     #flex-input-bill {
