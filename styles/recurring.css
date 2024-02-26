@@ -1,6 +1,10 @@
 @charset "utf-8";
 @import url(main.css);
 
+.content {  
+    flex-direction: row;
+}
+
 .flex-container {
     display: flex;
     flex-wrap: wrap;
@@ -31,8 +35,7 @@
     border-radius: 5px;
     box-shadow: 1px 1px 5px grey;
     margin: 20px;
-    position: relative;
-    max-width: 30%;
+    max-width: unset;
   }
 
   .billName-input, .billDue-select, .billActual-input, .billBudget-input {
@@ -66,9 +69,6 @@
     font-size: 24px;
 }
 
-#add-recurring-payment {
-    max-width: unset;
-}
 
 .bills-name-table {
     margin: 20px;
@@ -80,12 +80,13 @@
     width: 40vw;
 }
 
-@media screen and (max-width: 768px) {
-    .flex-container {
-        flex-direction: column;
-    }
 
-    .flex-zone {
+@media screen and (max-width: 768px) {
+    .content {
+        flex-direction: column !important;
+    }
+    
+    .flex-container {
         flex-direction: column;
     }
 
