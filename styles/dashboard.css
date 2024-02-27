@@ -8,16 +8,20 @@
     justify-content: flex-start;
     flex-grow: 1;
 }
+
 .flex-zone>* {
-    background-color: rgb(250, 250 ,250);
+    background-color: rgb(250, 250, 250);
     box-shadow: 0 0 5px grey;
     border-radius: 5px;
     padding: 5px;
     margin: 5px;
 }
+
 .simple {
     flex-grow: 1;
+    text-align: center;
 }
+
 .flex-zone-right>* {
     flex-grow: 1;
 }
@@ -28,49 +32,56 @@
     flex-direction: column;
     align-items: center;
 }
+
 .flex-container-left {
     display: flex;
     align-items: center;
     justify-content: space-around;
 }
+
 .flex-item {
     display: flex;
     flex-direction: column;
     margin: 0 2% 0 2%;
 }
+
 .flex-zone-left {
     width: 60%;
 }
+
 .balance-div {
     margin: 0 2% 0 2%;
 }
 
 .spending-graph-btn {
-    background-color: transparent; 
-    border: none; 
-    padding: 0; 
-    width: 20px; 
-    height: 20px; 
-    cursor: pointer; 
-    background-size: cover; 
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    background-size: cover;
     display: none;
-  }
-  
-  
+}
+
+
 .spending-graph-btn.icon-search {
     background-image: url(../img/graph-button-refresh.png);
-  }
+}
 
 @media screen and (max-width: 970px) {
     .content {
         flex-direction: column;
     }
+
     .flex-zone-right {
         flex-direction: row;
     }
+
     .simple {
         flex-grow: 1;
     }
+
     .flex-zone-left {
         display: flex;
         flex-grow: 1;
@@ -88,6 +99,7 @@
     .sidebar span {
         display: none;
     }
+
     .sidebar {
         font-size: calc(2vw + 2vh + 1vmin);
     }
