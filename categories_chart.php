@@ -17,7 +17,7 @@
   <div class="sidebar">
     <ul>
       <li>
-        <a href="dashboard.html">
+        <a href="dashboard.php">
           <i class='bx bxs-home'></i>
           <span>Home</span>
         </a>
@@ -29,15 +29,15 @@
         </a>
       </li>
       <li>
-        <a href="recurring.html">
+        <a href="recurring.php">
           <i class='bx bxs-calendar'></i>
           <span>Recurring</span>
         </a>
       </li>
       <li>
-        <a href="https://www.lhv.ee/et/">
-          <i class='bx bxs-bank'></i>
-          <span>Savings</span>
+        <a href="money_flow.php">
+          <i class='bx bx-line-chart'></i>
+          <span>Cash flow</span>
         </a>
       </li>
       <li>
@@ -59,7 +59,7 @@
         </a>
       </li>
       <li>
-        <a href="index.html">
+        <a href="index.php">
           <i class='bx bx-run'></i>
           <span>Logout</span>
         </a>
