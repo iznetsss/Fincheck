@@ -14,7 +14,7 @@
         <img src="img/logo.png" width="200px">
     </header>
     <div class="flex-container">
-        <form class="login_form" action="dashboard.html">
+        <form class="login_form" action="dashboard.php">
             <h1 class="welcome-txt">Welcome to FinCheck</h1>
             <input class="form_field" type="text" placeholder="email" required>
             <br>
@@ -24,7 +24,7 @@
         </form>
         <div class="flex-item">
             <span>Don't have an account?</span>
-            <a href="registration.html">Sign Up</a>
+            <a href="registration.php">Sign Up</a>
         </div>
     </div>
 
