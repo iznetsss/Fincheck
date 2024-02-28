@@ -54,12 +54,6 @@
             </a>
         </li>
         <li>
-            <a href="https://www.instagram.com/">
-            <i class='bx bxs-user'></i>
-            <span>Profile</span>
-            </a>
-        </li>
-        <li>
             <a href="index.php">
             <i class='bx bx-run'></i>
             <span>Logout</span>
