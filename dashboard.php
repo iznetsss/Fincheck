@@ -47,12 +47,21 @@
             <span>Advanced</span>
             </a>
         </li>
-        <li>
-            <a href="https://images.app.goo.gl/bXFCT34kEYP93jZf8">
-            <i class='bx bxs-cog'></i>
-            <span>Settings</span>
+        <li class="dropdown">
+            <a class="dropdown-toggle"> <!--JS SCRIPT DROP-DOWN MENU FOR CURRENCY-->
+                <i class='bx bx-euro', id='selected-currency'></i>
+                <span>Currency</span>
             </a>
+            <ul class="dropdown-menu" id="currency-dropdown">
+                <li><i class='bx bx-euro' ></i></i> EUR</li>
+                <li><i class='bx bx-dollar' ></i> USD</li>
+                <li><i class='bx bx-pound' ></i> GBR</li>
+                <li><i class="bx bx-lira"></i> TRY</li>
+                <li><i class='bx bx-yen' ></i> CNY</li>
+                <li><i class='bx bx-bitcoin' ></i> BTC</li>
+            </ul>
         </li>
+
         <li>
             <a href="https://www.instagram.com/">
             <i class='bx bxs-user'></i>
