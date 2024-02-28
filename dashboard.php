@@ -48,11 +48,12 @@
             </a>
         </li>
         <li>
-            <a href="settings.php">
+            <a href="https://images.app.goo.gl/bXFCT34kEYP93jZf8">
             <i class='bx bxs-cog'></i>
             <span>Settings</span>
             </a>
         </li>
+
         <li>
             <a href="index.php">
             <i class='bx bx-run'></i>
