@@ -12,7 +12,7 @@
 
 <body>
   <header id=>
-    <img src="img/logo.png" width="200px">
+  <img src="img/logo.png" width="200px">
   </header>
   <div class="sidebar">
         <ul>
