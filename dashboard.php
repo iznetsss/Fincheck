@@ -43,7 +43,7 @@
         <li>
             <a href="https://images.app.goo.gl/bwyFJQ1y22gpr9cN7">
             <i class='bx bx-table'></i>
-            <span>Table</span>
+            <span>Advanced</span>
             </a>
         </li>
         <li>
@@ -84,7 +84,7 @@
         </div>
       </div>
       <div class="simple">
-        <span class="header2"><a href="expenses.html" title="See more">This month spendings</a></span>
+        <span class="header2"><a href="expenses.php" title="See more">This month spendings</a></span>
         <!--
                 <label class="spending-container">
                 <input class="calender" type="date" id="spending-graph-start"/>
@@ -177,7 +177,7 @@
         <span class="header2-invisible">Invisible text</span>
       </div>
       <div class="flex-container flex-container-right">
-        <h2><a href="recurring.html">Upcoming payments</a></h2>
+        <h2><a href="recurring.php">Upcoming payments</a></h2>
         <table class="right-table">
           <thead>
             <tr>

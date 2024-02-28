@@ -43,7 +43,7 @@
       <li>
         <a href="https://images.app.goo.gl/bwyFJQ1y22gpr9cN7">
           <i class='bx bx-table'></i>
-          <span>Table</span>
+          <span>Advanced</span>
         </a>
       </li>
       <li>
@@ -67,7 +67,7 @@
     </ul>
   </div>
   <div class="content">
-    <h1><a href="categories_table.html">See Table</a></h1>
+    <h1><a href="categories_table.php">See Table</a></h1>
     <div class="flex-zone" id="bublik">
       <canvas id="pie-chart"></canvas>
       <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.umd.min.js"></script>

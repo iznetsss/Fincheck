@@ -43,7 +43,7 @@
         <li>
             <a href="https://images.app.goo.gl/bwyFJQ1y22gpr9cN7">
             <i class='bx bx-table'></i>
-            <span>Table</span>
+            <span>Advanced</span>
             </a>
         </li>
         <li>
