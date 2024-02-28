@@ -23,7 +23,7 @@
             </a>
         </li>
         <li>
-            <a href="#">
+            <a href="categories_chart.php">
             <i class='bx bxs-category'></i>
             <span>Categories</span>
             </a>
@@ -41,7 +41,7 @@
             </a>
         </li>
         <li>
-            <a href="https://images.app.goo.gl/bwyFJQ1y22gpr9cN7">
+            <a href="advanced.php">
             <i class='bx bx-table'></i>
             <span>Advanced</span>
             </a>

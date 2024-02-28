@@ -7,7 +7,7 @@
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <meta charset="utf-8">
   <meta name="authors" content="kisevt, ikuzne">
-  <title>Expenses•FinCheck</title>
+  <title>Recurring•FinCheck</title>
 </head>
 
 <body>
@@ -41,7 +41,7 @@
             </a>
         </li>
         <li>
-            <a href="https://images.app.goo.gl/bwyFJQ1y22gpr9cN7">
+            <a href="advanced.php">
             <i class='bx bx-table'></i>
             <span>Advanced</span>
             </a>
