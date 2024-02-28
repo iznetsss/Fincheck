@@ -47,7 +47,7 @@
             </a>
         </li>
         <li>
-            <a href="https://images.app.goo.gl/bXFCT34kEYP93jZf8">
+            <a href="settings.php">
             <i class='bx bxs-cog'></i>
             <span>Settings</span>
             </a>
