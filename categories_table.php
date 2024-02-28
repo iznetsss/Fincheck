@@ -46,6 +46,20 @@
             <span>Advanced</span>
             </a>
         </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle"> <!--JS SCRIPT DROP-DOWN MENU FOR CURRENCY-->
+                <i class='bx bx-euro', id='selected-currency'></i>
+                <span>Currency</span>
+            </a>
+            <ul class="dropdown-menu" id="currency-dropdown">
+                <li><a href="#"><i class='bx bx-euro' ></i></i> EUR</a></li>
+                <li><a href="#"><i class='bx bx-dollar' ></i> USD</a></li>
+                <li><a href="#"><i class='bx bx-pound' ></i> GBR</a></li>
+                <li><a href="#"><i class="bx bx-lira"></i> TRY</a></li>
+                <li><a href="#"><i class='bx bx-yen' ></i> CNY</a></li>
+                <li><a href="#"><i class='bx bx-bitcoin' ></i> BTC</a></li>
+            </ul>
+        </li>
         <li>
             <a href="https://images.app.goo.gl/bXFCT34kEYP93jZf8">
             <i class='bx bxs-cog'></i>
@@ -59,7 +73,7 @@
             </a>
         </li>
         </ul>
-    </div>
+  </div>
     <div class="content">
         <h1><a href="categories_chart.php">See Chart</a></h1>
         <div class="flex-zone">
