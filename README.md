@@ -10,7 +10,7 @@ Provide a general summary of the web project. Must include:
 ## Team
 
 Ivan Kuznetsov (ikuzne/233767IVSB)
-Kirill Sevtsov (kiseft/233735IVSB)
+Kirill Sevtsov (kisevt/233735IVSB)
 
 ## Goals, Objectives and Phases
 
