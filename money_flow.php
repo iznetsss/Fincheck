@@ -176,7 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
                 </select> 
                 <label class="expense-type-label" for="expense-date">Date:</label>    
                 <input class="calender" type="date" id="expense-date" name="expense-date">
-                <input class="btn" type="submit" id="submit-button-expense" name="submit-button-expense">
+                <input class="btn" type="submit" id="submit-button-expense" name="submit-button-expense" value="Submit Expense">
             </form>
         </div>
         <div class="flex-container", id="expenses-table">
@@ -211,7 +211,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
                 </select> 
                 <label class="income-type-label" for="income-date">Date:</label>    
                 <input class="calender" type="date" id="income-date" name="income-date">
-                <input class="btn" type="submit" id="submit-button-income" name="submit-button-income">
+                <input class="btn" type="submit" id="submit-button-income" name="submit-button-income" value="Submit Income">
             </form>
         </div>
         <div class="flex-container", id="income-table">
