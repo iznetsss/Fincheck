@@ -1,94 +1,51 @@
-# SPECIFICATION FOR A WEBSITE
+# SPECIFICATION FOR FINCKECK
 
 ## Overview
 
-Provide a general summary of the web project. Must include:
+### General summary
 
-* The "problem" your web project is trying to fix.
-* The target audience of your web project.
+#### Problem
+Managing personal finances is often complex and time-consuming, with existing tools lacking user-friendly interfaces. Our web project addresses this by offering an intuitive, efficient, and holistic financial tracking solution, making budgeting and goal-setting easier for users.
+
+#### Target Audience
+Our financial tracker is created for individuals of all backgrounds, including young professionals, families, elders, and freelancers. The user-friendly interface caters to both beginners and experienced users, providing a comprehensive solution for effective financial management.
 
 ## Team
 
-Provide a list of team members. If team members have different roles and/or tasks, then list the roles of each member too.
+Ivan Kuznetsov: co-founder
+Kirill Sevtsov: co-founder
 
 ## Goals, Objectives and Phases
 
-### Objective
+### Objecive
 
-What is YOUR (not users) objective? What is the website supposed to achieve?
+We are striving to create a user-friendly but at the same time powerful too for managing personal finances. Considering the disadvantages of tools that we have been using it the past, we are trying to create a solution that will be convinient for everyone.
 
 ### Goals
 
-List goals that can be used to measure if your website has reached its objective. The goals should be "SMART":
-
-* specific
-* measurable
-* assignable
-* realistic
-* time-related
+1. Have functionality that is comparable to other solutions.
+2. Be intuitive.
+3. Have appealing design.
 
 ### Phases
 
-Same as YOUR COURSE (`ISC0008`) milestones.
+1. HTML/CSS
+2. PHP
+3. JS/SQL
 
-## Content Structure
+## Content structure
 
 ### Site map
 
-Provide a hierarchical structure of your website as a `tree` (can be an image):
+### Content types
 
-```text
-HOME
-  +--ABOUT US
-  |    +--HISTORY
-  |    +--TEAM
-  +--SERVICES
-  |    +--SERVICE 1
-  |    +--SERVICE 2
-  ...
-  +--CONTACT
-```
-
-### Content Types
-
-Describe what kind of data types each page contains:
-
-* new?
-* blogs?
-* images?
-* people?
-* products?
-* comments?
-* etc
-
-Are these data types hierarchical? etc.
-
-### Page Templates
-
-Before the first milestone you should have "page templates", i.e., HTML pages that illustrate what info and data each page will contain. You can use mock content.
-
-Make sure you include navigation menus, etc.
+### Page templates
 
 ## Design
 
-The page templates should come with CSS to give a good idea what the pages will look like when all components (`PHP`, `SQL` and `JavaScript`) are added.
-
 ## Functionality
 
-How does your website work? What are the specific parts that each of your page require?
-
-* What fields are required for sign-up?
-* What happens if user leaves a comment?
-* What are the user roles?
-* What are performance requirements?
-
-## Browser Support
-
-Specify which browsers are supported. As minimum, your website should support:
-
-* Chrome/Chromium
-* Firefox
-* mobile browsers (Chrome, Firefox, Safari, etc)
+## Browser support
 
 ## Hosting
 
