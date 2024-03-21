@@ -1,3 +1,144 @@
+<?php
+//EXPENSES
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'])) 
+{
+    if (isset($_POST['expense-amount']) && isset($_POST['expense-type']) && isset($_POST['expense-date'])) 
+    {
+        $amount = $_POST['expense-amount']; // Get amount
+        if(isset($amount) && preg_match('/^\d+(\.\d{1,2})?$/', $amount)) 
+        {
+            if(!ctype_digit($amount)) // Check if it is not a whole number...
+            {
+                if (strpos($amount, ',') !== false && strpos($amount, '.') === false) // If there is a comma and no period, change the comma to a period
+                {
+                    $amount = str_replace(',', '.', $amount);
+                }
+                elseif (strpos($amount, '.') === false) // If there is a period
+                {
+                    // Do nothing
+                }
+            }
+
+            if(!($amount >= 0.01 && $amount <= 10000000)) // Amount must be between 0.01 and 10000000
+            {
+                $amountError = "<span class='error'>Amount must be between 0.01 and 10000000</span>"; // Amount error message
+                echo $amountError;
+            }
+        }
+        elseif(empty($amount))
+        {
+            $amountError = "<span class='error'>Wrong number input</span>"; // Amount error message
+            echo $amountError;
+        }
+
+        $type = $_POST['expense-type']; // Get type
+        $allowed_types = array('Transport', 'Groceries', 'Eating out', 'Coffee', 'Fuel', 'Health', 'Beauty', 'Clothes', 'Gifts', 'Entertainment', 'Other');
+
+        if (!in_array($type, $allowed_types)) 
+        {
+            $typeError = "<span class='error'>Invalid expense type</span>";
+            echo $typeError;
+        }
+
+        $date = $_POST['expense-date'];
+        if (preg_match("/^\d{4}-\d{2}-\d{2}$/", $date)) // Date regex
+        {
+            if (strtotime($date) === false) 
+            {
+                $dateError = "<span style='color:red'>Wrong date input.</span><br>";
+                echo $dateError;
+            } else 
+            {
+                list($year, $month, $day) = explode('-', $date);
+            } 
+        } 
+        else 
+        {
+            $dateError = "<span style='color:red'>Incorrect date format.</span><br>";
+            echo $dateError;
+        }
+
+        $expenseData = array(); 
+
+        # Set data into array
+        $expenseData['amount'] = $amount;
+        $expenseData['type'] = $type;
+        $expenseData['date'] = $date;
+        echo 'Expense data added';
+    }
+}
+
+//INCOME
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income'])) 
+{
+    if (isset($_POST['income-amount']) && isset($_POST['income-type']) && isset($_POST['income-date'])) 
+    {
+        $amount = $_POST['income-amount']; // Get amount
+        if(isset($amount) && preg_match('/^\d+(\.\d{1,2})?$/', $amount)) 
+        {
+            if(!ctype_digit($amount)) // Check if it is not a whole number...
+            {
+                if (strpos($amount, ',') !== false && strpos($amount, '.') === false) // If there is a comma and no period, change the comma to a period
+                {
+                    $amount = str_replace(',', '.', $amount);
+                }
+                elseif (strpos($amount, '.') === false) // If there is a period
+                {
+                    // Do nothing
+                }
+            }
+
+            if(!($amount >= 0.01 && $amount <= 10000000)) // Amount must be between 0.01 and 10000000
+            {
+                $amountError = "<span class='error'>Amount must be between 0.01 and 10000000</span>"; // Amount error message
+                echo $amountError;
+            }
+        }
+        elseif(empty($amount))
+        {
+            $amountError = "<span class='error'>Wrong number input</span>"; // Amount error message
+            echo $amountError;
+        }
+
+        $type = $_POST['income-type']; // Get type
+        $allowed_types = array('Employment', 'Entrepreneurship', 'Investment', 'Savings', 'Loans', 'Rent', 'Dividends', 'Freelancing', 'Gifts', 'DebtReturn', 'Other');
+
+        if (!in_array($type, $allowed_types)) 
+        {
+            $typeError = "<span class='error'>Invalid income type</span>";
+            echo $typeError;
+        }
+
+        $date = $_POST['income-date'];
+        if (preg_match("/^\d{4}-\d{2}-\d{2}$/", $date)) // Date regex
+        {
+            if (strtotime($date) === false) 
+            {
+                $dateError = "<span style='color:red'>Wrong date input.</span><br>";
+                echo $dateError;
+            } else 
+            {
+                list($year, $month, $day) = explode('-', $date);
+            } 
+        } 
+        else 
+        {
+            $dateError = "<span style='color:red'>Incorrect date format.</span><br>";
+            echo $dateError;
+        }
+
+        $incomeData = array(); 
+
+        # Set data into array
+        $incomeData['amount'] = $amount;
+        $incomeData['type'] = $type;
+        $incomeData['date'] = $date;
+        echo 'Income data added';
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,26 +156,28 @@
     <div class="content">
       <div class="flex-zone", id="flex-zone-expenses">
         <div class="flex-container", id="expenses-input">
-            <h3>Expenses</h3>
-            <label for="expense-amount">Amount:</label>
-            <input class="expense-amount-input"type="number" id="expense-amount" name="expense-amount" min="0">
-            <label class="expense-type-label"for="expense-type">Select Expense Type:</label>
-            <select class="expense-type-select"id="expense-type">
-                <option id="$Transport">Transport</option>
-                <option id="$Groceries">Groceries</option>
-                <option id="$Eating out">Eating out</option>
-                <option id="$Coffee">Coffee</option>
-                <option id="$Fuel">Fuel</option>
-                <option id="$Health">Health</option>
-                <option id="$Beauty">Beauty</option>
-                <option id="$Clothes">Clothes</option>
-                <option id="$Gifts">Gifts</option>
-                <option id="$Entertainment">Entertainment</option>
-                <option id="$Other">Other</option>
-            </select> 
-            <label class="expense-type-label"for="expense-date">Date:</label>    
-            <input class="calender" type="date" id="expense-date">
-            <input class="btn" type="submit" id="submit-button-recurring">
+            <form method="POST" action="">
+                <h3>Expenses</h3>
+                <label for="expense-amount">Amount:</label>
+                <input class="expense-amount-input" type="number" id="expense-amount" name="expense-amount" min="0">
+                <label class="expense-type-label" for="expense-type">Select Expense Type:</label>
+                <select class="expense-type-select" id="expense-type" name="expense-type">
+                    <option value="Transport">Transport</option>
+                    <option value="Groceries">Groceries</option>
+                    <option value="Eating out">Eating out</option>
+                    <option value="Coffee">Coffee</option>
+                    <option value="Fuel">Fuel</option>
+                    <option value="Health">Health</option>
+                    <option value="Beauty">Beauty</option>
+                    <option value="Clothes">Clothes</option>
+                    <option value="Gifts">Gifts</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Other">Other</option>
+                </select> 
+                <label class="expense-type-label" for="expense-date">Date:</label>    
+                <input class="calender" type="date" id="expense-date" name="expense-date">
+                <input class="btn" type="submit" id="submit-button-expense" name="submit-button-expense">
+            </form>
         </div>
         <div class="flex-container", id="expenses-table">
             <h4>The Chart of Expenses</h4>
@@ -48,26 +191,28 @@
       </div>
       <div class="flex-zone", id="flex-zone-income">
         <div class="flex-container", id="income-input">
-          <h3>Income</h3>
-          <label for="income-amount">Amount:</label>
-          <input class="income-amount-input"type="number" id="income-amount" name="income-amount" min="0">
-          <label class="income-type-label"for="income-type">Select Income Type:</label>
-          <select class="income-type-select"id="income-type">
-              <option id="$Employment">Employment</option>
-              <option id="$Entrepreneurship">Entrepreneurship </option>
-              <option id="$Investment">Investment</option>
-              <option id="$Savings">Savings</option>
-              <option id="$Loans">Loans</option>
-              <option id="$Rent">Rent</option>
-              <option id="$Dividends">Dividends</option>
-              <option id="$Freelancing">Freelancing</option>
-              <option id="$Gifts">Gifts</option>
-              <option id="$DebtReturn">Debt Return</option>
-              <option id="$Other">Other</option>
-          </select> 
-          <label class="income-type-label"for="income-date">Date:</label>    
-          <input class="calender" type="date" id="income-date">
-          <input class="btn" type="submit" id="submit-button-recurring">
+            <form method="POST" action="">
+                <h3>Income</h3>
+                <label for="income-amount">Amount:</label>
+                <input class="income-amount-input" type="number" id="income-amount" name="income-amount" min="0">
+                <label class="income-type-label" for="income-type">Select Income Type:</label>
+                <select class="income-type-select" id="income-type" name="income-type" >
+                    <option value="Employment">Employment</option>
+                    <option value="Entrepreneurship">Entrepreneurship</option>
+                    <option value="Investment">Investment</option>
+                    <option value="Savings">Savings</option>
+                    <option value="Loans">Loans</option>
+                    <option value="Rent">Rent</option>
+                    <option value="Dividends">Dividends</option>
+                    <option value="Freelancing">Freelancing</option>
+                    <option value="Gifts">Gifts</option>
+                    <option value="DebtReturn">Debt Return</option>
+                    <option value="Other">Other</option>
+                </select> 
+                <label class="income-type-label" for="income-date">Date:</label>    
+                <input class="calender" type="date" id="income-date" name="income-date">
+                <input class="btn" type="submit" id="submit-button-income" name="submit-button-income">
+            </form>
         </div>
         <div class="flex-container", id="income-table">
           <h4>The Chart of Incomes</h4>
