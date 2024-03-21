@@ -1,5 +1,35 @@
 <?php
-
+if($_SERVER['REQUEST_METHOD'] === 'POST' && 
+isset($_POST['loginButton']) && $_POST['loginButton'] == "Login" &&
+!empty($_POST['email']) && !empty($_POST['password'])) {
+    //Check email.
+    if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+        $error = "Invalid email address.";
+    }
+    if (!file_exists("data/users.csv")) {
+        $error = "User with this email is not registered.";
+    }
+    if (!isset($error) && file_exists("data/users.csv")) {
+        $file = fopen("data/users.csv", "r");
+        $found = FALSE;
+        while (($user = fgetcsv($file, 1000, ";")) !== FALSE) {
+            if ($user[0] == $_POST['email']) {
+                if (password_verify($_POST['password'], $user[1])) {
+                    header("Location: dashboard.php");
+                    exit();
+                }
+                else {
+                    $found = TRUE;
+                    $error = "Incorrect password.";
+                    break;
+                }
+            }
+        }
+        if ($found == FALSE) {
+            $error = "User with this email is not registered.";
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -18,18 +48,23 @@
         <img src="img/logo.png" width="200px">
     </header>
     <div class="flex-container">
-        <form class="login_form" action="dashboard.php">
+        <form method="post" action="index.php" id="loginForm" name="loginForm">
             <h1 class="welcome-txt">Welcome to FinCheck</h1>
-            <input class="form_field" type="text" placeholder="email" required>
+            <input class="form_field" type="email" id="email" name="email" placeholder="email" required>
             <br>
-            <input class="form_field" type="password" placeholder="password" required>
+            <input class="form_field" type="password" id="password" name="password" placeholder="password" required>
             <br>
-            <input type="submit" class="btn" value="Login">
+            <input type="submit" class="btn" id="loginButton" name="loginButton" value="Login">
         </form>
         <div class="flex-item">
             <span>Don't have an account?</span>
             <a href="registration.php">Sign Up</a>
         </div>
+        <?php
+        if (isset($error)) {
+            echo $error;
+        }
+        ?>
     </div>
 
 
