@@ -58,13 +58,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
             echo $dateError;
         }
 
-        $expenseData = array(); 
-
-        # Set data into array
-        $expenseData['amount'] = $amount;
-        $expenseData['type'] = $type;
-        $expenseData['date'] = $date;
-        echo 'Expense data added';
+        if (!empty($amountError) || !empty($typeError) || !empty($dateError)) 
+        {
+            $expenseData = array(); 
+            // Set data into array
+            $expenseData['amount'] = $amount;
+            $expenseData['type'] = $type;
+            $expenseData['date'] = $date;
+            echo 'Expense data added';
+        }
     }
 }
 
