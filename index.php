@@ -50,7 +50,7 @@ isset($_POST['loginButton']) && $_POST['loginButton'] == "Login" &&
     <div class="flex-container">
         <form method="post" action="index.php" id="loginForm" name="loginForm">
             <h1 class="welcome-txt">Welcome to FinCheck</h1>
-            <input class="form_field" type="email" id="email" name="email" placeholder="email" required>
+            <input class="form_field" type="email" id="email" name="email" placeholder="email" <?php if (isset($error)) {echo 'value="'.$_POST['email'].'"';} ?> required>
             <br>
             <input class="form_field" type="password" id="password" name="password" placeholder="password" required>
             <br>
