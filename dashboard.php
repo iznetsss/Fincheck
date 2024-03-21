@@ -62,7 +62,7 @@
             </ul>
         </li>
         <li>
-            <a href="https://images.app.goo.gl/bXFCT34kEYP93jZf8">
+            <a href="">
             <i class='bx bxs-cog'></i>
             <span>Settings</span>
             </a>
