@@ -59,6 +59,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
         {
             $amountErrorExpenses = "<span style='color:red'>Wrong number input</span><br>"; // Amount error message
         }
+        //Converting $amount to float, rounding, and converting back to string
+        $amount = number_format(floatval($amount), 2);
 
         $type = $_POST['expense-type']; // Get type
         $allowedTypes = array('Transport', 'Groceries', 'Eating out', 'Coffee', 'Fuel', 'Health', 'Beauty', 'Clothes', 'Gifts', 'Entertainment', 'Other');
@@ -147,6 +149,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         {
             $amountErrorIncome = "<span class='error'>Wrong number input</span><br>"; // Amount error message
         }
+        //Converting $amount to float, rounding, and converting back to string
+        $amount = number_format(floatval($amount), 2);
 
         $type = $_POST['income-type']; // Get type
         $allowedTypes = array('Employment', 'Entrepreneurship', 'Investment', 'Savings', 'Loans', 'Rent', 'Dividends', 'Freelancing', 'Gifts', 'DebtReturn', 'Other');
@@ -227,7 +231,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
             <form method="POST" action="">
                 <h3>Expenses</h3>
                 <label for="expense-amount">Amount:</label>
-                <input class="expense-amount-input" type="number" id="expense-amount" name="expense-amount" min="0">
+                <input class="expense-amount-input" type="number" id="expense-amount" name="expense-amount" min="0" step="0.01">
                 <label class="expense-type-label" for="expense-type">Select Expense Type:</label>
                 <select class="expense-type-select" id="expense-type" name="expense-type">
                     <option value="Transport">Transport</option>
@@ -282,7 +286,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
             <form method="POST" action="">
                 <h3>Income</h3>
                 <label for="income-amount">Amount:</label>
-                <input class="income-amount-input" type="number" id="income-amount" name="income-amount" min="0">
+                <input class="income-amount-input" type="number" id="income-amount" name="income-amount" min="0" step="0.01">
                 <label class="income-type-label" for="income-type">Select Income Type:</label>
                 <select class="income-type-select" id="income-type" name="income-type" >
                     <option value="Employment">Employment</option>
