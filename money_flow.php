@@ -2,6 +2,37 @@
 //EXPENSES
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'])) 
 {
+    $amountErrorExpenses = $typeErrorExpenses = $dateErrorExpenses = $amountErrorIncome = $typeErrorIncome = $dateErrorIncome = '';
+
+    function expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses) {
+        $output = '<br>';
+        if(isset($amountErrorExpenses)) {
+            $output .= $amountErrorExpenses;
+        }
+        if(isset($typeErrorExpenses)) {
+            $output .= $typeErrorExpenses;
+        }
+        if(isset($dateErrorExpenses)) {
+            $output .= $dateErrorExpenses;
+        }
+        return $output;
+    }
+    
+    function incomeErrorsOutput($amountErrorIncome, $typeErrorIncome, $dateErrorIncome) {
+        $output = '<br>';
+        if(isset($amountErrorIncome)) {
+            $output .= $amountErrorIncome;
+        }
+        if(isset($typeErrorIncome)) {
+            $output .= $typeErrorIncome;
+        }
+        if(isset($dateErrorIncome)) {
+            $output .= $dateErrorIncome;
+        }
+        return $output;
+    }
+
+
     if (isset($_POST['expense-amount']) && isset($_POST['expense-type']) && isset($_POST['expense-date'])) 
     {
         $amount = $_POST['expense-amount']; // Get amount
@@ -21,23 +52,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
 
             if(!($amount >= 0.01 && $amount <= 10000000)) // Amount must be between 0.01 and 10000000
             {
-                $amountError = "<span class='error'>Amount must be between 0.01 and 10000000</span>"; // Amount error message
-                echo $amountError;
+                $amountErrorExpenses = "<span style='color:red'>Amount must be between 0.01 and 10000000.</span><br>"; // Amount error message
             }
         }
         elseif(empty($amount))
         {
-            $amountError = "<span class='error'>Wrong number input</span>"; // Amount error message
-            echo $amountError;
+            $amountErrorExpenses = "<span style='color:red'>Wrong number input</span><br>"; // Amount error message
         }
 
         $type = $_POST['expense-type']; // Get type
-        $allowed_types = array('Transport', 'Groceries', 'Eating out', 'Coffee', 'Fuel', 'Health', 'Beauty', 'Clothes', 'Gifts', 'Entertainment', 'Other');
+        $allowedTypes = array('Transport', 'Groceries', 'Eating out', 'Coffee', 'Fuel', 'Health', 'Beauty', 'Clothes', 'Gifts', 'Entertainment', 'Other');
 
-        if (!in_array($type, $allowed_types)) 
+        if (!in_array($type, $allowedTypes)) 
         {
-            $typeError = "<span class='error'>Invalid expense type</span>";
-            echo $typeError;
+            $typeErrorExpenses = "<span style='color:red'>Invalid expense type.<br></span>";
         }
 
         $date = $_POST['expense-date'];
@@ -45,8 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
         {
             if (strtotime($date) === false) 
             {
-                $dateError = "<span style='color:red'>Wrong date input.</span><br>";
-                echo $dateError;
+                $dateErrorExpenses = "<span style='color:red'>Wrong date input.<br></span>";
             } else 
             {
                 list($year, $month, $day) = explode('-', $date);
@@ -54,21 +81,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
         } 
         else 
         {
-            $dateError = "<span style='color:red'>Incorrect date format.</span><br>";
-            echo $dateError;
+            $dateErrorExpenses = "<span style='color:red'>Incorrect date format.<br></span>";
         }
 
-        if (!empty($amountError) || !empty($typeError) || !empty($dateError)) 
+        //Enters are spaces in note
+        if(isset($_POST['expense-note']))
+        {
+            $note = str_replace("\r\n", " ", $_POST['expense-note']);
+        }
+
+        if (empty($amountErrorExpenses) && empty($typeErrorExpenses) && empty($dateErrorExpenses)) 
         {
             $expenseData = array(); 
             // Set data into array
             $expenseData['amount'] = $amount;
             $expenseData['type'] = $type;
             $expenseData['date'] = $date;
-            echo 'Expense data added';
+            $expenseData['note'] = $note; 
+            $expenseData['recurring'] = "No"; //Recurring is always "No"
+
+
+            $csv_file_path = 'data/expenses.csv';
+            
+            if (!file_exists($csv_file_path)) {
+                touch($csv_file_path);
+                chmod($csv_file_path, 0777); 
+            }
+    
+            $csv_file = fopen($csv_file_path, 'a');
+            fputcsv($csv_file, $expenseData, ';');
+            fclose($csv_file);
+
+            $checkSumbission = TRUE;
         }
     }
 }
+
 
 //INCOME
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income'])) 
@@ -92,23 +140,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
 
             if(!($amount >= 0.01 && $amount <= 10000000)) // Amount must be between 0.01 and 10000000
             {
-                $amountError = "<span class='error'>Amount must be between 0.01 and 10000000</span>"; // Amount error message
-                echo $amountError;
+                $amountErrorIncome = "<span class='error'>Amount must be between 0.01 and 10000000</span><br>"; // Amount error message
             }
         }
         elseif(empty($amount))
         {
-            $amountError = "<span class='error'>Wrong number input</span>"; // Amount error message
-            echo $amountError;
+            $amountErrorIncome = "<span class='error'>Wrong number input</span><br>"; // Amount error message
         }
 
         $type = $_POST['income-type']; // Get type
-        $allowed_types = array('Employment', 'Entrepreneurship', 'Investment', 'Savings', 'Loans', 'Rent', 'Dividends', 'Freelancing', 'Gifts', 'DebtReturn', 'Other');
+        $allowedTypes = array('Employment', 'Entrepreneurship', 'Investment', 'Savings', 'Loans', 'Rent', 'Dividends', 'Freelancing', 'Gifts', 'DebtReturn', 'Other');
 
-        if (!in_array($type, $allowed_types)) 
+        if (!in_array($type, $allowedTypes)) 
         {
-            $typeError = "<span class='error'>Invalid income type</span>";
-            echo $typeError;
+            $typeErrorIncome = "<span class='error'>Invalid income type</span><br>";
         }
 
         $date = $_POST['income-date'];
@@ -116,8 +161,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         {
             if (strtotime($date) === false) 
             {
-                $dateError = "<span style='color:red'>Wrong date input.</span><br>";
-                echo $dateError;
+                $dateErrorIncome = "<span style='color:red'>Wrong date input.</span><br>";
             } else 
             {
                 list($year, $month, $day) = explode('-', $date);
@@ -125,17 +169,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         } 
         else 
         {
-            $dateError = "<span style='color:red'>Incorrect date format.</span><br>";
-            echo $dateError;
+            $dateErrorIncome = "<span style='color:red'>Incorrect date format.</span><br>";
         }
 
-        $incomeData = array(); 
+        //Enters are spaces in note
+        if(isset($_POST['income-note']))
+        {
+            $note = str_replace("\r\n", " ", $_POST['income-note']);
+        }
 
-        # Set data into array
-        $incomeData['amount'] = $amount;
-        $incomeData['type'] = $type;
-        $incomeData['date'] = $date;
-        echo 'Income data added';
+         
+        if (empty($amountErrorIncome) && empty($typeErrorIncome) && empty($dateErrorIncome)) 
+        {
+            $incomeData = array(); 
+            // Set data into array
+            $incomeData['amount'] = $amount;
+            $incomeData['type'] = $type;
+            $incomeData['date'] = $date;
+            $incomeData['note'] = $note; 
+            $incomeData['recurring'] = "No"; //Recurring is always "No"
+
+            $csv_file_path = 'data/incomes.csv';
+            
+            if (!file_exists($csv_file_path)) {
+                touch($csv_file_path);
+                chmod($csv_file_path, 0777); 
+            }
+    
+            $csv_file = fopen($csv_file_path, 'a');
+            fputcsv($csv_file, $incomeData, ';');
+            fclose($csv_file);
+
+            $checkSumbission = TRUE;
+        }
     }
 }
 
@@ -177,8 +243,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
                     <option value="Other">Other</option>
                 </select> 
                 <label class="expense-type-label" for="expense-date">Date:</label>    
-                <input class="calender" type="date" id="expense-date" name="expense-date">
+                <input class="calender" type="date" id="expense-date" name="expense-date"><br><br>
+
+                <label for="expense-note">Note:</label>    
+                <input type="text" id="expense-note"  class="expense-amount-input" name="expense-note">
+                <input type="hidden" id="recurring" value="No">
+
                 <input class="btn" type="submit" id="submit-button-expense" name="submit-button-expense" value="Submit Expense">
+                <?php
+                //Error expense message
+                if(isset($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses))
+                {
+                    echo expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses); 
+                }
+                //Data was added message
+                if (!empty($amountErrorExpenses) || !empty($typeErrorExpenses) || !empty($dateErrorExpenses)) {
+                    echo outputErrors($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses);
+                } 
+                elseif(isset($checkSumbission))
+                {
+                    echo '<p>Expense was added successfully</p>';
+                }
+                ?>
             </form>
         </div>
         <div class="flex-container", id="expenses-table">
@@ -212,8 +298,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
                     <option value="Other">Other</option>
                 </select> 
                 <label class="income-type-label" for="income-date">Date:</label>    
-                <input class="calender" type="date" id="income-date" name="income-date">
+                <input class="calender" type="date" id="income-date" name="income-date"><br><br>
+                <label for="income-note">Note:</label>    
+                <input type="text" id="income-note"  class="income-amount-input" name="income-note">
+                <input type="hidden" id="recurring" value="No">
                 <input class="btn" type="submit" id="submit-button-income" name="submit-button-income" value="Submit Income">
+                <?php 
+                //Error income message
+                if(isset($amountErrorIncome, $typeErrorIncome, $dateErrorIncome))
+                {
+                    echo expensesErrorsOutput($amountErrorIncome, $typeErrorIncome, $dateErrorIncome); 
+                } 
+                elseif(isset($checkSumbission))
+                {
+                    echo '<p>Income was added successfully</p>';
+                }
+                ?>
             </form>
         </div>
         <div class="flex-container", id="income-table">
@@ -228,11 +328,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
 
             <!--JS SCRIPT-->
             <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.umd.min.js"></script>
+            
+            <?php 
+                $currentDay = date("j");
+                $daysInMonth = date("t");
+                
+                $labels = array();
+                for ($i = 1; $i <= $currentDay; $i++) {
+                    $labels[] = $i;
+                }
+            ?>
+
             <script>
                 new Chart(document.getElementById("line-chart-expenses"), {
                     type : 'line',
                     data : {
-                        labels : [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 ],
+                        labels : <?php echo json_encode($labels); ?>, //Always last day in today day
                         datasets : [{
                             data : [ 33, 6, 60, 0, 20, 22, 16, 0, 3.86, 600, 60, 183, 5, 6, 6, 3, 2, 0, 0, 5, 9, 15, 44, 94, 0, 55, 4 ],
                             label : "Spendings",
@@ -258,7 +369,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
                 new Chart(document.getElementById("line-chart-income"), {
                     type : 'line',
                     data : {
-                        labels : [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 ],
+                        labels : <?php echo json_encode($labels); ?>, //Always last day in today day
                         datasets : [{
                             data : [ 60, 0, 0, 75, 2350, 350, 0, 10, 0, 0, 0, 35, 0, 0, 0, 750, 0, 0, 0, 0, 0, 55, 0, 0, 0, 0, 250 ],
                             label : "Income",
