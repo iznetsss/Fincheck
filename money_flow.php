@@ -96,9 +96,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
         {
             $expenseData = array(); 
             // Set data into array
-            $expenseData['amount'] = $amount;
-            $expenseData['type'] = $type;
             $expenseData['date'] = $date;
+            $expenseData['type'] = $type;
+            $expenseData['amount'] = $amount;
             $expenseData['note'] = $note; 
             $expenseData['recurring'] = "No"; //Recurring is always "No"
 
@@ -187,9 +187,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         {
             $incomeData = array(); 
             // Set data into array
-            $incomeData['amount'] = $amount;
-            $incomeData['type'] = $type;
             $incomeData['date'] = $date;
+            $incomeData['type'] = $type;
+            $incomeData['amount'] = $amount;
             $incomeData['note'] = $note; 
             $incomeData['recurring'] = "No"; //Recurring is always "No"
 
@@ -205,6 +205,60 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
             fclose($csv_file);
 
             $checkSumbission = TRUE;
+        }
+    }
+}
+
+//Graph logic.
+//Labels (days on x-axis).
+$currentDay = date("j");
+$daysInMonth = date("t");
+
+if (file_exists("data/expenses.csv")) {
+    $spendings = [];
+    $file = fopen("data/expenses.csv", "r");
+    while (($spending = fgetcsv($file, 1000, ";")) !== FALSE) {
+        array_push($spendings, [$spending[0], $spending[2]]);
+    }
+    fclose($file);
+    $spendingsByDays = [];
+    for ($i = 1; $i <= $currentDay; $i++) {
+        $spendingsByDays[$i] = 0;
+    }
+    foreach ($spendings as $spending) {
+        if (substr($spending[0], 8, 2)[0] != "0") {
+            $day = substr($spending[0], 8, 2);
+        }
+        else {
+            $day = substr($spending[0], 9, 1);
+        }
+        if ($day <= $currentDay) {
+            $spendingsByDays[$day] += floatval($spending[1]);
+        }
+        
+    }
+}
+
+if (file_exists("data/incomes.csv")) {
+    $incomes = [];
+    $file = fopen("data/incomes.csv", "r");
+    while (($income = fgetcsv($file, 1000, ";")) !== FALSE) {
+        array_push($incomes, [$income[0], $income[2]]);
+    }
+    fclose($file);
+    $incomesByDays = [];
+    for ($i = 1; $i <= $currentDay; $i++) {
+        $incomesByDays[$i] = 0;
+    }
+    foreach ($incomes as $income) {
+        if (substr($income[0], 8, 2)[0] != "0") {
+            $day = substr($income[0], 8, 2);
+        }
+        else {
+            $day = substr($income[0], 9, 1);
+        }
+        if ($day <= $currentDay) {
+            $incomesByDays[$day] += floatval($income[1]);
         }
     }
 }
@@ -332,24 +386,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
 
             <!--JS SCRIPT-->
             <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.umd.min.js"></script>
-            
-            <?php 
-                $currentDay = date("j");
-                $daysInMonth = date("t");
-                
-                $labels = array();
-                for ($i = 1; $i <= $currentDay; $i++) {
-                    $labels[] = $i;
-                }
-            ?>
 
             <script>
                 new Chart(document.getElementById("line-chart-expenses"), {
                     type : 'line',
                     data : {
-                        labels : <?php echo json_encode($labels); ?>, //Always last day in today day
+                        
                         datasets : [{
-                            data : [ 33, 6, 60, 0, 20, 22, 16, 0, 3.86, 600, 60, 183, 5, 6, 6, 3, 2, 0, 0, 5, 9, 15, 44, 94, 0, 55, 4 ],
+                            data : <?php echo json_encode($spendingsByDays); ?>,
                             label : "Spendings",
                             borderColor : "#F01F51",
                             backgroundColor : "#F01F51",
@@ -373,9 +417,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
                 new Chart(document.getElementById("line-chart-income"), {
                     type : 'line',
                     data : {
-                        labels : <?php echo json_encode($labels); ?>, //Always last day in today day
+                         //Always last day in today day
                         datasets : [{
-                            data : [ 60, 0, 0, 75, 2350, 350, 0, 10, 0, 0, 0, 35, 0, 0, 0, 750, 0, 0, 0, 0, 0, 55, 0, 0, 0, 0, 250 ],
+                            data : <?php echo json_encode($incomesByDays); ?>,
                             label : "Income",
                             borderColor : "#0072ce",
                             backgroundColor : "#0072ce",

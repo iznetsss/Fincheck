@@ -1,3 +1,12 @@
+<?php
+  if (file_exists("data/expenses.csv")) {
+      $rows = [];
+      $file = fopen("data/expenses.csv", "r");
+      while (($row = fgetcsv($file, 1000, ";")) !== FALSE) {
+          array_push($rows, $row);
+      }
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,160 +42,19 @@
             <td>Weekly shopping</td>
             <td>No</td>
           </tr>
-          <tr>
-            <td>27.02</td>
-            <td>Snacks</td>
-            <td>9.12</td>
-            <td>Musli bar</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>26.02</td>
-            <td>Car</td>
-            <td>51.92</td>
-            <td>Fuel</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>26.02</td>
-            <td>Youtube Premium</td>
-            <td>13.99</td>
-            <td>-</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td>25.02</td>
-            <td>Croceries</td>
-            <td>17.20</td>
-            <td>Weekly</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>23.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>23.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>23.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>23.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>20.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>20.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>20.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>19.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>18.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>16.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>16.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>15.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>14.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>10.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>10.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>09.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>08.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>02.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td> 
-          </tr>
+          <?php
+          if (isset($rows)) {
+            foreach($rows as $row) {
+              echo "<tr>";
+              foreach($row as $cell) {
+                echo "<td>";
+                echo $cell;
+                echo "</td>";
+              }
+              echo "</tr>";
+            }
+          }
+          ?>
         </tbody>
     </table>
   </div>
