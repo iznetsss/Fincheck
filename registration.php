@@ -77,7 +77,7 @@ isset($_POST['registerButton']) && $_POST['registerButton'] == "Register" &&
     <div class="flex-container">
         <form method="post" id="registrationForm" name="registrationForm" action="registration.php">
             <h1 class="welcome-txt">Create an account</h1>
-            <input class="form_field" type="email" id="email" name="email" placeholder="email" required>
+            <input class="form_field" type="email" id="email" name="email" placeholder="email" <?php if (isset($error) && $error == TRUE) {echo 'value="'.$_POST['email'].'"';} ?> required>
             <br>
             <input class="form_field" type="password" id="password" name="password" placeholder="password" required>
             <br>
