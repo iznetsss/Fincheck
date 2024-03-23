@@ -35,13 +35,6 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>27.02</td>
-            <td>Croceries</td>
-            <td>30.22</td>
-            <td>Weekly shopping</td>
-            <td>No</td>
-          </tr>
           <?php
           if (isset($rows)) {
             foreach($rows as $row) {
