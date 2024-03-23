@@ -15,10 +15,12 @@ isset($_POST['loginButton']) && $_POST['loginButton'] == "Login" &&
         while (($user = fgetcsv($file, 1000, ";")) !== FALSE) {
             if ($user[0] == $_POST['email']) {
                 if (password_verify($_POST['password'], $user[1])) {
+                    fclose($file);
                     header("Location: dashboard.php");
                     exit();
                 }
                 else {
+                    fclose($file);
                     $found = TRUE;
                     $error = "Incorrect password.";
                     break;
@@ -26,6 +28,7 @@ isset($_POST['loginButton']) && $_POST['loginButton'] == "Login" &&
             }
         }
         if ($found == FALSE) {
+            fclose($file);
             $error = "User with this email is not registered.";
         }
     }

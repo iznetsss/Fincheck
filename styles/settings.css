@@ -1,2 +1,14 @@
 @charset "utf-8";
 @import url(main.css);
+
+.content {
+  align-items: flex-start;
+  flex-direction: column;
+}
+.flex-zone {
+  background-color: rgb(250, 250, 250);
+  box-shadow: 0 0 5px grey;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
+}

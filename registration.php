@@ -98,7 +98,7 @@ isset($_POST['registerButton']) && $_POST['registerButton'] == "Register" &&
             else if (isset($error) && $error == FALSE) {
                 echo $confirmation;
             }
-            ?>
+        ?>
     </div>
 
 
