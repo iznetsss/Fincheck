@@ -126,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
     if (isset($_POST['income-amount']) && isset($_POST['income-type']) && isset($_POST['income-date'])) 
     {
         $amount = $_POST['income-amount']; // Get amount
-        if(isset($amount) && preg_match('/^\d+(\.\d{1,2})?$/', $amount)) 
+        if(isset($amount) && preg_match("/^\d+(\.\d{2})?$/", $amount)) 
         {
             if(!ctype_digit($amount)) // Check if it is not a whole number...
             {
@@ -161,7 +161,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         }
 
         $date = $_POST['income-date'];
-        if (preg_match("/^\d{4}-\d{2}-\d{2}$/", $date)) // Date regex
+        if (preg_match("/^\d+(\.\d{2})?$/", $date)) // Date regex
         {
             if (strtotime($date) === false) 
             {
@@ -231,7 +231,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
             <form method="POST" action="">
                 <h3>Expenses</h3>
                 <label for="expense-amount">Amount:</label>
-                <input class="expense-amount-input" type="number" id="expense-amount" name="expense-amount" min="0" step="0.01">
+                <input class="expense-amount-input" type="number" id="expense-amount" name="expense-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?">
                 <label class="expense-type-label" for="expense-type">Select Expense Type:</label>
                 <select class="expense-type-select" id="expense-type" name="expense-type">
                     <option value="Transport">Transport</option>
@@ -286,7 +286,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
             <form method="POST" action="">
                 <h3>Income</h3>
                 <label for="income-amount">Amount:</label>
-                <input class="income-amount-input" type="number" id="income-amount" name="income-amount" min="0" step="0.01">
+                <input class="income-amount-input" type="number" id="income-amount" name="income-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?">
                 <label class="income-type-label" for="income-type">Select Income Type:</label>
                 <select class="income-type-select" id="income-type" name="income-type" >
                     <option value="Employment">Employment</option>
