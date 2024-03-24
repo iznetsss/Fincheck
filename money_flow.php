@@ -113,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
             fputcsv($csv_file, $expenseData, ';');
             fclose($csv_file);
 
-            $checkSumbission = TRUE;
+            $checkSumbissionExpenses = TRUE;
         }
     }
 }
@@ -152,7 +152,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         $amount = number_format(floatval($amount), 2);
 
         $type = $_POST['income-type']; // Get type
-        $allowedTypes = array('Employment', 'Entrepreneurship', 'Investment', 'Savings', 'Loans', 'Rent', 'Dividents', 'Freelancing', 'Gifts', 'DebtReturn', 'Other');
+        $allowedTypes = array('Employment', 'Entrepreneurship', 'Investment', 'Savings', 'Loans', 'Rent', 'Dividends', 'Freelancing', 'Gifts', 'DebtReturn', 'Other');
 
         if (!in_array($type, $allowedTypes)) 
         {
@@ -203,7 +203,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
             fputcsv($csv_file, $incomeData, ';');
             fclose($csv_file);
 
-            $checkSumbission = TRUE;
+            $checkSumbissionIncome = TRUE;
         }
     }
 }
@@ -315,16 +315,10 @@ if (file_exists("data/income_categories.csv")) {
 
                 <input class="btn" type="submit" id="submit-button-expense" name="submit-button-expense" value="Submit Expense">
                 <?php
-                //Error expense message
-                if(isset($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses))
-                {
-                    echo expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses); 
-                }
-                //Data was added message
                 if (!empty($amountErrorExpenses) || !empty($typeErrorExpenses) || !empty($dateErrorExpenses)) {
-                    echo outputErrors($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses);
+                    echo expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses);
                 } 
-                elseif(isset($checkSumbission))
+                elseif(isset($checkSumbissionExpenses))
                 {
                     echo '<p>Expense was added successfully</p>';
                 }
@@ -365,12 +359,10 @@ if (file_exists("data/income_categories.csv")) {
                 <input type="hidden" id="recurring" value="No">
                 <input class="btn" type="submit" id="submit-button-income" name="submit-button-income" value="Submit Income">
                 <?php 
-                //Error income message
-                if(isset($amountErrorIncome, $typeErrorIncome, $dateErrorIncome))
-                {
-                    echo expensesErrorsOutput($amountErrorIncome, $typeErrorIncome, $dateErrorIncome); 
+                if (!empty($amountErrorIncome) || !empty($typeErrorIncome) || !empty($dateErrorIncome)) {
+                    echo expensesErrorsOutput($amountErrorIncome, $typeErrorIncome, $dateErrorIncome);
                 } 
-                elseif(isset($checkSumbission))
+                elseif(isset($checkSumbissionIncome))
                 {
                     echo '<p>Income was added successfully</p>';
                 }
