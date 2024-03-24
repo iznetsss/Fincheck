@@ -1,3 +1,38 @@
+<?php
+// Last expenses table
+
+$file = fopen("data/expenses.csv", "r");
+$lastExpenses = array();
+
+// Set pointer to the end of file
+fseek($file, -1, SEEK_END);
+
+$lineCount = 0;
+
+while (($char = fgetc($file)) !== false) {
+    if ($char === "\n") {
+        $lineCount++;
+    }
+    fseek($file, -2, SEEK_CUR);
+    if ($lineCount > 6) { // Last 6 expenses
+        break;
+    }
+}
+
+while (($data = fgetcsv($file, 1000, ";")) !== false) {
+    // Check if the row has at least three elements
+    if (count($data) >= 3) {
+        // Rearrange the elements of each row
+        $correctRowOrder = array($data[0], $data[2], $data[1]);
+        $lastExpenses[] = $correctRowOrder;
+    }
+}
+
+fclose($file);
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -95,31 +130,21 @@
               <td>1.00</td>
               <td>Snacks</td>
             </tr>
-            <tr>
-              <td>27.02</td>
-              <td>3.00</td>
-              <td>Snacks</td>
-            </tr>
-            <tr>
-              <td>26.02</td>
-              <td>50.17</td>
-              <td>Car</td>
-            </tr>
-            <tr>
-              <td>26.02</td>
-              <td>4.83</td>
-              <td>Eating out</td>
-            </tr>
-            <tr>
-              <td>24.02</td>
-              <td>30.99</td>
-              <td>Clothes</td>
-            </tr>
-            <tr>
-              <td>24.02</td>
-              <td>13.40</td>
-              <td>Eating out</td>
-            </tr>
+            <?php
+
+            if (isset($lastExpenses)) {
+              foreach($lastExpenses as $row) {
+                echo "<tr>";
+                foreach($row as $cell) {
+                  echo "<td>";
+                  echo $cell;
+                  echo "</td>";
+                }
+                echo "</tr>";
+              }
+            }
+
+            ?>
           </tbody>
         </table>
         <span class="header2-invisible">Invisible text</span>
