@@ -119,7 +119,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
     }
 }
 
-
 //INCOME
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income'])) 
 {
@@ -353,7 +352,7 @@ if (file_exists("data/income_categories.csv")) {
                 <select class="income-type-select" id="income-type" name="income-type" >
                     <?php
                         foreach ($incomeCategories as $category) {
-                            echo "<option>";
+                            echo '<option value="'.$category.'">';
                             echo $category;
                             echo "</option>";
                         }
