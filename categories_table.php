@@ -1,3 +1,30 @@
+<?php
+//Categories.
+if (file_exists("data/spending_categories.csv")) {
+    $file = fopen("data/spending_categories.csv", "r");
+    $categories = fgetcsv($file, 1000, ";");
+    fclose($file);  
+}
+$spendingsByCategories = [];
+foreach ($categories as $category) {
+    $spendingsByCategories[$category] = 0;
+}
+
+if (file_exists("data/expenses.csv")) {
+    $spendings = [];
+    $file = fopen("data/expenses.csv", "r");
+    while (($spending = fgetcsv($file, 1000, ";")) !== FALSE) {
+        array_push($spendings, [$spending[1], $spending[2]]);
+    }
+    fclose($file);
+    
+    foreach ($spendings as $spending) {
+        $category = $spending[0];
+        $spendingsByCategories[$category] += floatval($spending[1]);
+    }
+}
+
+?>
 <!DOCTYPE html>
 <html>
 
@@ -19,79 +46,26 @@
             <table class="expenses-table">
                 <thead>
                     <tr>
-                        <th>Type</th>
-                        <th>Budget</th>
-                        <th>Actual</th>
-                        <th>Left</th>
+                        <th>Category</th>
+                        <th>Spendings</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Transport</td>
-                        <td>500</td>
-                        <td>350</td>
-                        <td>150</td>
-                    </tr>
-                    <tr>
-                        <td>Groceries</td>
-                        <td>250</td>
-                        <td>150</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>Eating out</td>
-                        <td>100</td>
-                        <td>45</td>
-                        <td>55</td>
-                    </tr>
-                    <tr>
-                        <td>Coffee</td>
-                        <td>20</td>
-                        <td>5</td>
-                        <td>15</td>
-                    </tr>
-                    <tr>
-                        <td>Fuel</td>
-                        <td>350</td>
-                        <td>200</td>
-                        <td>150</td>
-                    </tr>
-                    <tr>
-                        <td>Health</td>
-                        <td>80</td>
-                        <td>50</td>
-                        <td>30</td>
-                    </tr>
-                    <tr>
-                        <td>Beauty</td>
-                        <td>150</td>
-                        <td>120</td>
-                        <td>30</td>
-                    </tr>
-                    <tr>
-                        <td>Clothes</td>
-                        <td>200</td>
-                        <td>160</td>
-                        <td>400</td>
-                    </tr>
-                    <tr>
-                        <td>Gifts</td>
-                        <td>100</td>
-                        <td>20</td>
-                        <td>80</td>
-                    </tr>
-                    <tr>
-                        <td>Entertainment</td>
-                        <td>150</td>
-                        <td>80</td>
-                        <td>70</td>
-                    </tr>
-                    <tr>
-                        <td>Other</td>
-                        <td>100</td>
-                        <td>50</td>
-                        <td>50</td>
-                    </tr>
+                    <?php
+                    if (isset($spendingsByCategories)) {
+                        foreach ($spendingsByCategories as $cat => $sum) {
+                            echo "<tr>";
+                            echo "<td>";
+                            echo $cat;
+                            echo "</td>";
+                            echo "<td>";
+                            echo $sum;
+                            echo "</td>";
+                            echo "</tr>";
+
+                        }
+                    }
+                    ?>
                 </tbody>
             </table>
         </div>

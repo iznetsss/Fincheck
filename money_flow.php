@@ -137,6 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
                 elseif (strpos($amount, '.') === false) // If there is a period
                 {
                     // Do nothing
+                    //THEN WHY EVEN HAVE THIS STATEMENT???
                 }
             }
 
@@ -262,7 +263,17 @@ if (file_exists("data/incomes.csv")) {
         }
     }
 }
-
+//Categories.
+if (file_exists("data/spending_categories.csv")) {
+    $file = fopen("data/spending_categories.csv", "r");
+    $spendingCategories = fgetcsv($file, 1000, ";");
+    fclose($file);  
+}
+if (file_exists("data/income_categories.csv")) {
+    $file = fopen("data/income_categories.csv", "r");
+    $incomeCategories = fgetcsv($file, 1000, ";");
+    fclose($file);  
+}
 ?>
 
 <!DOCTYPE html>
@@ -288,16 +299,13 @@ if (file_exists("data/incomes.csv")) {
                 <input class="expense-amount-input" type="number" id="expense-amount" name="expense-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?">
                 <label class="expense-type-label" for="expense-type">Select Expense Type:</label>
                 <select class="expense-type-select" id="expense-type" name="expense-type">
-                    <option value="Transport">Transport</option>
-                    <option value="Groceries">Groceries</option>
-                    <option value="Eating out">Eating out</option>
-                    <option value="Coffee">Coffee</option>
-                    <option value="Fuel">Fuel</option>
-                    <option value="Health">Health</option>
-                    <option value="Beauty">Beauty</option>
-                    <option value="Clothes">Clothes</option>
-                    <option value="Gifts">Gifts</option>
-                    <option value="Entertainment">Entertainment</option>
+                    <?php
+                    foreach ($spendingCategories as $category) {
+                        echo "<option>";
+                        echo $category;
+                        echo "</option>";
+                    }
+                    ?>
                     <option value="Other">Other</option>
                 </select> 
                 <label class="expense-type-label" for="expense-date">Date:</label>    
@@ -343,16 +351,13 @@ if (file_exists("data/incomes.csv")) {
                 <input class="income-amount-input" type="number" id="income-amount" name="income-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?">
                 <label class="income-type-label" for="income-type">Select Income Type:</label>
                 <select class="income-type-select" id="income-type" name="income-type" >
-                    <option value="Employment">Employment</option>
-                    <option value="Entrepreneurship">Entrepreneurship</option>
-                    <option value="Investment">Investment</option>
-                    <option value="Savings">Savings</option>
-                    <option value="Loans">Loans</option>
-                    <option value="Rent">Rent</option>
-                    <option value="Dividends">Dividends</option>
-                    <option value="Freelancing">Freelancing</option>
-                    <option value="Gifts">Gifts</option>
-                    <option value="DebtReturn">Debt Return</option>
+                    <?php
+                        foreach ($incomeCategories as $category) {
+                            echo "<option>";
+                            echo $category;
+                            echo "</option>";
+                        }
+                    ?>
                     <option value="Other">Other</option>
                 </select> 
                 <label class="income-type-label" for="income-date">Date:</label>    
