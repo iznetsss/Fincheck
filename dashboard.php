@@ -1,5 +1,69 @@
 <?php
-// Last expenses table
+//Graph logic.
+$currentDay = date("j");
+$daysInMonth = date("t");
+
+if (file_exists("data/expenses.csv")) {
+    $spendings = [];
+    $file = fopen("data/expenses.csv", "r");
+    while (($spending = fgetcsv($file, 1000, ";")) !== FALSE) {
+        array_push($spendings, [$spending[0], $spending[2]]);
+    }
+    fclose($file);
+    $spendingsByDays = [];
+    for ($i = 1; $i <= $currentDay; $i++) {
+        $spendingsByDays[$i] = 0;
+    }
+    foreach ($spendings as $spending) {
+        if (substr($spending[0], 8, 2)[0] != "0") {
+            $day = substr($spending[0], 8, 2);
+        }
+        else {
+            $day = substr($spending[0], 9, 1);
+        }
+        if ($day <= $currentDay) {
+            $spendingsByDays[$day] += floatval($spending[1]);
+        }
+        
+    }
+}
+
+if (file_exists("data/incomes.csv")) {
+  $incomes = [];
+  $file = fopen("data/incomes.csv", "r");
+  while (($income = fgetcsv($file, 1000, ";")) !== FALSE) {
+      array_push($incomes, [$income[0], $income[2]]);
+  }
+  fclose($file);
+  $incomesByDays = [];
+  for ($i = 1; $i <= $currentDay; $i++) {
+      $incomesByDays[$i] = 0;
+  }
+  foreach ($incomes as $income) {
+      if (substr($income[0], 8, 2)[0] != "0") {
+          $day = substr($income[0], 8, 2);
+      }
+      else {
+          $day = substr($income[0], 9, 1);
+      }
+      if ($day <= $currentDay) {
+          $incomesByDays[$day] += floatval($income[1]);
+      }
+  }
+}
+//- - - - -Balance logic.- - - - -
+
+$total_spendings = 0.00;
+foreach ($spendingsByDays as $spending) {
+  $total_spendings += floatval($spending);
+}
+$total_incomes = 0.00;
+foreach ($incomesByDays as $income) {
+  $total_incomes += floatval($income);
+}
+$balance = $total_incomes - $total_spendings;
+
+// Last expenses table.
 
 $file = fopen("data/expenses.csv", "r");
 $lastExpenses = array();
@@ -55,25 +119,19 @@ fclose($file);
         <!--Hide Balance-->
         <div class="balance-div">
           <h2>Balance</h2>
-          <h1>788.98</h1>
+          <h1><?php echo number_format(floatval($balance), 2); ?></h1>
         </div>
         <div class="balance-div">
           <h2><a href="#" title="New spending">Spent<i class='bx bx-minus'></i></a></h2>
-          <h1>1251.86</h1>
+          <h1><?php echo number_format(floatval($total_spendings), 2); ?></h1>
         </div>
         <div class="balance-div">
           <h2><a href="#" title="New income">Earned<i class='bx bx-plus'></i></a></h2>
-          <h1>1651.07</h1>
+          <h1><?php echo number_format(floatval($total_incomes), 2); ?></h1>
         </div>
       </div>
       <div class="simple">
         <span class="header2"><a href="expenses.php" title="See more">This month spendings</a></span>
-        <!--
-                <label class="spending-container">
-                <input class="calender" type="date" id="spending-graph-start"/>
-                <input class="calender" type="date" id="spending-graph-end"/>
-                <button class="spending-graph-btn icon-search" aria-label="spending-graph-btn"></button>
-                -->
         </label>
         <canvas id="line-chart"></canvas>
         <!--Hide recurring payments-->
@@ -82,16 +140,9 @@ fclose($file);
           new Chart(document.getElementById("line-chart"), {
             type: 'line',
             data: {
-              labels: [1, 2, 3, 4, 5, 6,
-                7, 8, 9, 10, 11, 12, 13,
-                14, 15, 16, 17, 18, 19, 20,
-                21, 22, 23, 24, 25, 26, 27],
               datasets: [
                 {
-                  data: [33, 6, 60, 0, 20,
-                    22, 16, 0, 3.86, 600, 60,
-                    183, 5, 6, 6, 3, 2, 0,
-                    0, 5, 9, 15, 44, 94, 0, 55, 4],
+                  data: <?php echo json_encode($spendingsByDays); ?>,
                   label: "Spendings",
                   borderColor: "#0072ce",
                   backgroundColor: "#0072ce",
