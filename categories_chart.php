@@ -1,3 +1,30 @@
+<?php
+//Categories.
+if (file_exists("data/spending_categories.csv")) {
+    $file = fopen("data/spending_categories.csv", "r");
+    $categories = fgetcsv($file, 1000, ";");
+    fclose($file);  
+}
+$spendingsByCategories = [];
+foreach ($categories as $category) {
+    $spendingsByCategories[$category] = 0;
+}
+
+if (file_exists("data/expenses.csv")) {
+    $spendings = [];
+    $file = fopen("data/expenses.csv", "r");
+    while (($spending = fgetcsv($file, 1000, ";")) !== FALSE) {
+        array_push($spendings, [$spending[1], $spending[2]]);
+    }
+    fclose($file);
+    
+    foreach ($spendings as $spending) {
+        $category = $spending[0];
+        $spendingsByCategories[$category] += floatval($spending[1]);
+    }
+}
+
+?>
 <!DOCTYPE html>
 <html>
 
@@ -22,11 +49,11 @@
         new Chart(document.getElementById('pie-chart'), {
           type: 'doughnut',
           data: {
-            labels: ["Groceries", "Rent", "Utilities", "Car", "Clothes", "Health", "Eating out", "Other"],
+            labels: <?php echo json_encode(array_keys($spendingsByCategories)); ?>,
             datasets: [{
               borderColor: ["#6fb7a0", "#746fb7", "#B76f70", "#A7b76f", "#6fb7b6", "#B7956f", "#D45950", "#c7c7c7"],
               backgroundColor: ["#6fb7a0", "#746fb7", "#B76f70", "#A7b76f", "#6fb7b6", "#B7956f", "#D45950", "#c7c7c7"],
-              data: [103, 600, 113, 105, 55, 0, 20, 7]
+              data: <?php echo json_encode(array_values($spendingsByCategories)); ?>, 
             }]
           },
           options: {
