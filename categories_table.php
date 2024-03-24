@@ -17,7 +17,6 @@ if (file_exists("data/expenses.csv")) {
         array_push($spendings, [$spending[1], $spending[2]]);
     }
     fclose($file);
-    
     foreach ($spendings as $spending) {
         $category = $spending[0];
         $spendingsByCategories[$category] += floatval($spending[1]);
