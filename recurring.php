@@ -1,3 +1,93 @@
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurring'])) 
+{
+
+  $amountError = $typeError = $dateError = '';
+
+  function errorsOutput($amountError, $typeError, $dateError) {
+      $output = '<br>';
+      if(isset($amountError)) {
+          $output .= $amountError;
+      }
+      if(isset($typeError)) {
+          $output .= $typeError;
+      }
+      if(isset($dateError)) {
+          $output .= $dateError;
+      }
+      return $output;
+  }
+  
+
+
+  if(isset($_POST['bill-amount']) && isset($_POST['day']) && isset($_POST['bill-actual']) && isset($_POST['repeat']))
+  {
+    //NAME INPUT
+    if(isset($_POST['expense-note'])) 
+    {
+      $maxNameLength = 30; //30 charachters is limit
+      $name = trim($_POST['expense-note']);
+      $name = str_replace("\r\n", " ", $name); //Delete enters
+      $name = substr($note, 0, $maxNameLength);
+    }
+  
+
+    //DATE
+    $date = $_POST['day'];
+    if (preg_match("/^\d+(\.\d{2})?$/", $date)) // Date regex
+    {
+        if (strtotime($date) === false) 
+        {
+            $dateError = "<span style='color:red'>Wrong date input.</span><br>";
+        } else 
+        {
+            list($year, $month, $day) = explode('-', $date);
+        } 
+    } 
+    else 
+    {
+        $dateError = "<span style='color:red'>Incorrect date format.</span><br>";
+    }
+
+    //AMOUNT
+    $amount = $_POST['bill-actual']; // Get amount
+    if(isset($amount) && preg_match("/^\d+(\.\d{2})?$/", $amount)) 
+    {
+        if(!($amount >= 0.01 && $amount <= 10000000)) // Amount must be between 0.01 and 10000000
+        {
+            $amountError = "<span class='error'>Amount must be between 0.01 and 10000000</span><br>"; // Amount error message
+        }
+    }
+    elseif(empty($amount))
+    {
+        $amountError = "<span class='error'>Wrong number input</span><br>"; // Amount error message
+    }
+    //Converting $amount to float, rounding, and converting back to string
+    $amount = number_format(floatval($amount), 2);
+
+    //REPEATS
+    $repeat = $_POST['repeat'];
+    $allowedTypes = array('monthly', 'annualy', 'weekly', '2weekly', 'daily');
+
+    if (!in_array($type, $allowedTypes)) 
+    {
+        $repeatError = "<span class='error'>Invalid income type</span><br>";
+    }
+
+    //If life is good - we move forward
+    if (empty($dateError) && empty($amountError) && empty($repeatError)) 
+    {
+      $recurringData = array();
+      $recurringData['name'] = $name;
+      $recurringData['day'] = $date;
+      $recurringData['amount'] = $amount;
+      $recurringData['repeating'] = $repeat;
+    }
+  }
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -16,22 +106,41 @@
 
   <div class="content">
     <div class="flex-container" id="flex-input-bill">
-      <span class="header2">New recurring payment</span>
-      <label for="bill-name">Name:</label>
-      <input class="bill-name-input" type="text" id="bill-amount" name="bill-amount">
-      <label for="bill-due">Due:</label>
-      <input type="date" class="bill-due-select" id="day">
-      <label for="bill-actual">Amount:</label>
-      <input class="bill-actual-input" type="number" id="bill-actual" name="bill-actual" min="0">
-      <label for="bill-due">Repeat:</label>
-      <select class="bill-due-select" id="day">
-        <option value="monthly">Every Month</option>
-        <option value="annualy">Every Year</option>
-        <option value="Weekly">Every Week</option>
-        <option value="2weekly">Every 2 Weeks</option>
-        <option value="daily">Every Day</option>
-      </select>
-      <input class="btn" type="submit" id="submit-button-recurring">
+      <form method="POST" action="">
+        <span class="header2">New recurring payment</span>
+        <label for="bill-name">Name:</label>
+        <input class="bill-name-input" type="text" id="bill-amount" name="bill-amount" maxlength="30">
+        <label for="bill-due">Due:</label>
+        <input type="date" class="bill-due-select" id="day">
+        <label for="bill-actual">Amount:</label>
+        <input class="bill-actual-input" type="number" id="bill-actual" name="bill-actual" min="0" step="0.01" pattern="\d+(\.\d{2})?">
+        <label for="bill-due">Repeat:</label>
+        <select class="bill-due-select" id="repeat">
+          <option value="monthly">Every Month</option>
+          <option value="annualy">Every Year</option>
+          <option value="weekly">Every Week</option>
+          <option value="2weekly">Every 2 Weeks</option>
+          <option value="daily">Every Day</option>
+        </select>
+        <input class="btn" type="submit" id="submit-button-recurring" name="submit-button-recurring" value="Sumbit">
+
+        <?php
+        //Error expense message
+        if(isset($dateError, $amountError, $repeatError))
+        {
+            echo expensesErrorsOutput($dateError, $amountError, $repeatError); 
+        }
+        //Data was added message
+        if (!empty($dateError) || !empty($amountError) || !empty($repeatError)) {
+            echo outputErrors($dateError, $amountError, $repeatError);
+        } 
+        elseif(isset($checkSumbission))
+        {
+            echo '<p>RECURRING was added successfully</p>';
+        }
+        ?>
+
+      </form>
     </div>
     <div class="flex-container" id="flex-table-bills">
       <table class="bills-table">
