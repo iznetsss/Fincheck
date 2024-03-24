@@ -91,8 +91,9 @@ while (($data = fgetcsv($file, 1000, ";")) !== false) {
         $lastExpenses[] = $correctRowOrder;
     }
 }
-
 fclose($file);
+rsort($lastExpenses);
+
 ?>
 
 
