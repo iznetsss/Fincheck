@@ -107,7 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
   <div class="content">
     <div class="flex-container" id="flex-input-bill">
       <form method="POST" action="">
-        <span class="header2">New recurring payment</span>
+        <span class="header2">New recurring payment</span><br><br>
         <label for="bill-name">Name:</label>
         <input class="bill-name-input" type="text" id="bill-amount" name="bill-amount" maxlength="30">
         <label for="bill-due">Due:</label>
