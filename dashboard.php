@@ -125,11 +125,6 @@ fclose($file);
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>27.02</td>
-              <td>1.00</td>
-              <td>Snacks</td>
-            </tr>
             <?php
 
             if (isset($lastExpenses)) {
