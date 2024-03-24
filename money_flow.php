@@ -152,7 +152,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         $amount = number_format(floatval($amount), 2);
 
         $type = $_POST['income-type']; // Get type
-        $allowedTypes = array('Employment', 'Entrepreneurship', 'Investment', 'Savings', 'Loans', 'Rent', 'Dividends', 'Freelancing', 'Gifts', 'DebtReturn', 'Other');
+        $allowedTypes = array('Employment', 'Entrepreneurship', 'Investment', 'Savings', 'Loans', 'Rent', 'Dividents', 'Freelancing', 'Gifts', 'DebtReturn', 'Other');
 
         if (!in_array($type, $allowedTypes)) 
         {
@@ -160,7 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         }
 
         $date = $_POST['income-date'];
-        if (preg_match("/^\d+(\.\d{2})?$/", $date)) // Date regex
+        if (preg_match("/^\d{4}-\d{2}-\d{2}$/", $date)) // Date regex
         {
             if (strtotime($date) === false) 
             {
