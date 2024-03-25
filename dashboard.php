@@ -124,18 +124,11 @@ while (($data = fgetcsv($file, 1000, ";")) !== false) {
 }
 fclose($file);
 
-//Sort data by date
-usort($recurringTable, function($a, $b) 
-{
-  $dateA = strtotime($a[1]);
-  $dateB = strtotime($b[1]);
-
-  if ($dateA == $dateB) {
-      return 0;
-  }
-  return ($dateA < $dateB) ? -1 : 1;
+usort($recurringTable, function($a, $b) {
+  $dateA = DateTime::createFromFormat('d.m', $a[0]);
+  $dateB = DateTime::createFromFormat('d.m', $b[0]);
+  return $dateA <=> $dateB;
 });
-
 ?>
 
 
