@@ -87,7 +87,7 @@ while (($data = fgetcsv($file, 1000, ";")) !== false) {
     // Check if the row has at least three elements
     if (count($data) >= 3) {
         // Rearrange the elements of each row
-        $correctRowOrder = array($data[0], $data[2], $data[1]);
+        $correctRowOrder = array(date('d.m', strtotime($data[0])), $data[2], $data[1]);
         $lastExpenses[] = $correctRowOrder;
     }
 }
