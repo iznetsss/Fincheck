@@ -62,7 +62,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
         $amount = number_format(floatval($amount), 2);
 
         $type = $_POST['expense-type']; // Get type
-        $allowedTypes = array('Transport', 'Groceries', 'Eating out', 'Coffee', 'Fuel', 'Health', 'Beauty', 'Clothes', 'Gifts', 'Entertainment', 'Other');
+        if (file_exists("data/spending_categories.csv")) {
+            $file = fopen("data/spending_categories.csv", "r");
+            $allowedTypes = fgetcsv($file, 1000, ";");
+            fclose($file);  
+        }
+        else {
+            $allowedTypes = array('Transport', 'Groceries', 'Eating out', 'Coffee', 'Fuel', 'Health & Beauty', 'Clothes', 'Gifts', 'Entertainment', 'Other');
+        }
+        
 
         if (!in_array($type, $allowedTypes)) 
         {
@@ -151,8 +159,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         $amount = number_format(floatval($amount), 2);
 
         $type = $_POST['income-type']; // Get type
-        $allowedTypes = array('Employment', 'Entrepreneurship', 'Investment', 'Savings', 'Loans', 'Rent', 'Dividends', 'Freelancing', 'Gifts', 'DebtReturn', 'Other');
-
+        if (file_exists("data/income_categories.csv")) {
+            $file = fopen("data/income_categories.csv", "r");
+            $allowedTypes = fgetcsv($file, 1000, ";");
+            fclose($file);  
+        }
+        else {
+            $allowedTypes = array('Employment', 'Entrepreneurship', 'Investment', 'Savings', 'Loans', 'Rent', 'Dividends', 'Freelancing', 'Gifts', 'Debt Return', 'Other');
+        }
         if (!in_array($type, $allowedTypes)) 
         {
             $typeErrorIncome = "<span style='color:red'>Invalid income type</span><br>";
@@ -302,7 +316,6 @@ if (file_exists("data/income_categories.csv")) {
                         echo "</option>";
                     }
                     ?>
-                    <option value="Other">Other</option>
                 </select> 
                 <label class="expense-type-label" for="expense-date">Date:</label>    
                 <input class="calender" type="date" id="expense-date" name="expense-date"><br><br>
@@ -348,7 +361,6 @@ if (file_exists("data/income_categories.csv")) {
                             echo "</option>";
                         }
                     ?>
-                    <option value="Other">Other</option>
                 </select> 
                 <label class="income-type-label" for="income-date">Date:</label>    
                 <input class="calender" type="date" id="income-date" name="income-date"><br><br>
