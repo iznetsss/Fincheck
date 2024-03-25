@@ -94,6 +94,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
   }
 }
 
+//Recurring table.
+
+$file = fopen("data/recurring.csv", "r");
+$recurringTable = array();
+
+while (($data = fgetcsv($file, 1000, ";")) !== false) {
+    // Check if the row has at least four elements (name, day, amount, repeating)
+    if (count($data) >= 4) {
+        $name = $data[0];
+        $day = date('d', strtotime($data[1])); // Extract day from date
+        $amount = $data[2];
+        
+        // Add formatted data to recurring table
+        $recurringTable[] = array($name, $day, $amount);
+    }
+
+}
+fclose($file);
+
 ?>
 
 <!DOCTYPE html>
@@ -157,42 +176,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
           </tr>
         </thead>
         <tbody>
-          <!--Sort by due-->
-          <tr>
-            <td>Electricity</td>
-            <td>10</td>
-            <td>600</td>
-          </tr>
-          <tr>
-            <td>Internet</td>
-            <td>2</td>
-            <td>50</td>
-          </tr>
-          <tr>
-            <td>Credit</td>
-            <td>5</td>
-            <td>350</td>
-          </tr>
-          <tr>
-            <td>Gas</td>
-            <td>6</td>
-            <td>330</td>
-          </tr>
-          <tr>
-            <td>Netflix</td>
-            <td>1</td>
-            <td>10</td>
-          </tr>
-          <tr>
-            <td>Spotify</td>
-            <td>7</td>
-            <td>10</td>
-          </tr>
-          <tr>
-            <td>Phone</td>
-            <td>13</td>
-            <td>50</td>
-          </tr>
+          <?php
+
+            if (isset($recurringTable)) {
+              foreach($recurringTable as $row) {
+                echo "<tr>";
+                foreach($row as $cell) {
+                  echo "<td>";
+                  echo $cell;
+                  echo "</td>";
+                }
+                echo "</tr>";
+              }
+            }
+
+            ?>
+          
         </tbody>
       </table>
     </div>
