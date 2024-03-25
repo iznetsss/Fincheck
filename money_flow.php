@@ -77,20 +77,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
             $typeErrorExpenses = "<span style='color:red'>Invalid expense type.<br></span>";
         }
 
+        // DATE
         $date = $_POST['expense-date'];
-        if (preg_match("/^\d{4}-\d{2}-\d{2}$/", $date)) // Date regex
+        $dateObj = DateTime::createFromFormat('Y-m-d', $date);
+    
+        if ($dateObj && $dateObj->format('Y-m-d') === $date) 
         {
-            if (strtotime($date) === false) 
-            {
-                $dateErrorExpenses = "<span style='color:red'>Wrong date input.<br></span>";
-            } else 
-            {
-                list($year, $month, $day) = explode('-', $date);
-            } 
-        } 
-        else 
-        {
-            $dateErrorExpenses = "<span style='color:red'>Incorrect date format.<br></span>";
+            // Valid date
+            $year = $dateObj->format('Y');
+            $month = $dateObj->format('m');
+            $day = $dateObj->format('d');
+        } else {
+            // Invalid date 
+            $dateErrorExpenses = "<span style='color:red'>Incorrect date format.</span><br>";
         }
 
         //Enters are spaces in note
@@ -150,12 +149,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
 
             if(!($amount >= 0.01 && $amount <= 10000000)) // Amount must be between 0.01 and 10000000
             {
-                $amountErrorIncome = "<span class='error'>Amount must be between 0.01 and 10000000</span><br>"; // Amount error message
+                $amountErrorIncome = "<span style='color:red'>Amount must be between 0.01 and 10000000</span><br>"; // Amount error message
             }
         }
-        elseif(empty($amount))
+        else
         {
-            $amountErrorIncome = "<span class='error'>Wrong number input</span><br>"; // Amount error message
+            $amountErrorIncome = "<span style='color:red'>Wrong number input</span><br>"; // Amount error message
         }
         //Converting $amount to float, rounding, and converting back to string
         $amount = number_format(floatval($amount), 2);
@@ -171,22 +170,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         }
         if (!in_array($type, $allowedTypes)) 
         {
-            $typeErrorIncome = "<span class='error'>Invalid income type</span><br>";
+            $typeErrorIncome = "<span style='color:red'>Invalid income type</span><br>";
         }
 
+        // DATE
         $date = $_POST['income-date'];
-        if (preg_match("/^\d{4}-\d{2}-\d{2}$/", $date)) // Date regex
+        $dateObj = DateTime::createFromFormat('Y-m-d', $date);
+    
+        if ($dateObj && $dateObj->format('Y-m-d') === $date) 
         {
-            if (strtotime($date) === false) 
-            {
-                $dateErrorIncome = "<span style='color:red'>Wrong date input.</span><br>";
-            } else 
-            {
-                list($year, $month, $day) = explode('-', $date);
-            } 
-        } 
-        else 
-        {
+            // Valid date
+            $year = $dateObj->format('Y');
+            $month = $dateObj->format('m');
+            $day = $dateObj->format('d');
+        } else {
+            // Invalid date 
             $dateErrorIncome = "<span style='color:red'>Incorrect date format.</span><br>";
         }
 

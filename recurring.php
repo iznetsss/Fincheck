@@ -2,8 +2,7 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurring'])) 
 {
 
-  $amountError = $typeError = $dateError = '';
-
+  $dateError = $amountError = $repeatError = '';
   function errorsOutput($amountError, $typeError, $dateError) {
       $output = '<br>';
       if(isset($amountError)) {
@@ -20,32 +19,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
   
 
 
-  if(isset($_POST['bill-amount']) && isset($_POST['day']) && isset($_POST['bill-actual']) && isset($_POST['repeat']))
+  if(isset($_POST['bill-name']) && isset($_POST['day']) && isset($_POST['bill-actual']) && isset($_POST['repeat']))
   {
     //NAME INPUT
-    if(isset($_POST['expense-note'])) 
+    if(isset($_POST['bill-name'])) 
     {
       $maxNameLength = 30; //30 charachters is limit
-      $name = trim($_POST['expense-note']);
+      $name = trim($_POST['bill-name']);
       $name = str_replace("\r\n", " ", $name); //Delete enters
-      $name = substr($note, 0, $maxNameLength);
+      $name = substr($name, 0, $maxNameLength);
     }
   
 
     //DATE
     $date = $_POST['day'];
-    if (preg_match("/^\d+(\.\d{2})?$/", $date)) // Date regex
+    $dateObj = DateTime::createFromFormat('Y-m-d', $date);
+
+    if ($dateObj && $dateObj->format('Y-m-d') === $date) 
     {
-        if (strtotime($date) === false) 
-        {
-            $dateError = "<span style='color:red'>Wrong date input.</span><br>";
-        } else 
-        {
-            list($year, $month, $day) = explode('-', $date);
-        } 
-    } 
-    else 
-    {
+        // Valid date
+        $year = $dateObj->format('Y');
+        $month = $dateObj->format('m');
+        $day = $dateObj->format('d');
+    } else {
+        // Invalid date
         $dateError = "<span style='color:red'>Incorrect date format.</span><br>";
     }
 
@@ -55,12 +52,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
     {
         if(!($amount >= 0.01 && $amount <= 10000000)) // Amount must be between 0.01 and 10000000
         {
-            $amountError = "<span class='error'>Amount must be between 0.01 and 10000000</span><br>"; // Amount error message
+            $amountError = "<span style='color:red'>Amount must be between 0.01 and 10000000</span><br>"; // Amount error message
         }
-    }
-    elseif(empty($amount))
-    {
-        $amountError = "<span class='error'>Wrong number input</span><br>"; // Amount error message
+    } else {
+        $amountError = "<span style='color:red'>Wrong number input</span><br>"; // Amount error message
     }
     //Converting $amount to float, rounding, and converting back to string
     $amount = number_format(floatval($amount), 2);
@@ -69,9 +64,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
     $repeat = $_POST['repeat'];
     $allowedTypes = array('monthly', 'annualy', 'weekly', '2weekly', 'daily');
 
-    if (!in_array($type, $allowedTypes)) 
+    if (!in_array($repeat, $allowedTypes)) 
     {
-        $repeatError = "<span class='error'>Invalid income type</span><br>";
+        $repeatError = "<span style='color:red'>Invalid payment repeating type</span><br>";
     }
 
     //If life is good - we move forward
@@ -82,9 +77,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
       $recurringData['day'] = $date;
       $recurringData['amount'] = $amount;
       $recurringData['repeating'] = $repeat;
+
+      $csv_file_path = 'data/recurring.csv';
+            
+        if (!file_exists($csv_file_path)) {
+            touch($csv_file_path);
+            chmod($csv_file_path, 0777); 
+        }
+
+      $csv_file = fopen($csv_file_path, 'a');
+      fputcsv($csv_file, $recurringData, ';');
+      fclose($csv_file);
+
+      $checkSumbission = TRUE;
     }
   }
 }
+
+//Recurring table.
+
+$file = fopen("data/recurring.csv", "r");
+$recurringTable = array();
+
+while (($data = fgetcsv($file, 1000, ";")) !== false) {
+    // Check if the row has at least four elements (name, day, amount, repeating)
+    if (count($data) >= 4) {
+        $name = $data[0];
+        $day = date('d', strtotime($data[1])); // Extract day from date
+        $amount = $data[2];
+        
+        // Add formatted data to recurring table
+        $recurringTable[] = array($name, $day, $amount);
+    }
+
+}
+fclose($file);
 
 ?>
 
@@ -109,13 +136,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
       <form method="POST" action="">
         <span class="header2">New recurring payment</span><br><br>
         <label for="bill-name">Name:</label>
-        <input class="bill-name-input" type="text" id="bill-amount" name="bill-amount" maxlength="30">
+        <input class="bill-name-input" type="text" id="bill-name" name="bill-name" maxlength="30">
         <label for="bill-due">Due:</label>
-        <input type="date" class="bill-due-select" id="day">
+        <input type="date" class="bill-due-select" id="day" name="day">
         <label for="bill-actual">Amount:</label>
         <input class="bill-actual-input" type="number" id="bill-actual" name="bill-actual" min="0" step="0.01" pattern="\d+(\.\d{2})?">
         <label for="bill-due">Repeat:</label>
-        <select class="bill-due-select" id="repeat">
+        <select class="bill-due-select" id="repeat" name="repeat">
           <option value="monthly">Every Month</option>
           <option value="annualy">Every Year</option>
           <option value="weekly">Every Week</option>
@@ -126,17 +153,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
 
         <?php
         //Error expense message
-        if(isset($dateError, $amountError, $repeatError))
-        {
-            echo expensesErrorsOutput($dateError, $amountError, $repeatError); 
-        }
-        //Data was added message
         if (!empty($dateError) || !empty($amountError) || !empty($repeatError)) {
-            echo outputErrors($dateError, $amountError, $repeatError);
+            echo errorsOutput($dateError, $amountError, $repeatError);
         } 
+        //Recurring was added
         elseif(isset($checkSumbission))
         {
-            echo '<p>RECURRING was added successfully</p>';
+            echo '<p>Recurring payments was added successfully</p>';
         }
         ?>
 
@@ -150,54 +173,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
             <th>Name</th>
             <th>Due</th>
             <th>Actual</th>
-            <th>Budget</th>
           </tr>
         </thead>
         <tbody>
-          <!--Sort by due-->
-          <tr>
-            <td>Electricity</td>
-            <td>10</td>
-            <td>600</td>
-            <td>500</td>
-          </tr>
-          <tr>
-            <td>Internet</td>
-            <td>2</td>
-            <td>50</td>
-            <td>50</td>
-          </tr>
-          <tr>
-            <td>Credit</td>
-            <td>5</td>
-            <td>350</td>
-            <td>350</td>
-          </tr>
-          <tr>
-            <td>Gas</td>
-            <td>6</td>
-            <td>330</td>
-            <td>350</td>
-          </tr>
-          <tr>
-            <td>Netflix</td>
-            <td>1</td>
-            <td>10</td>
-            <td>10</td>
-          </tr>
-          <tr>
-            <td>Spotify</td>
-            <td>7</td>
-            <td>10</td>
-            <td>10</td>
-          </tr>
-          <tr>
-            <td>Phone</td>
-            <td>13</td>
-            <td>50</td>
-            <td>50</td>
-          </tr>
-          </tr>
+          <?php
+
+            if (isset($recurringTable)) {
+              foreach($recurringTable as $row) {
+                echo "<tr>";
+                foreach($row as $cell) {
+                  echo "<td>";
+                  echo $cell;
+                  echo "</td>";
+                }
+                echo "</tr>";
+              }
+            }
+
+            ?>
+          
         </tbody>
       </table>
     </div>
