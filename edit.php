@@ -1,0 +1,45 @@
+<?php
+  if (file_exists("data/expenses.csv")) {
+      $rows = [];
+      $file = fopen("data/expenses.csv", "r");
+      while (($row = fgetcsv($file, 1000, ";")) !== FALSE) {
+        $row[1] = date('d.m', strtotime($row[1]));
+        array_push($rows, $row);
+      }
+      rsort($rows);
+      
+  }
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="styles/edit.css">
+  <link rel="icon" href="img/icon.PNG">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="authors" content="kisevt, ikuzne">
+  <title>Advanced•FinCheck</title>
+</head>
+
+<body>
+  <?php include 'includes/header.php'; ?>
+  <?php include 'includes/sidebar.php'; ?>
+  <div class="content">
+    <div class="flex-container">
+        <form method="post" action="index.php" id="loginForm" name="loginForm">
+            <h1 class="welcome-txt">Welcome to FinCheck</h1>
+            <input class="form_field" type="email" id="email" name="email" placeholder="email" <?php if (isset($error)) {echo 'value="'.$_POST['email'].'"';} ?> required>
+            <br>
+            <input class="form_field" type="password" id="password" name="password" placeholder="password" required>
+            <br>
+            <input type="submit" class="btn" id="loginButton" name="loginButton" value="Login">
+        </form>
+        <div class="flex-item">
+            <span>Don't have an account?</span>
+            <a href="registration.php">Sign Up</a>
+        </div>
+    </div>
+  </div>
+</body>

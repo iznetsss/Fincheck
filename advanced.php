@@ -3,7 +3,6 @@
       $rows = [];
       $file = fopen("data/expenses.csv", "r");
       while (($row = fgetcsv($file, 1000, ";")) !== FALSE) {
-        unset($row[0]);
         $row[1] = date('d.m', strtotime($row[1]));
         array_push($rows, $row);
       }
@@ -42,12 +41,17 @@
           <?php
           if (isset($rows)) {
             foreach($rows as $row) {
+              $noNumber = array_slice($row, 1, -1);
               echo "<tr>";
-              foreach($row as $cell) {
+              foreach($noNumber as $cell) {
                 echo "<td>";
                 echo $cell;
                 echo "</td>";
               }
+              echo "<td>";
+              echo '<span class="cell-left">'.end($row).'</span>';
+              echo '<span class="cell-right"><a href="edit.php" id="'.$row[0].'">Edit</a></span>';
+              echo "</td>";
               echo "</tr>";
             }
           }

@@ -4,3 +4,10 @@
 .content {
     justify-content: center;
 }
+
+.cell-left {
+    float: left;
+}
+.cell-right {
+    float: right;
+}
