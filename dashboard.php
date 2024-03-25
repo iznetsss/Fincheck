@@ -93,11 +93,17 @@ while (($data = fgetcsv($file, 1000, ";")) !== false) {
 }
 fclose($file);
 
+//Sort data by date (from latest to earliest)
+usort($lastExpenses, function($a, $b) {
+  $dateA = DateTime::createFromFormat('d.m', $a[0]);
+  $dateB = DateTime::createFromFormat('d.m', $b[0]);
+  return $dateB <=> $dateA;
+});
+
 
 
 // Upcoming payments table
 //Recurring table.
-
 $file = fopen("data/recurring.csv", "r");
 $recurringTable = array();
 
