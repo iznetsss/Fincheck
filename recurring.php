@@ -102,9 +102,9 @@ $recurringTable = array();
 while (($data = fgetcsv($file, 1000, ";")) !== false) {
     // Check if the row has at least four elements (name, day, amount, repeating)
     if (count($data) >= 4) {
-        $name = $data[0];
-        $day = date('d', strtotime($data[1])); // Extract day from date
-        $amount = $data[2];
+        $name = $data[1];
+        $day = date('d', strtotime($data[2])); // Extract day from date
+        $amount = $data[3];
         
         // Add formatted data to recurring table
         $recurringTable[] = array($name, $day, $amount);
@@ -166,9 +166,10 @@ fclose($file);
       </form>
     </div>
     <div class="flex-container" id="flex-table-bills">
-      <table class="bills-table">
-        <span class="bills-table-name header2">Recurring payments</span>
-        <thead>
+    
+    <table class="bills-table">
+      <span class="bills-table-name header2">Recurring payments</span>
+      <thead>
           <tr>
             <th>Name</th>
             <th>Due</th>
@@ -193,7 +194,8 @@ fclose($file);
             ?>
           
         </tbody>
-      </table>
+
+    </table>
     </div>
 
   </div>
