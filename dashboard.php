@@ -92,7 +92,43 @@ while (($data = fgetcsv($file, 1000, ";")) !== false) {
     }
 }
 fclose($file);
-rsort($lastExpenses);
+
+
+
+// Upcoming payments table
+//Recurring table.
+
+$file = fopen("data/recurring.csv", "r");
+$recurringTable = array();
+
+while (($data = fgetcsv($file, 1000, ";")) !== false) {
+    // Check if the row has at least four elements
+    if (count($data) >= 4) {
+        $name = $data[0];
+        // Extract day and month from date
+        $date = date('d.m', strtotime($data[1]));
+        $amount = $data[2];
+        
+        // Add formatted data to recurring table
+        $recurringTable[] = array($date, $amount, $name);
+
+
+    }
+
+}
+fclose($file);
+
+//Sort data by date
+usort($recurringTable, function($a, $b) 
+{
+  $dateA = strtotime($a[1]);
+  $dateB = strtotime($b[1]);
+
+  if ($dateA == $dateB) {
+      return 0;
+  }
+  return ($dateA < $dateB) ? -1 : 1;
+});
 
 ?>
 
@@ -212,21 +248,21 @@ rsort($lastExpenses);
               <td>5.99</td>
               <td>Telegram premium</td>
             </tr>
-            <tr>
-              <td>10.03</td>
-              <td>600.00</td>
-              <td>Rent</td>
-            </tr>
-            <tr>
-              <td>13.03</td>
-              <td>8.99</td>
-              <td>Netflix</td>
-            </tr>
-            <tr>
-              <td>17.03</td>
-              <td>4.29</td>
-              <td>Spotify</td>
-            </tr>
+            <?php
+
+            if (isset($recurringTable)) {
+              foreach($recurringTable as $row) {
+                echo "<tr>";
+                foreach($row as $cell) {
+                  echo "<td>";
+                  echo $cell;
+                  echo "</td>";
+                }
+                echo "</tr>";
+              }
+            }
+
+            ?>
           </tbody>
         </table>
         <span class="header2-invisible">Invisible text</span>
