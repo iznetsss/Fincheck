@@ -101,22 +101,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
 
         if (empty($amountErrorExpenses) && empty($typeErrorExpenses) && empty($dateErrorExpenses)) 
         {
+            $csv_file_path = 'data/expenses.csv';
             $expenseData = array(); 
             // Set data into array
+            $expenseData['count'] = count(file($csv_file_path)) + 1;
             $expenseData['date'] = $date;
             $expenseData['type'] = $type;
             $expenseData['amount'] = $amount;
             $expenseData['note'] = $note; 
             $expenseData['recurring'] = "No"; //Recurring is always "No"
+            
 
-
-            $csv_file_path = 'data/expenses.csv';
+            
             
             if (!file_exists($csv_file_path)) {
                 touch($csv_file_path);
                 chmod($csv_file_path, 0777); 
             }
-    
             $csv_file = fopen($csv_file_path, 'a');
             fputcsv($csv_file, $expenseData, ';');
             fclose($csv_file);
@@ -200,6 +201,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         {
             $incomeData = array(); 
             // Set data into array
+            $incomeData['count'] = count(file($csv_file_path)) + 1;
             $incomeData['date'] = $date;
             $incomeData['type'] = $type;
             $incomeData['amount'] = $amount;
@@ -231,7 +233,7 @@ if (file_exists("data/expenses.csv")) {
     $spendings = [];
     $file = fopen("data/expenses.csv", "r");
     while (($spending = fgetcsv($file, 1000, ";")) !== FALSE) {
-        array_push($spendings, [$spending[0], $spending[2]]);
+        array_push($spendings, [$spending[1], $spending[3]]);
     }
     fclose($file);
     $spendingsByDays = [];
@@ -256,7 +258,7 @@ if (file_exists("data/incomes.csv")) {
     $incomes = [];
     $file = fopen("data/incomes.csv", "r");
     while (($income = fgetcsv($file, 1000, ";")) !== FALSE) {
-        array_push($incomes, [$income[0], $income[2]]);
+        array_push($incomes, [$income[1], $income[3]]);
     }
     fclose($file);
     $incomesByDays = [];

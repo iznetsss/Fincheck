@@ -7,7 +7,7 @@ if (file_exists("data/expenses.csv")) {
     $spendings = [];
     $file = fopen("data/expenses.csv", "r");
     while (($spending = fgetcsv($file, 1000, ";")) !== FALSE) {
-        array_push($spendings, [$spending[0], $spending[2]]);
+        array_push($spendings, [$spending[1], $spending[3]]);
     }
     fclose($file);
     $spendingsByDays = [];
@@ -32,7 +32,7 @@ if (file_exists("data/incomes.csv")) {
   $incomes = [];
   $file = fopen("data/incomes.csv", "r");
   while (($income = fgetcsv($file, 1000, ";")) !== FALSE) {
-      array_push($incomes, [$income[0], $income[2]]);
+      array_push($incomes, [$income[1], $income[3]]);
   }
   fclose($file);
   $incomesByDays = [];
@@ -87,7 +87,7 @@ while (($data = fgetcsv($file, 1000, ";")) !== false) {
     // Check if the row has at least three elements
     if (count($data) >= 3) {
         // Rearrange the elements of each row
-        $correctRowOrder = array(date('d.m', strtotime($data[0])), $data[2], $data[1]);
+        $correctRowOrder = array(date('d.m', strtotime($data[1])), $data[3], $data[2]);
         $lastExpenses[] = $correctRowOrder;
     }
 }

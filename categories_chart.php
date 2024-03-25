@@ -14,7 +14,7 @@ if (file_exists("data/expenses.csv")) {
     $spendings = [];
     $file = fopen("data/expenses.csv", "r");
     while (($spending = fgetcsv($file, 1000, ";")) !== FALSE) {
-        array_push($spendings, [$spending[1], $spending[2]]);
+        array_push($spendings, [$spending[2], $spending[3]]);
     }
     fclose($file);
     
