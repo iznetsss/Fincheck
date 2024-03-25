@@ -3,8 +3,9 @@
       $rows = [];
       $file = fopen("data/expenses.csv", "r");
       while (($row = fgetcsv($file, 1000, ";")) !== FALSE) {
-        $row[0] = date('d.m', strtotime($row[0]));
-          array_push($rows, $row);
+        unset($row[0]);
+        $row[1] = date('d.m', strtotime($row[1]));
+        array_push($rows, $row);
       }
       rsort($rows);
       
