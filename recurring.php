@@ -166,9 +166,10 @@ fclose($file);
       </form>
     </div>
     <div class="flex-container" id="flex-table-bills">
-      <table class="bills-table">
-        <span class="bills-table-name header2">Recurring payments</span>
-        <thead>
+    
+    <table class="bills-table">
+      <span class="bills-table-name header2">Recurring payments</span>
+      <thead>
           <tr>
             <th>Name</th>
             <th>Due</th>
@@ -193,7 +194,8 @@ fclose($file);
             ?>
           
         </tbody>
-      </table>
+
+    </table>
     </div>
 
   </div>
