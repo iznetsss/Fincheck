@@ -1,33 +1,33 @@
 <?php
- $amountErrorExpenses = $typeErrorExpenses = $dateErrorExpenses = $amountErrorIncome = $typeErrorIncome = $dateErrorIncome = '';
+$amountErrorExpenses = $typeErrorExpenses = $dateErrorExpenses = $amountErrorIncome = $typeErrorIncome = $dateErrorIncome = '';
 
- function expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses) {
-     $output = '<br>';
-     if(isset($amountErrorExpenses)) {
-         $output .= $amountErrorExpenses;
-     }
-     if(isset($typeErrorExpenses)) {
-         $output .= $typeErrorExpenses;
-     }
-     if(isset($dateErrorExpenses)) {
-         $output .= $dateErrorExpenses;
-     }
-     return $output;
- }
- 
- function incomeErrorsOutput($amountErrorIncome, $typeErrorIncome, $dateErrorIncome) {
-     $output = '<br>';
-     if(isset($amountErrorIncome)) {
-         $output .= $amountErrorIncome;
-     }
-     if(isset($typeErrorIncome)) {
-         $output .= $typeErrorIncome;
-     }
-     if(isset($dateErrorIncome)) {
-         $output .= $dateErrorIncome;
-     }
-     return $output;
- }
+function expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses) {
+    $output = '<br>';
+    if(isset($amountErrorExpenses)) {
+        $output .= $amountErrorExpenses;
+    }
+    if(isset($typeErrorExpenses)) {
+        $output .= $typeErrorExpenses;
+    }
+    if(isset($dateErrorExpenses)) {
+        $output .= $dateErrorExpenses;
+    }
+    return $output;
+}
+
+function incomeErrorsOutput($amountErrorIncome, $typeErrorIncome, $dateErrorIncome) {
+    $output = '<br>';
+    if(isset($amountErrorIncome)) {
+        $output .= $amountErrorIncome;
+    }
+    if(isset($typeErrorIncome)) {
+        $output .= $typeErrorIncome;
+    }
+    if(isset($dateErrorIncome)) {
+        $output .= $dateErrorIncome;
+    }
+    return $output;
+}
 //EXPENSES
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'])) 
 {

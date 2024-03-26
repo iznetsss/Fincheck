@@ -50,7 +50,7 @@
               }
               echo "<td>";
               echo '<span class="cell-left">'.end($row).'</span>';
-              echo '<span class="cell-right"><a href="edit.php" id="'.$row[0].'">Edit</a></span>';
+              echo '<span class="cell-right"><a href="edit.php?id='.$row[0].'">Edit</a></span>';
               echo "</td>";
               echo "</tr>";
             }
