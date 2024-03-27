@@ -68,28 +68,13 @@ $balance = $total_incomes - $total_spendings;
 $file = fopen("data/expenses.csv", "r");
 $lastExpenses = array();
 
-// Set pointer to the end of file
-fseek($file, -1, SEEK_END);
-
-$lineCount = 0;
-
-while (($char = fgetc($file)) !== false) {
-    if ($char === "\n") {
-        $lineCount++;
-    }
-    fseek($file, -2, SEEK_CUR);
-    if ($lineCount > 6) { // Last 6 expenses
-        break;
-    }
-}
-
 while (($data = fgetcsv($file, 1000, ";")) !== false) {
-    // Check if the row has at least three elements
-    if (count($data) >= 3) {
-        // Rearrange the elements of each row
-        $correctRowOrder = array(date('d.m', strtotime($data[1])), $data[3], $data[2]);
-        $lastExpenses[] = $correctRowOrder;
-    }
+  $name = $data[0];
+  $date = date('d.m', strtotime($data[1])); // Extract day and month from date
+  $amount = $data[2];
+  
+  // Add formatted data to recurring table
+  $lastExpenses[] = array($date, $amount, $name);
 }
 fclose($file);
 
@@ -99,7 +84,7 @@ usort($lastExpenses, function($a, $b) {
   $dateB = DateTime::createFromFormat('d.m', $b[0]);
   return $dateB <=> $dateA;
 });
-
+$lastExpenses = array_slice($lastExpenses, 0, 8); //8 latest spendinds
 
 
 // Upcoming payments table
@@ -108,27 +93,23 @@ $file = fopen("data/recurring.csv", "r");
 $recurringTable = array();
 
 while (($data = fgetcsv($file, 1000, ";")) !== false) {
-    // Check if the row has at least four elements
-    if (count($data) >= 4) {
-        $name = $data[0];
-        // Extract day and month from date
-        $date = date('d.m', strtotime($data[1]));
-        $amount = $data[2];
-        
-        // Add formatted data to recurring table
-        $recurringTable[] = array($date, $amount, $name);
-
-
-    }
-
+  $name = $data[0];
+  $date = date('d.m', strtotime($data[1])); // Extract day and month from date
+  $amount = $data[2];
+  
+  // Add formatted data to recurring table
+  $recurringTable[] = array($date, $amount, $name);
 }
 fclose($file);
-
-usort($recurringTable, function($a, $b) {
+//Sort data by date (from latest to earliest)
+usort($recurringTable, function($a, $b) 
+{
   $dateA = DateTime::createFromFormat('d.m', $a[0]);
   $dateB = DateTime::createFromFormat('d.m', $b[0]);
   return $dateA <=> $dateB;
 });
+$recurringTable = array_slice($recurringTable, 0, 6) //7 upcoming payments
+
 ?>
 
 
