@@ -1,5 +1,8 @@
 <?php
-//Graph logic.
+//- - - - -Graph logic.- - - - -
+$currentDate = new DateTime();
+$currentYear = $currentDate->format('Y');
+$currentMonth = $currentDate->format('m');
 $currentDay = date("j");
 $daysInMonth = date("t");
 
@@ -15,19 +18,22 @@ if (file_exists("data/expenses.csv")) {
         $spendingsByDays[$i] = 0;
     }
     foreach ($spendings as $spending) {
-        if (substr($spending[0], 8, 2)[0] != "0") {
-            $day = substr($spending[0], 8, 2);
-        }
-        else {
-            $day = substr($spending[0], 9, 1);
-        }
-        if ($day <= $currentDay) {
-            $spendingsByDays[$day] += floatval($spending[1]);
-        }
-        
-    }
+      $spendingDate = new DateTime($spending[0]);
+      $spendingYear = $spendingDate->format('Y');
+      $spendingMonth = $spendingDate->format('m');
+      if ($currentYear === $spendingYear && $currentMonth === $spendingMonth) {
+          if (substr($spending[0], 8, 2)[0] != "0") {
+              $day = substr($spending[0], 8, 2);
+          }
+          else {
+              $day = substr($spending[0], 9, 1);
+          }
+          if ($day <= $currentDay) {
+              $spendingsByDays[$day] += floatval($spending[1]);
+          }
+      }
+   }
 }
-
 if (file_exists("data/incomes.csv")) {
   $incomes = [];
   $file = fopen("data/incomes.csv", "r");
@@ -40,19 +46,24 @@ if (file_exists("data/incomes.csv")) {
       $incomesByDays[$i] = 0;
   }
   foreach ($incomes as $income) {
-      if (substr($income[0], 8, 2)[0] != "0") {
-          $day = substr($income[0], 8, 2);
-      }
-      else {
-          $day = substr($income[0], 9, 1);
-      }
-      if ($day <= $currentDay) {
-          $incomesByDays[$day] += floatval($income[1]);
+      $incomeDate = new DateTime($income[0]);
+      $incomeYear = $incomeDate->format('Y');
+      $incomeMonth = $incomeDate->format('m');
+      if ($currentYear === $incomeYear && $currentMonth === $incomeMonth) {
+          if (substr($income[0], 8, 2)[0] != "0") {
+              $day = substr($income[0], 8, 2);
+          }
+          else {
+              $day = substr($income[0], 9, 1);
+          }
+          if ($day <= $currentDay) {
+              $incomesByDays[$day] += floatval($income[1]);
+          }
       }
   }
 }
-//- - - - -Balance logic.- - - - -
 
+//- - - - -BALANCE LOGIC.- - - - -
 $total_spendings = 0.00;
 foreach ($spendingsByDays as $spending) {
   $total_spendings += floatval($spending);
@@ -63,8 +74,7 @@ foreach ($incomesByDays as $income) {
 }
 $balance = $total_incomes - $total_spendings;
 
-// Last expenses table.
-
+//- - - - -LATEST EXPENSES TABLE.- - - - -
 $file = fopen("data/expenses.csv", "r");
 $lastExpenses = array();
 

@@ -1,4 +1,7 @@
 <?php
+$currentDate = new DateTime();
+$currentYear = $currentDate->format('Y');
+$currentMonth = $currentDate->format('m');
 //Categories.
 if (file_exists("data/spending_categories.csv")) {
     $file = fopen("data/spending_categories.csv", "r");
@@ -14,7 +17,12 @@ if (file_exists("data/expenses.csv")) {
     $spendings = [];
     $file = fopen("data/expenses.csv", "r");
     while (($spending = fgetcsv($file, 1000, ";")) !== FALSE) {
+        $spendingDate = new DateTime($spending[1]);
+        $spendingYear = $spendingDate->format('Y');
+        $spendingMonth = $spendingDate->format('m');
+        if ($currentYear === $spendingYear && $currentMonth === $spendingMonth) {
         array_push($spendings, [$spending[2], $spending[3]]);
+        }
     }
     fclose($file);
     foreach ($spendings as $spending) {
