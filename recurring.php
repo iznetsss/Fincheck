@@ -92,6 +92,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
   }
 }
 
+$file = fopen("data/recurring.csv", "r");
+while (($data = fgetcsv($file, 1000, ";")) !== false) {
+    if ($data[3] == "monthly") {
+        $date = $data[1];
+        $name = $data[0];
+        $amount = $data[2];
+
+        $expenseDate = new DateTime($date);
+        $today = new DateTime();
+
+        if ($expenseDate < $today) {
+            // Add to file if its less than today
+            $expensesFile = fopen("data/expenses.csv", "a");
+            fputcsv($expensesFile, array('', $date, $name, $amount, '', 'Yes'), ';');
+            fclose($expensesFile);
+        }
+    }
+}
+fclose($file);
 
 
 //Recurring table.
