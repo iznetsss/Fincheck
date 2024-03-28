@@ -199,21 +199,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         {
             $incomeData = array(); 
             // Set data into array
-            $incomeData['count'] = count(file($csv_file_path)) + 1;
+            $incomeData['count'] = count(file('data/incomes.csv')) + 1;
             $incomeData['date'] = $date;
             $incomeData['type'] = $type;
             $incomeData['amount'] = $amount;
             $incomeData['note'] = $note; 
             $incomeData['recurring'] = "No"; //Recurring is always "No"
-
-            $csv_file_path = 'data/incomes.csv';
             
-            if (!file_exists($csv_file_path)) {
-                touch($csv_file_path);
-                chmod($csv_file_path, 0777); 
+            if (!file_exists('data/incomes.csv')) {
+                touch('data/incomes.csv');
+                chmod('data/incomes.csv', 0777); 
             }
     
-            $csv_file = fopen($csv_file_path, 'a');
+            $csv_file = fopen('data/incomes.csv', 'a');
             fputcsv($csv_file, $incomeData, ';');
             fclose($csv_file);
 
