@@ -152,6 +152,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
         }
     }
 }
+}
 //CATEGORIES.
 if (file_exists("data/spending_categories.csv")) {
     $file = fopen("data/spending_categories.csv", "r");

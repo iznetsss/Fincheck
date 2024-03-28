@@ -92,12 +92,13 @@ isset($_POST['deleteButton']) && $_POST['deleteButton'] == "Delete account" &&
         <div class="flex-zone">
             <form method="post" id="settingsForm" name="settingsForm" action="settings.php">
                 <select id="selectCurrency" name="selectCurrency">
-                    <option><i class='bx bx-euro' ></i> EUR</option>
-                    <option><i class='bx bx-dollar' ></i> USD</option>
-                    <option><i class='bx bx-pound' ></i> GBR</option>
-                    <option><i class="bx bx-lira"></i> TRY</option>
-                    <option><i class='bx bx-yen' ></i> CNY</option>
-                    <option><i class='bx bx-bitcoin' ></i> BTC</option>
+                    <option>&#8364; EUR</option>
+                    <option>&#36; USD</option>
+                    <option>&#163; GBR</option>
+                    <option>&#165; CNY</option>
+                    <option>&#8377; INR</option>
+                    <option>&#8361; KRW</option>
+                    <option>&#165; JPY</option>
                 </select>
                 <label for="selectCurrency">Change currency</label>
                 <br>
