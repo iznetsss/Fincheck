@@ -77,15 +77,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
       $recurringData['day'] = $date;
       $recurringData['amount'] = $amount;
       $recurringData['repeating'] = $repeat;
-
-      $csv_file_path = 'data/recurring.csv';
             
-        if (!file_exists($csv_file_path)) {
-            touch($csv_file_path);
-            chmod($csv_file_path, 0777); 
+        if (!file_exists('data/recurring.csv')) {
+            touch('data/recurring.csv');
+            chmod('data/recurring.csv', 0777); 
         }
 
-      $csv_file = fopen($csv_file_path, 'a');
+      $csv_file = fopen('data/recurring.csv', 'a');
       fputcsv($csv_file, $recurringData, ';');
       fclose($csv_file);
 
@@ -94,8 +92,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
   }
 }
 
-//Recurring table.
 
+
+//Recurring table.
 $file = fopen("data/recurring.csv", "r");
 $recurringTable = array();
 

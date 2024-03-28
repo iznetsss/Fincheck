@@ -69,9 +69,9 @@ $file = fopen("data/expenses.csv", "r");
 $lastExpenses = array();
 
 while (($data = fgetcsv($file, 1000, ";")) !== false) {
-  $name = $data[0];
+  $name = $data[2];
   $date = date('d.m', strtotime($data[1])); // Extract day and month from date
-  $amount = $data[2];
+  $amount = $data[3];
   
   // Add formatted data to recurring table
   $lastExpenses[] = array($date, $amount, $name);
