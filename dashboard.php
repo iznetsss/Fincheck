@@ -149,16 +149,16 @@ $recurringTable = array_slice($recurringTable, 0, 6) //7 upcoming payments
           <h1><?php echo number_format(floatval($balance), 2); ?></h1>
         </div>
         <div class="balance-div">
-          <h2><a href="#" title="New spending">Spent<i class='bx bx-minus'></i></a></h2>
+          <h2><a href="money_flow.php" title="New spending">Spent<i class='bx bx-minus'></i></a></h2>
           <h1><?php echo number_format(floatval($total_spendings), 2); ?></h1>
         </div>
         <div class="balance-div">
-          <h2><a href="#" title="New income">Earned<i class='bx bx-plus'></i></a></h2>
+          <h2><a href="money_flow.php" title="New income">Earned<i class='bx bx-plus'></i></a></h2>
           <h1><?php echo number_format(floatval($total_incomes), 2); ?></h1>
         </div>
       </div>
       <div class="simple">
-        <span class="header2"><a href="expenses.php" title="See more">This month spendings</a></span>
+        <span class="header2"><a href="advanced.php" title="See more">This month spendings</a></span>
         </label>
         <canvas id="line-chart"></canvas>
         <!--Hide recurring payments-->
@@ -193,7 +193,7 @@ $recurringTable = array_slice($recurringTable, 0, 6) //7 upcoming payments
     </div>
     <div class="flex-zone flex-zone-right">
       <div class="flex-container flex-container-right">
-        <h2><a href="#">Latest spendings</a></h2>
+        <h2><a href="advanced.php">Latest spendings</a></h2>
         <table class="right-table">
           <thead>
             <tr>
