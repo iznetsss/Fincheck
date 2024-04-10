@@ -1,3 +1,3 @@
 <header>
-    <img src="img/logo.png" width="200px">
+    <a href="dashboard.php"> <img src="img/logo.png" width="200px"></a>
 </header>

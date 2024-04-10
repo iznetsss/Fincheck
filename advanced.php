@@ -6,8 +6,11 @@
         $row[1] = date('d.m', strtotime($row[1]));
         array_push($rows, $row);
       }
-      rsort($rows);
-      
+      usort($rows, function($a, $b) {
+        return strtotime($b[1]) - strtotime($a[1]);
+      });
+    
+    fclose($file);
   }
 ?>
 <!DOCTYPE html>
