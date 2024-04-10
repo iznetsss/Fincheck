@@ -13,7 +13,6 @@ isset($_POST['registerButton']) && $_POST['registerButton'] == "Register" &&
         $emailError = "<span>Invalid email address.</span>";
         array_push($arrErrors, $emailError);
     }
-
     //Check password length.
     if (strlen($_POST['password']) < 8 || strlen($_POST['passwordConfirm'] < 8)) {
         $error = TRUE;
@@ -33,7 +32,6 @@ isset($_POST['registerButton']) && $_POST['registerButton'] == "Register" &&
         $passwordMatch = "<span>The passwords do not match.</span>";
         array_push($arrErrors, $passwordMatch);
     }
-
     //Check username
     if(!preg_match('/^[a-zA-Z0-9_-]{1,12}$/', $_POST['username']))
     {
@@ -45,52 +43,48 @@ isset($_POST['registerButton']) && $_POST['registerButton'] == "Register" &&
     //SQL STUFF
     if ($error == FALSE) {
         //Login into db
-        $server = "127.0.1.1"; // anysql.itcollege.ee
-        $user = "root"; // ICS0008_WT_4
-        $password = "1234"; // 14b9a69f0e86
-        $database = "ICS0008_4";
-        $mysqli = new mysqli($server, $user, $password, $database);
-        if ($mysqli->connect_error) {
-            echo"<script>alert('Connection to DB failed');</script>";
-            die;
-        }
-        else 
-        {
-            // Reg variables
-            $email = $_POST['email'];
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            
-            
-            // Check if the user with the given email or username already exists
-            $query = "SELECT * FROM users WHERE email = ? OR username = ?";
-            $stmt = $mysqli->prepare($query);
-            $stmt->bind_param("ss", $email, $username);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            
-            if ($result->num_rows > 0) {
-                // User with the provided email or username already exists
-                $error = TRUE;
-                $userExistsError = "<span>User with this email or username already exists.</span>";
-                array_push($arrErrors, $userExistsError);
+        require ("includes/sql_connect.php");
+        // Reg variables
+        $email = $_POST['email'];
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        
+        // Check if the user with the given email or username already exists
+        $query = "SELECT * FROM users WHERE email = ? OR username = ?";
+        $stmt = $link->prepare($query);
+        $stmt->bind_param("ss", $email, $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            // User with the provided email or username already exists
+            $error = TRUE;
+            $userExistsError = "<span>User with this email or username already exists.</span>";
+            array_push($arrErrors, $userExistsError);
+        } else {
+            // User does not exist, add the user to the database
+            $query = "INSERT INTO users (email, username, pass) VALUES (?, ?, ?)";
+            $stmt = $link->prepare($query);
+            $stmt->bind_param("sss", $email, $username, $hashed_password);
+            if ($stmt->execute()) {
+                $confirmation = "<span>Your account has been created.</span>";
             } else {
-                // User does not exist, add the user to the database
-                $query = "INSERT INTO users (email, username, pass) VALUES (?, ?, ?)";
-                $stmt = $mysqli->prepare($query);
-                $stmt->bind_param("sss", $email, $username, $hashed_password);
-                if ($stmt->execute()) {
-                    $confirmation = "<span>Your account has been created.</span>";
-                } else {
-                    $error = TRUE;
-                    $databaseAddingError = "<span>Error creating your account. Please try again later.</span>";
-                    array_push($arrErrors, $databaseAddingError);
-                }
+                $error = TRUE;
+                $databaseAddingError = "<span>Error creating your account. Please try again later.</span>";
+                array_push($arrErrors, $databaseAddingError);
             }
-            
-            $stmt->close();
         }
+        $stmt->close();
+        $incomesName = $username."_incomes";
+        $spendingsName = $username."_spendings";
+        $recurringName = $username."_recurring";
+        $categoriesName = $username."_categories";
+        
+        $link -> query("CREATE TABLE " . $incomesName . " (ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, income_date DATE NOT NULL, category VARCHAR(30) NOT NULL, amount INT NOT NULL, spending_comment VARCHAR(100), recurring BOOL NOT NULL);");
+        $link -> query("CREATE TABLE " . $spendingsName . " (ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, spending_date DATE NOT NULL, category VARCHAR(30) NOT NULL, amount FLOAT NOT NULL, income_comment VARCHAR(100), recurring BOOL NOT NULL);");
+        $link -> query("CREATE TABLE " . $recurringName . " (ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, recurring_date DATE NOT NULL, category VARCHAR(30) NOT NULL, amount FLOAT NOT NULL, periodicity VARCHAR(30) NOT NULL);");
+        $link -> query("CREATE TABLE " . $categoriesName . " (ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, category VARCHAR(30) NOT NULL);");                         
     }
 
 
