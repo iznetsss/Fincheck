@@ -1,4 +1,6 @@
 <?php
+
+echo number_format(floatval(400000), 2, ".", "");
 $amountErrorExpenses = $typeErrorExpenses = $dateErrorExpenses = $amountErrorIncome = $typeErrorIncome = $dateErrorIncome = '';
 
 function expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses) {
