@@ -1,4 +1,6 @@
 <?php
+
+echo number_format(floatval(400000), 2, ".", "");
 $amountErrorExpenses = $typeErrorExpenses = $dateErrorExpenses = $amountErrorIncome = $typeErrorIncome = $dateErrorIncome = '';
 
 function expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses) {
@@ -59,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
             $amountErrorExpenses = "<span style='color:red'>Wrong number input</span><br>"; // Amount error message
         }
         //Converting $amount to float, rounding, and converting back to string
-        $amount = number_format(floatval($amount), 2);
+        $amount = number_format(floatval($amount), 2, ".", "");
 
         $type = $_POST['expense-type']; // Get type
         if (file_exists("data/spending_categories.csv")) {

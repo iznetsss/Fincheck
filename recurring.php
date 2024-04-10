@@ -91,9 +91,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
     }
   }
 }
-
+/*
 $file = fopen("data/recurring.csv", "r");
+$arrRecurring = [];
 while (($data = fgetcsv($file, 1000, ";")) !== false) {
+  array_push($arrRecurring, $data);
+fclose($file);
+foreach ($arrRecurring as $payment) {
+  if (strtotime($payment[1]) <= strtotime('today')) {
+    $arrPayment = [
+      ['Date'] = 
+    ]
+    $paymentDate = $payment[1];
+    $pamentName = $payment[0];
+    $paymentAmount = $payment[2];
+    $paymentRegular = $payment[3];
+    
+  }
+}
     if ($data[3] == "monthly") {
         $date = $data[1];
         $name = $data[0];
@@ -110,7 +125,8 @@ while (($data = fgetcsv($file, 1000, ";")) !== false) {
         }
     }
 }
-fclose($file);
+*/
+
 
 
 //Recurring table.
