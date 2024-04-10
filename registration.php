@@ -1,4 +1,7 @@
 <?php
+//if users table does not exist, create it.
+
+//Form STUFF
 $arrErrors = [];
 if($_SERVER['REQUEST_METHOD'] === 'POST' && 
 isset($_POST['registerButton']) && $_POST['registerButton'] == "Register" &&
@@ -7,27 +10,27 @@ isset($_POST['registerButton']) && $_POST['registerButton'] == "Register" &&
     //Check email.
     if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         $error = TRUE;
-        $emailError = "Invalid email address.";
+        $emailError = "<span>Invalid email address.</span>";
         array_push($arrErrors, $emailError);
     }
 
     //Check password length.
     if (strlen($_POST['password']) < 8 || strlen($_POST['passwordConfirm'] < 8)) {
         $error = TRUE;
-        $passwordLengthError = "The password should contain at least 8 characters.";
+        $passwordLengthError = "<span>The password should contain at least 8 characters.</span>";
         array_push($arrErrors, $passwordLengthError);
     }
     //Check password pattern.
     $passwordPattern = "/^[a-zA-Z0-9~`!@#$%^&*()_+=:;<,>.?'-]+$/";
     if (!preg_match($passwordPattern, $_POST['password']) || !preg_match($passwordPattern, $_POST['passwordConfirm'])) {
         $error = TRUE;
-        $passwordRegxError = "The password can contain letters, numbers, and the following characters (~`!@#$%^&*()_+=:;<,>.?'-).";
+        $passwordRegxError = "<span>The password can contain letters, numbers, and the following characters (~`!@#$%^&*()_+=:;<,>.?'-).</span>";
         array_push($arrErrors, $passwordRegxError);
     }
     //Check if passwords are the same.
     if ($_POST['password'] != $_POST['passwordConfirm']) {
         $error = TRUE;
-        $passwordMatch = "The passwords do not match.";
+        $passwordMatch = "<span>The passwords do not match.</span>";
         array_push($arrErrors, $passwordMatch);
     }
 
@@ -35,7 +38,7 @@ isset($_POST['registerButton']) && $_POST['registerButton'] == "Register" &&
     if(!preg_match('/^[a-zA-Z0-9_-]{1,12}$/', $_POST['username']))
     {
         $error = TRUE;
-        $usernameError = "You can use letters, numbers, underscore, dash and max length is 12.";
+        $usernameError = "<span>You can use letters, numbers, underscore, dash and max length is 12.</span>";
         array_push($arrErrors, $usernameError);
     }
 
@@ -70,7 +73,7 @@ isset($_POST['registerButton']) && $_POST['registerButton'] == "Register" &&
             if ($result->num_rows > 0) {
                 // User with the provided email or username already exists
                 $error = TRUE;
-                $userExistsError = "<p>User with this email or username already exists.</p>";
+                $userExistsError = "<span>User with this email or username already exists.</span>";
                 array_push($arrErrors, $userExistsError);
             } else {
                 // User does not exist, add the user to the database
@@ -78,10 +81,10 @@ isset($_POST['registerButton']) && $_POST['registerButton'] == "Register" &&
                 $stmt = $mysqli->prepare($query);
                 $stmt->bind_param("sss", $email, $username, $hashed_password);
                 if ($stmt->execute()) {
-                    $confirmation = "<p>Your account has been created.</p>";
+                    $confirmation = "<span>Your account has been created.</span>";
                 } else {
                     $error = TRUE;
-                    $databaseAddingError = "<p>Error creating your account. Please try again later.</p>";
+                    $databaseAddingError = "<span>Error creating your account. Please try again later.</span>";
                     array_push($arrErrors, $databaseAddingError);
                 }
             }
