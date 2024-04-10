@@ -110,8 +110,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
             $expenseData['type'] = $type;
             $expenseData['amount'] = $amount;
             $expenseData['note'] = $note; 
-            $expenseData['recurring'] = "No"; //Recurring is always "No"
+            $expenseData['recurring'] = FALSE; //Recurring is always "No"
             
+            require ("includes/sql_connect.php");
+
+            $link -> query("INSERT INTO kirrshew_spendings (spending_date, category, amount, spending_comment, recurring) VALUES ()")
 
             
             
