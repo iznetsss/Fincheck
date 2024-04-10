@@ -1,6 +1,4 @@
 <?php
-
-echo number_format(floatval(400000), 2, ".", "");
 $amountErrorExpenses = $typeErrorExpenses = $dateErrorExpenses = $amountErrorIncome = $typeErrorIncome = $dateErrorIncome = '';
 
 function expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses) {
@@ -102,30 +100,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
 
         if (empty($amountErrorExpenses) && empty($typeErrorExpenses) && empty($dateErrorExpenses)) 
         {
-            $csv_file_path = 'data/expenses.csv';
-            $expenseData = array(); 
-            // Set data into array
-            $expenseData['count'] = count(file($csv_file_path)) + 1;
-            $expenseData['date'] = $date;
-            $expenseData['type'] = $type;
-            $expenseData['amount'] = $amount;
-            $expenseData['note'] = $note; 
-            $expenseData['recurring'] = FALSE; //Recurring is always "No"
-            
             require ("includes/sql_connect.php");
-
-            $link -> query("INSERT INTO kirrshew_spendings (spending_date, category, amount, spending_comment, recurring) VALUES ()")
-
-            
-            
-            if (!file_exists($csv_file_path)) {
-                touch($csv_file_path);
-                chmod($csv_file_path, 0777); 
-            }
-            $csv_file = fopen($csv_file_path, 'a');
-            fputcsv($csv_file, $expenseData, ';');
-            fclose($csv_file);
-
+            $link -> query("INSERT INTO kirrshew_spendings (spending_date, category, amount, spending_comment, recurring) 
+                            VALUES ('$date', '$type', '$amount', '$note', FALSE);");
             $checkSumbissionExpenses = TRUE;
         }
     }
@@ -202,25 +179,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
          
         if (empty($amountErrorIncome) && empty($typeErrorIncome) && empty($dateErrorIncome)) 
         {
-            $incomeData = array(); 
-            // Set data into array
-            $incomeData['count'] = count(file('data/incomes.csv')) + 1;
-            $incomeData['date'] = $date;
-            $incomeData['type'] = $type;
-            $incomeData['amount'] = $amount;
-            $incomeData['note'] = $note; 
-            $incomeData['recurring'] = "No"; //Recurring is always "No"
-            
-            if (!file_exists('data/incomes.csv')) {
-                touch('data/incomes.csv');
-                chmod('data/incomes.csv', 0777); 
-            }
-    
-            $csv_file = fopen('data/incomes.csv', 'a');
-            fputcsv($csv_file, $incomeData, ';');
-            fclose($csv_file);
-
-            $checkSumbissionIncome = TRUE;
+            require ("includes/sql_connect.php");
+            $link -> query("INSERT INTO kirrshew_incomes (income_date, category, amount, income_comment, recurring) 
+                            VALUES ('$date', '$type', '$amount', '$note', FALSE);");
+            $checkSumbissionExpenses = TRUE;
         }
     }
 }
