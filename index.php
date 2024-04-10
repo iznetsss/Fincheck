@@ -1,35 +1,35 @@
 <?php
+
 if($_SERVER['REQUEST_METHOD'] === 'POST' && 
 isset($_POST['loginButton']) && $_POST['loginButton'] == "Login" &&
 !empty($_POST['email']) && !empty($_POST['password'])) {
+
+    include_once("includes/sql_connect.php");
     //Check email.
     if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         $error = "Invalid email address.";
     }
-    if (!file_exists("data/users.csv")) {
+    $email = $_POST['email'];
+    //Check if email exists.
+    $query = ("SELECT EXISTS (SELECT 1 FROM users WHERE email = '$email') as email_exists;");
+    $result = mysqli_query($link, $query);
+    $row = mysqli_fetch_assoc($result);
+    $email_exists = $row["email_exists"];
+    if (!$email_exists) {
         $error = "User with this email is not registered.";
     }
-    if (!isset($error) && file_exists("data/users.csv")) {
-        $file = fopen("data/users.csv", "r");
-        $found = FALSE;
-        while (($user = fgetcsv($file, 1000, ";")) !== FALSE) {
-            if ($user[0] == $_POST['email']) {
-                if (password_verify($_POST['password'], $user[1])) {
-                    fclose($file);
-                    header("Location: dashboard.php");
-                    exit();
-                }
-                else {
-                    fclose($file);
-                    $found = TRUE;
-                    $error = "Incorrect password.";
-                    break;
-                }
-            }
+    else {
+        //Check if the password is correct.
+        $query = ("SELECT pass FROM users WHERE email = '$email'");
+        $result = mysqli_query($link, $query);
+        $row = mysqli_fetch_assoc($result);
+        $pass = $row["pass"];
+        if (password_verify($_POST['password'], $pass)) {
+            header("Location: dashboard.php");
+            exit();
         }
-        if ($found == FALSE) {
-            fclose($file);
-            $error = "User with this email is not registered.";
+        else {
+            $error = "Incorrect password.";
         }
     }
 }

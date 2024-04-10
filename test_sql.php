@@ -1,17 +1,17 @@
 <?php
-$server = "127.0.0.1";
-$user = "root";
-$password = "Gorgorod1460";
-$database = "ICS0008_4";
-$link = new mysqli($server, $user, $password, $database);
-if ($link->connect_error) {
-    die("Connection to DB failed: " . $link->connect_error);
-}
-$link -> query("DROP TABLE users;");
-$link -> query("CREATE TABLE IF NOT EXISTS users (
-                ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL, 
-                username VARCHAR(12) NOT NULL, 
-                email VARCHAR(320) NOT NULL, 
-                pass VARCHAR(100) NOT NULL);");
+include_once("includes/sql_connect.php");
+$email = "test@tt.com";
+//Check if email exists.
+$query = ("SELECT EXISTS (SELECT 1 FROM users WHERE email = '$email') as email_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$email_exists = $row["email_exists"];
 
-?>
+if ($email_exists) {
+    echo "YES MOTHERFUCKER";
+}
+$query = ("SELECT pass FROM users WHERE email = '$email'");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$pass = $row["pass"];
+echo $pass;
