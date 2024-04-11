@@ -1,19 +1,39 @@
 <?php
 require ("includes/session_check.php");
+require ("includes/sql_connect.php");
 
-  if (file_exists("data/expenses.csv")) {
-      $rows = [];
-      $file = fopen("data/expenses.csv", "r");
-      while (($row = fgetcsv($file, 1000, ";")) !== FALSE) {
-        $row[1] = date('d.m', strtotime($row[1]));
-        array_push($rows, $row);
-      }
-      usort($rows, function($a, $b) {
-        return strtotime($b[1]) - strtotime($a[1]);
-      });
-    
-    fclose($file);
-  }
+$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'spendings') as table_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$tableExists = $row['table_exists'];
+if (!$tableExists) {
+    die('Database error: no spending table found.');
+}    
+//if table exists, getting all needed data
+$tableRows = [];
+$query = ("SELECT spending_date, category, amount, spending_comment, recurring FROM spendings 
+           WHERE username = '$username';");
+$result = mysqli_query($link, $query);
+if ($result->num_rows == 0) {
+
+}
+else {
+    while($row = $result->fetch_assoc()) {
+        $spendingDate = date('d.m.Y', strtotime($row['spending_date']));
+        $spendingCategory = $row['category'];
+        $spendingAmount = $row['amount'];
+        $spendingComment = $row['spending_comment'];
+        if ($row['recurring']) {
+          $spendingRecurring = 'Yes';
+        }
+        else {
+          $spendingRecurring = 'No';
+        }
+        $tableRow = [$spendingDate, $spendingCategory, $spendingAmount, $spendingComment, $spendingRecurring];
+        array_push($tableRows, $tableRow);
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,8 +49,8 @@ require ("includes/session_check.php");
 </head>
 
 <body>
-  <?php include 'includes/header.php'; ?>
-  <?php include 'includes/sidebar.php'; ?>
+  <?php require 'includes/header.php'; ?>
+  <?php require 'includes/sidebar.php'; ?>
   <div class="content">
     <table>
         <thead>
@@ -44,19 +64,14 @@ require ("includes/session_check.php");
         </thead>
         <tbody>
           <?php
-          if (isset($rows)) {
-            foreach($rows as $row) {
-              $noNumber = array_slice($row, 1, -1);
+          if (isset($tableRows)) {
+            foreach($tableRows as $row) {
               echo "<tr>";
-              foreach($noNumber as $cell) {
+              foreach($row as $cell) {
                 echo "<td>";
                 echo $cell;
                 echo "</td>";
               }
-              echo "<td>";
-              echo '<span class="cell-left">'.end($row).'</span>';
-              echo '<span class="cell-right"><a href="edit.php?id='.$row[0].'">Edit</a></span>';
-              echo "</td>";
               echo "</tr>";
             }
           }
