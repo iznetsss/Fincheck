@@ -189,10 +189,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
 }
 //Graph logic.
 //Labels (days on x-axis).
-$currentDate = new DateTime();
-$currentYear = $currentDate->format('Y');
-$currentMonth = $currentDate->format('m');
-$currentDay = date("j");
 $daysInMonth = date("t");
 $spendingsByDays = [];
 //Array with all days in current month as keys. Values are set to 0 by default.

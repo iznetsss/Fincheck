@@ -1,80 +1,71 @@
 <?php
 require ("includes/session_check.php");
+require ("includes/sql_connect.php");
 
 //- - - - -Graph logic.- - - - -
-$currentDate = new DateTime();
-$currentYear = $currentDate->format('Y');
-$currentMonth = $currentDate->format('m');
-$currentDay = date("j");
 $daysInMonth = date("t");
-
-if (file_exists("data/expenses.csv")) {
-    $spendings = [];
-    $file = fopen("data/expenses.csv", "r");
-    while (($spending = fgetcsv($file, 1000, ";")) !== FALSE) {
-        array_push($spendings, [$spending[1], $spending[3]]);
-    }
-    fclose($file);
-    $spendingsByDays = [];
-    for ($i = 1; $i <= $currentDay; $i++) {
-        $spendingsByDays[$i] = 0;
-    }
-    foreach ($spendings as $spending) {
-      $spendingDate = new DateTime($spending[0]);
-      $spendingYear = $spendingDate->format('Y');
-      $spendingMonth = $spendingDate->format('m');
-      if ($currentYear === $spendingYear && $currentMonth === $spendingMonth) {
-          if (substr($spending[0], 8, 2)[0] != "0") {
-              $day = substr($spending[0], 8, 2);
-          }
-          else {
-              $day = substr($spending[0], 9, 1);
-          }
-          if ($day <= $currentDay) {
-              $spendingsByDays[$day] += floatval($spending[1]);
-          }
-      }
-   }
+$spendingsByDays = [];
+//Array with all days in current month as keys. Values are set to 0 by default.
+for ($i = 1; $i <= $daysInMonth; $i++) {
+    $spendingsByDays[$i] = 0;
+    $incomesByDays[$i] = 0;
 }
-if (file_exists("data/incomes.csv")) {
-  $incomes = [];
-  $file = fopen("data/incomes.csv", "r");
-  while (($income = fgetcsv($file, 1000, ";")) !== FALSE) {
-      array_push($incomes, [$income[1], $income[3]]);
-  }
-  fclose($file);
-  $incomesByDays = [];
-  for ($i = 1; $i <= $currentDay; $i++) {
-      $incomesByDays[$i] = 0;
-  }
-  foreach ($incomes as $income) {
-      $incomeDate = new DateTime($income[0]);
-      $incomeYear = $incomeDate->format('Y');
-      $incomeMonth = $incomeDate->format('m');
-      if ($currentYear === $incomeYear && $currentMonth === $incomeMonth) {
-          if (substr($income[0], 8, 2)[0] != "0") {
-              $day = substr($income[0], 8, 2);
-          }
-          else {
-              $day = substr($income[0], 9, 1);
-          }
-          if ($day <= $currentDay) {
-              $incomesByDays[$day] += floatval($income[1]);
-          }
-      }
-  }
+//Checking if the table exists.
+$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'spendings') as table_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$tableExists = $row['table_exists'];
+if (!$tableExists) {
+    die('Database error: no spending table found.');
+}    
+//if table exists, getting spendings by days
+$query = ("SELECT DAY(spending_date), amount FROM spendings 
+           WHERE username = '$username' AND 
+           YEAR(spending_date) = YEAR(CURDATE()) AND
+           MONTH(spending_date) = MONTH(CURDATE());");
+
+$result = mysqli_query($link, $query);
+if ($result->num_rows == 0) {
+
+}
+else {
+    while($row = $result->fetch_assoc()) {
+        $spendingDate = (int) $row['DAY(spending_date)'];
+        $spendingAmount = $row['amount'];
+        $spendingsByDays[$spendingDate] += floatval($spendingAmount);
+    }
+}
+$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'incomes') as table_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$tableExists = $row['table_exists'];
+if (!$tableExists) {
+    die('Database error: no income table found.');
+}    
+$totalIncomes = 0.0;
+$query = ("SELECT amount FROM incomes 
+           WHERE username = '$username' AND 
+           YEAR(income_date) = YEAR(CURDATE()) AND
+           MONTH(income_date) = MONTH(CURDATE());");
+
+$result = mysqli_query($link, $query);
+if ($result->num_rows == 0) {
+
+}
+else {
+    while($row = $result->fetch_assoc()) {
+        $incomeAmount = $row['amount'];
+        $totalIncomes += floatval($incomeAmount);
+    }
 }
 
 //- - - - -BALANCE LOGIC.- - - - -
-$total_spendings = 0.00;
+$totalSpendings = 0.00;
 foreach ($spendingsByDays as $spending) {
-  $total_spendings += floatval($spending);
+  $totalSpendings += floatval($spending);
 }
-$total_incomes = 0.00;
-foreach ($incomesByDays as $income) {
-  $total_incomes += floatval($income);
-}
-$balance = $total_incomes - $total_spendings;
+
+$balance = $totalIncomes - $totalSpendings;
 
 //- - - - -LATEST EXPENSES TABLE.- - - - -
 $file = fopen("data/expenses.csv", "r");
@@ -152,11 +143,11 @@ $recurringTable = array_slice($recurringTable, 0, 6) //7 upcoming payments
         </div>
         <div class="balance-div">
           <h2><a href="money_flow.php" title="New spending">Spent<i class='bx bx-minus'></i></a></h2>
-          <h1><?php echo number_format(floatval($total_spendings), 2); ?></h1>
+          <h1><?php echo number_format(floatval($totalSpendings), 2); ?></h1>
         </div>
         <div class="balance-div">
           <h2><a href="money_flow.php" title="New income">Earned<i class='bx bx-plus'></i></a></h2>
-          <h1><?php echo number_format(floatval($total_incomes), 2); ?></h1>
+          <h1><?php echo number_format(floatval($totalIncomes), 2); ?></h1>
         </div>
       </div>
       <div class="simple">
