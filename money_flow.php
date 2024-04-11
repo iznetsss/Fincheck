@@ -1,13 +1,6 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['user_id'])) {
-  header("Location: index.php");
-  exit; 
-}
-
-
-echo number_format(floatval(400000), 2, ".", "");
+require ("includes/session_check.php");
+require ("includes/sql_connect.php");
 $amountErrorExpenses = $typeErrorExpenses = $dateErrorExpenses = $amountErrorIncome = $typeErrorIncome = $dateErrorIncome = '';
 
 function expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses) {
@@ -106,12 +99,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
         {
             $note = str_replace("\r\n", " ", $_POST['expense-note']);
         }
-
+        //Writing to db
         if (empty($amountErrorExpenses) && empty($typeErrorExpenses) && empty($dateErrorExpenses)) 
         {
-            require ("includes/sql_connect.php");
-            $link -> query("INSERT INTO kirrshew_spendings (spending_date, category, amount, spending_comment, recurring) 
-                            VALUES ('$date', '$type', '$amount', '$note', FALSE);");
+
+            $link -> query("INSERT INTO spendings (username, spending_date, category, amount, spending_comment, recurring) 
+                            VALUES ('$username', '$date', '$type', '$amount', '$note', FALSE);");
             $checkSumbissionExpenses = TRUE;
         }
     }
@@ -184,18 +177,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         {
             $note = str_replace("\r\n", " ", $_POST['income-note']);
         }
-
-         
+        //Writing to db.
         if (empty($amountErrorIncome) && empty($typeErrorIncome) && empty($dateErrorIncome)) 
         {
-            require ("includes/sql_connect.php");
-            $link -> query("INSERT INTO kirrshew_incomes (income_date, category, amount, income_comment, recurring) 
-                            VALUES ('$date', '$type', '$amount', '$note', FALSE);");
+            
+            $link -> query("INSERT INTO incomes (username, income_date, category, amount, income_comment, recurring) 
+                            VALUES ('$username', '$date', '$type', '$amount', '$note', FALSE);");
             $checkSumbissionExpenses = TRUE;
         }
     }
 }
-
 //Graph logic.
 //Labels (days on x-axis).
 $currentDate = new DateTime();
@@ -203,64 +194,63 @@ $currentYear = $currentDate->format('Y');
 $currentMonth = $currentDate->format('m');
 $currentDay = date("j");
 $daysInMonth = date("t");
+$spendingsByDays = [];
+//Array with all days in current month as keys. Values are set to 0 by default.
+for ($i = 1; $i <= $daysInMonth; $i++) {
+    $spendingsByDays[$i] = 0;
+    $incomesByDays[$i] = 0;
+}
+//Checking if the table exists.
+$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'spendings') as table_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$tableExists = $row['table_exists'];
+if (!$tableExists) {
+    die('Database error: no spending table found.');
+}    
+//if table exists, getting spendings by days
+$query = ("SELECT DAY(spending_date), amount FROM spendings 
+           WHERE username = '$username' AND 
+           YEAR(spending_date) = YEAR(CURDATE()) AND
+           MONTH(spending_date) = MONTH(CURDATE());");
 
-if (file_exists("data/expenses.csv")) {
-    $spendings = [];
-    $file = fopen("data/expenses.csv", "r");
-    while (($spending = fgetcsv($file, 1000, ";")) !== FALSE) {
-        array_push($spendings, [$spending[1], $spending[3]]);
-    }
-    fclose($file);
-    $spendingsByDays = [];
-    for ($i = 1; $i <= $currentDay; $i++) {
-        $spendingsByDays[$i] = 0;
-    }
-    foreach ($spendings as $spending) {
-        $spendingDate = new DateTime($spending[0]);
-        $spendingYear = $spendingDate->format('Y');
-        $spendingMonth = $spendingDate->format('m');
-        if ($currentYear === $spendingYear && $currentMonth === $spendingMonth) {
-            if (substr($spending[0], 8, 2)[0] != "0") {
-                $day = substr($spending[0], 8, 2);
-            }
-            else {
-                $day = substr($spending[0], 9, 1);
-            }
-            if ($day <= $currentDay) {
-                $spendingsByDays[$day] += floatval($spending[1]);
-            }
-        }
+$result = mysqli_query($link, $query);
+if ($result->num_rows == 0) {
+
+}
+else {
+    while($row = $result->fetch_assoc()) {
+        $spendingDate = (int) $row['DAY(spending_date)'];
+        $spendingAmount = $row['amount'];
+        $spendingsByDays[$spendingDate] += floatval($spendingAmount);
     }
 }
 
-if (file_exists("data/incomes.csv")) {
-    $incomes = [];
-    $file = fopen("data/incomes.csv", "r");
-    while (($income = fgetcsv($file, 1000, ";")) !== FALSE) {
-        array_push($incomes, [$income[1], $income[3]]);
-    }
-    fclose($file);
-    $incomesByDays = [];
-    for ($i = 1; $i <= $currentDay; $i++) {
-        $incomesByDays[$i] = 0;
-    }
-    foreach ($incomes as $income) {
-        $incomeDate = new DateTime($income[0]);
-        $incomeYear = $incomeDate->format('Y');
-        $incomeMonth = $incomeDate->format('m');
-        if ($currentYear === $incomeYear && $currentMonth === $incomeMonth) {
-            if (substr($income[0], 8, 2)[0] != "0") {
-                $day = substr($income[0], 8, 2);
-            }
-            else {
-                $day = substr($income[0], 9, 1);
-            }
-            if ($day <= $currentDay) {
-                $incomesByDays[$day] += floatval($income[1]);
-            }
-        }
+//INCOMES
+$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'incomes') as table_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$tableExists = $row['table_exists'];
+if (!$tableExists) {
+    die('Database error: no income table found.');
+}    
+$query = ("SELECT DAY(income_date), amount FROM incomes 
+           WHERE username = '$username' AND 
+           YEAR(income_date) = YEAR(CURDATE()) AND
+           MONTH(income_date) = MONTH(CURDATE());");
+
+$result = mysqli_query($link, $query);
+if ($result->num_rows == 0) {
+
+}
+else {
+    while($row = $result->fetch_assoc()) {
+        $incomeDate = (int) $row['DAY(income_date)'];
+        $incomeAmount = $row['amount'];
+        $incomesByDays[$incomeDate] += floatval($incomeAmount);
     }
 }
+
 //Categories.
 if (file_exists("data/spending_categories.csv")) {
     $file = fopen("data/spending_categories.csv", "r");

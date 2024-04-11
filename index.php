@@ -26,9 +26,11 @@ isset($_POST['loginButton']) && $_POST['loginButton'] == "Login" &&
         if (password_verify($_POST['password'], $pass)) 
         {
             $query = ("SELECT username FROM users WHERE email = '$email'");
-            $resultUsername = mysqli_query($link, $query);
+            $result = mysqli_query($link, $query);
+            $row = mysqli_fetch_assoc($result);
+            $username = $row['username'];
             session_start();
-            $_SESSION['user_id'] = $resultUsername;
+            $_SESSION['user_id'] = $username;
             header("Location: dashboard.php");
             exit();
         }

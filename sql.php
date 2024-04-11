@@ -9,6 +9,7 @@ if ($mysqli->connect_error) {
     echo"<script>alert('Connection to DB failed');</script>";
     die;
 }
+/*
 else 
 {
     echo "Connected to DB successfully";
@@ -45,4 +46,7 @@ else
     
     $stmt->close();
 }
+*/
+$date = new DateTime(2024-02-04);
+echo (string) (int) $date->format('m');
 ?>

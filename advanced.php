@@ -1,10 +1,5 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['user_id'])) {
-  header("Location: index.php");
-  exit; 
-}
+require ("includes/session_check.php");
 
   if (file_exists("data/expenses.csv")) {
       $rows = [];
