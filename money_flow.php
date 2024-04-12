@@ -290,6 +290,7 @@ if (file_exists("data/income_categories.csv")) {
                         echo "</option>";
                     }
                     ?>
+                    <option><input type="text"></option>
                 </select> 
                 <label class="expense-type-label" for="expense-date">Date:</label>    
                 <input class="calender" type="date" id="expense-date" name="expense-date"><br><br>
