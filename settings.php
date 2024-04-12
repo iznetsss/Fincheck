@@ -1,6 +1,6 @@
 <?php
 require ("includes/session_check.php");
-
+require ("includes/sql_connect.php");
 
 $arrErrors = [];
 if($_SERVER['REQUEST_METHOD'] === 'POST' && 
@@ -20,58 +20,44 @@ isset($_POST['deleteButton']) && $_POST['deleteButton'] == "Delete account" &&
         $passwordMatchError = "The passwords do not match.";
         array_push($arrErrors, $passwordMatchError);
     }
-    //Check if user with this email exists.
-    if ($error == FALSE && !file_exists("data/users.csv")) {
-        $error = TRUE;
-        $noUserError = "User with this email is not registered.";
-        array_push($arrErrors, $noUserError);
-    }
-    //Creating array of users.
-    if ($error == FALSE && file_exists("data/users.csv")) {
-        $users = [];
-        $file = fopen("data/users.csv", "r");
-        $found = FALSE;
-        while (($user = fgetcsv($file, 1000, ";")) !== FALSE) {
-            if ($user[0] != $_POST['email']) {
-                array_push($users, $user);
-            }
-            else if ($user[0] == $_POST['email']) {
-                if (password_verify($_POST['password'], $user[1])) {
-                    $found = TRUE;
-                }
-                else {
-                    $found = TRUE;
-                    $error = TRUE;
-                    unset($users); //Deleting the arrays of users
-                    $incorrectPasswordError = "Incorrect password.";
-                    array_push($arrErrors, $incorrectPasswordError);
-
-                    break;
-                }
-            }
-        }
-        if ($found == FALSE) {
+    $email = $_POST['email'];
+    if (!$error) {
+        //Check if email exists.
+        $query = ("SELECT EXISTS (SELECT 1 FROM users WHERE email = '$email') as email_exists;");
+        $result = mysqli_query($link, $query);
+        $row = mysqli_fetch_assoc($result);
+        $email_exists = $row["email_exists"];
+        if (!$email_exists) {
             $error = TRUE;
-            unset($users);
-            $noUserError = "User with this email is not registered.";
-            array_push($arrErrors, $noUserError);
+            $noEmailError = "User with this email is not registered.";
+            array_push($arrErrors, $noEmailError);
         }
-        fclose($file);
     }
-    //Creating a temp file.
-    if ($error == FALSE) {
-        $tempFile = tempnam("data/", "_csv"); 
-        if (($file = fopen($tempFile, "w")) !== false) {
-            foreach ($users as $user) {
-            fputcsv($file, $user, ";");  // Write lines back to CSV format
-            }
-            fclose($file);
+    if (!$error) {
+        //Check if the password is correct.
+        $query = ("SELECT pass FROM users WHERE email = '$email'");
+        $result = mysqli_query($link, $query);
+        $row = mysqli_fetch_assoc($result);
+        $pass = $row["pass"];
+        if (password_verify($_POST['password'], $pass)) 
+        {
+            $query = ("SELECT username FROM users WHERE email = '$email'");
+            $result = mysqli_query($link, $query);
+            $row = mysqli_fetch_assoc($result);
+            $username = $row['username'];
+            $link -> query("DELETE FROM users WHERE username = '$username'");
+            $link -> query("DELETE FROM incomes WHERE username = '$username'");
+            $link -> query("DELETE FROM spendings WHERE username = '$username'");
+            $link -> query("DELETE FROM categories WHERE username = '$username'");
+            $link -> query("DELETE FROM recurring WHERE username = '$username'");
         }
-        rename($tempFile, "data/users.csv");
+        else {
+            $error = TRUE;
+            $incorrectPassError = "Incorrect password.";
+            array_push($arrErrors, $incorrectPassError);
+        }
     }
-    
-
-    
+        
 }
 ?>
 
@@ -138,12 +124,12 @@ isset($_POST['deleteButton']) && $_POST['deleteButton'] == "Delete account" &&
                 <input type="submit" class="btn" id="deleteButton" name="deleteButton" value="Delete account">
                 <br>
                 <?php
-                if (isset($error) && $error == TRUE) {
+                if (isset($error) && $error) {
                     foreach ($arrErrors as $err) {
                         printf("%s<br>", $err); 
                     }
                 }
-                else if (isset($error) && $error == FALSE) {
+                else if (isset($error) && !$error) {
                     echo "Done";
                 }
                 ?>
