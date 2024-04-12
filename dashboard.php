@@ -1,11 +1,7 @@
 <?php
 require ("includes/session_check.php");
 require ("includes/sql_connect.php");
-$link -> query("DROP TABLE users;");
-$link -> query("DROP TABLE incomes;");
-$link -> query("DROP TABLE spendings;");
-$link -> query("DROP TABLE recurring;");
-$link -> query("DROP TABLE categories;");
+
 
 //- - - - -Graph logic.- - - - -
 $daysInMonth = date("t");
