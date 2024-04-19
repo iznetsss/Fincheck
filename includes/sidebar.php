@@ -1,3 +1,16 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('logoutLink').addEventListener('click', function() {
+      var confirmLogout = confirm("Are you sure you want to logout?");
+      if (confirmLogout) {
+        fetch('includes/logout.php') 
+          .then(response => window.location.href = 'index.php')  // Redirect after the fetch completes
+      }
+    });
+  });
+</script>
+
+
 <div class="sidebar">
         <ul>
         <li>
@@ -37,10 +50,12 @@
             </a>
         </li>
         <li>
-            <a href="index.php">
+            <a href="javascript:void(0);" id="logoutLink">
             <i class='bx bx-run'></i>
             <span>Logout</span>
             </a>
         </li>
         </ul>
   </div>
+
+  
