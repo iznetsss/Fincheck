@@ -1,6 +1,29 @@
 <?php
 require ("includes/session_check.php");
 require ("includes/sql_connect.php");
+//Categories.
+
+$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'categories') as table_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$tableExists = $row['table_exists'];
+if (!$tableExists) {
+    die('Database error: no categories table found.');
+}  
+$spendingCategories = [];
+$incomeCategories = [];
+$query = ("SELECT category, income FROM categories 
+           WHERE username = '$username'");
+$result = mysqli_query($link, $query);
+while($row = $result->fetch_assoc()) {
+    if ($row['income']) {
+        array_push($incomeCategories, $row['category']);
+    }
+    else {
+        array_push($spendingCategories, $row['category']);
+    }
+}
+
 $amountErrorExpenses = $typeErrorExpenses = $dateErrorExpenses = $amountErrorIncome = $typeErrorIncome = $dateErrorIncome = '';
 
 function expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses) {
@@ -64,17 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
         $amount = number_format(floatval($amount), 2, ".", "");
 
         $type = $_POST['expense-type']; // Get type
-        if (file_exists("data/spending_categories.csv")) {
-            $file = fopen("data/spending_categories.csv", "r");
-            $allowedTypes = fgetcsv($file, 1000, ";");
-            fclose($file);  
-        }
-        else {
-            $allowedTypes = array('Transport', 'Groceries', 'Eating out', 'Coffee', 'Fuel', 'Health & Beauty', 'Clothes', 'Gifts', 'Entertainment', 'Other');
-        }
-        
-
-        if (!in_array($type, $allowedTypes)) 
+        if (!in_array($type, $spendingCategories)) 
         {
             $typeErrorExpenses = "<span style='color:red'>Invalid expense type.<br></span>";
         }
@@ -143,16 +156,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         //Converting $amount to float, rounding, and converting back to string
         $amount = number_format(floatval($amount), 2, ".", "");
 
+        //TYPE
         $type = $_POST['income-type']; // Get type
-        if (file_exists("data/income_categories.csv")) {
-            $file = fopen("data/income_categories.csv", "r");
-            $allowedTypes = fgetcsv($file, 1000, ";");
-            fclose($file);  
-        }
-        else {
-            $allowedTypes = array('Employment', 'Entrepreneurship', 'Investment', 'Savings', 'Loans', 'Rent', 'Dividends', 'Freelancing', 'Gifts', 'Debt Return', 'Other');
-        }
-        if (!in_array($type, $allowedTypes)) 
+        if (!in_array($type, $incomeCategories)) 
         {
             $typeErrorIncome = "<span style='color:red'>Invalid income type</span><br>";
         }
@@ -247,28 +253,7 @@ else {
     }
 }
 
-//Categories.
 
-$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'categories') as table_exists;");
-$result = mysqli_query($link, $query);
-$row = mysqli_fetch_assoc($result);
-$tableExists = $row['table_exists'];
-if (!$tableExists) {
-    die('Database error: no categories table found.');
-}  
-$spendingCategories = [];
-$incomeCategories = [];
-$query = ("SELECT category, income FROM categories 
-           WHERE username = '$username'");
-$result = mysqli_query($link, $query);
-while($row = $result->fetch_assoc()) {
-    if ($row['income']) {
-        array_push($incomeCategories, $row['category']);
-    }
-    else {
-        array_push($spendingCategories, $row['category']);
-    }
-}
 
 
 
