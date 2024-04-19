@@ -448,6 +448,22 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 });
 </script>
+<!--DO NOT TOUCH THIS-->
+<?php
+if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense']))
+{
+?>
+ <script>
+  document.addEventListener('DOMContentLoaded', function () 
+  {
+    var modalExpenses = document.getElementById("modal-expenses");
+    modalExpenses.style.display = "block";
+    modalExpenses.style.position = "absolute";
+  });
+ </script>
+<?php
+}
+?>
         <div class="balance-div">
           <h2><a href="#" title="New income" id="new-income-btn">Earned<i class='bx bx-plus'></i></a></h2>
           <h1><?php echo number_format(floatval($totalIncomes), 2); ?></h1>
@@ -479,6 +495,22 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 });
 </script>
+<?php
+if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']))
+{
+  /////////////////////////CHECKTHIS/////////////////////////////////////////////////////////////
+?>
+ <script>
+  document.addEventListener('DOMContentLoaded', function () 
+  {
+    var modalIncomes = document.getElementById("modal-incomes");
+    modalIncomes.style.display = "block";
+    modalIncomes.style.position = "absolute";
+  });
+ </script>
+<?php
+}
+?>
 
 
       <div class="simple">
