@@ -15,7 +15,7 @@ $query = ("SELECT spending_date, category, amount, spending_comment, recurring F
            WHERE username = '$username';");
 $result = mysqli_query($link, $query);
 if ($result->num_rows == 0) {
-
+    $noRows = TRUE;
 }
 else {
     while($row = $result->fetch_assoc()) {
@@ -52,6 +52,9 @@ else {
   <?php require 'includes/header.php'; ?>
   <?php require 'includes/sidebar.php'; ?>
   <div class="content">
+    <?php if (isset($noRows)) {?>
+      <span>No spendings has been made yet.</span>
+    <?php } else {?>
     <table>
         <thead>
           <tr>
@@ -78,6 +81,7 @@ else {
           ?>
         </tbody>
     </table>
+    <?php } ?>
   </div>
 
 

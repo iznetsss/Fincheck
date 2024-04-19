@@ -1,37 +1,43 @@
 <?php
 require ("includes/session_check.php");
+require ("includes/sql_connect.php");
 
-$currentDate = new DateTime();
-$currentYear = $currentDate->format('Y');
-$currentMonth = $currentDate->format('m');
+
 //Categories.
-if (file_exists("data/spending_categories.csv")) {
-    $file = fopen("data/spending_categories.csv", "r");
-    $categories = fgetcsv($file, 1000, ";");
-    fclose($file);  
+$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'categories') as table_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$tableExists = $row['table_exists'];
+if (!$tableExists) {
+    die('Database error: no categories table found.');
+}  
+$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'spendings') as table_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$tableExists = $row['table_exists'];
+if (!$tableExists) {
+    die('Database error: no spending table found.');
+} 
+
+$categories = [];
+$query = ("SELECT category FROM categories 
+           WHERE username = '$username' AND income = FALSE");
+$result = mysqli_query($link, $query);
+while($row = $result->fetch_assoc()) {
+    array_push($categories, $row['category']);
 }
 $spendingsByCategories = [];
 foreach ($categories as $category) {
     $spendingsByCategories[$category] = 0;
 }
 
-if (file_exists("data/expenses.csv")) {
-    $spendings = [];
-    $file = fopen("data/expenses.csv", "r");
-    while (($spending = fgetcsv($file, 1000, ";")) !== FALSE) {
-        $spendingDate = new DateTime($spending[1]);
-        $spendingYear = $spendingDate->format('Y');
-        $spendingMonth = $spendingDate->format('m');
-        if ($currentYear === $spendingYear && $currentMonth === $spendingMonth) {
-        array_push($spendings, [$spending[2], $spending[3]]);
-        }
-    }
-    fclose($file);
-    
-    foreach ($spendings as $spending) {
-        $category = $spending[0];
-        $spendingsByCategories[$category] += floatval($spending[1]);
-    }
+$query = ("SELECT category, amount FROM spendings 
+           WHERE username = '$username' AND 
+           YEAR(spending_date) = YEAR(CURDATE()) AND
+           MONTH(spending_date) = MONTH(CURDATE());");
+$result = mysqli_query($link, $query);
+while($row = $result->fetch_assoc()) {
+  $spendingsByCategories[$row['category']] += floatval($row['amount']);
 }
 
 ?>

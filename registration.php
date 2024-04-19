@@ -76,12 +76,18 @@ isset($_POST['registerButton']) && $_POST['registerButton'] == "Register" &&
             }
         }
         $stmt->close();
+        $link -> query("INSERT INTO categories (username, category, income) 
+                        VALUES ('$username', 'Groceries', FALSE), 
+                               ('$username', 'Transport', FALSE), 
+                               ('$username', 'Clothes', FALSE), 
+                               ('$username', 'Gifts', FALSE), 
+                               ('$username', 'Other', FALSE),
+                               ('$username', 'Salary', TRUE),
+                               ('$username', 'Gifts', TRUE),
+                               ('$username', 'Savings', TRUE),
+                               ('$username', 'Dividents', TRUE),
+                               ('$username', 'Other', TRUE)");
         /*
-        $incomesName = $username."_incomes";
-        $spendingsName = $username."_spendings";
-        $recurringName = $username."_recurring";
-        $categoriesName = $username."_categories";
-        
         $link -> query("CREATE TABLE " . $incomesName . " (ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, income_date DATE NOT NULL, category VARCHAR(30) NOT NULL, amount INT NOT NULL, income_comment VARCHAR(100), recurring BOOL NOT NULL);");
         $link -> query("CREATE TABLE " . $spendingsName . " (ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, spending_date DATE NOT NULL, category VARCHAR(30) NOT NULL, amount FLOAT NOT NULL, spending_comment VARCHAR(100), recurring BOOL NOT NULL);");
         $link -> query("CREATE TABLE " . $recurringName . " (ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, recurring_date DATE NOT NULL, category VARCHAR(30) NOT NULL, amount FLOAT NOT NULL, periodicity VARCHAR(30) NOT NULL);");

@@ -248,16 +248,31 @@ else {
 }
 
 //Categories.
-if (file_exists("data/spending_categories.csv")) {
-    $file = fopen("data/spending_categories.csv", "r");
-    $spendingCategories = fgetcsv($file, 1000, ";");
-    fclose($file);  
+
+$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'categories') as table_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$tableExists = $row['table_exists'];
+if (!$tableExists) {
+    die('Database error: no categories table found.');
+}  
+$spendingCategories = [];
+$incomeCategories = [];
+$query = ("SELECT category, income FROM categories 
+           WHERE username = '$username'");
+$result = mysqli_query($link, $query);
+while($row = $result->fetch_assoc()) {
+    if ($row['income']) {
+        array_push($incomeCategories, $row['category']);
+    }
+    else {
+        array_push($spendingCategories, $row['category']);
+    }
 }
-if (file_exists("data/income_categories.csv")) {
-    $file = fopen("data/income_categories.csv", "r");
-    $incomeCategories = fgetcsv($file, 1000, ";");
-    fclose($file);  
-}
+
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -285,12 +300,11 @@ if (file_exists("data/income_categories.csv")) {
                 <select class="expense-type-select" id="expense-type" name="expense-type">
                     <?php
                     foreach ($spendingCategories as $category) {
-                        echo "<option>";
+                        echo '<option value="'.$category.'">';
                         echo $category;
                         echo "</option>";
                     }
                     ?>
-                    <option><input type="text"></option>
                 </select> 
                 <label class="expense-type-label" for="expense-date">Date:</label>    
                 <input class="calender" type="date" id="expense-date" name="expense-date"><br><br>
