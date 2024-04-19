@@ -51,14 +51,36 @@ while($row = $result->fetch_assoc()) {
   <meta charset="utf-8">
   <meta name="authors" content="kisevt, ikuzne">
   <title>Categories•FinCheck</title>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var toggleButton = document.getElementById('toggle');
+    var chart = document.getElementById('categories_chart');
+    var table = document.getElementById('categories_table');
+
+    toggleButton.onclick = function() {
+      if (chart.style.display === 'none') {
+        chart.style.display = 'block';
+        chart.style.position = 'static';
+        table.style.display = 'none';
+        table.style.position = 'fixed';
+      } else {
+        chart.style.display = 'none';
+        table.style.display = 'block';
+        chart.style.position = 'fixed';
+        table.style.position = 'static';
+      }
+    };
+  });
+</script>
+
 </head>
 
 <body>
   <?php include 'includes/header.php'; ?>
   <?php include 'includes/sidebar.php'; ?>
   <div class="content">
-    <h1><a href="categories_table.php">See Table</a></h1>
-    <div class="flex-zone" id="bublik">
+    <h1><a href="#" id="toggle">Change view</a></h1>
+    <div class="flex-zone" id="categories_chart">
       <canvas id="pie-chart"></canvas>
       <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.umd.min.js"></script>
       <script>
@@ -83,6 +105,36 @@ while($row = $result->fetch_assoc()) {
       </script>
     </div>
   </div>
+    <div class="content">
+        <div class="flex-zone" id="categories_table">
+            <table class="expenses-table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Spendings</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if (isset($spendingsByCategories)) {
+                        foreach ($spendingsByCategories as $cat => $sum) {
+                            echo "<tr>";
+                            echo "<td>";
+                            echo $cat;
+                            echo "</td>";
+                            echo "<td>";
+                            echo $sum;
+                            echo "</td>";
+                            echo "</tr>";
+
+                        }
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+      </div>
+
 
 </body>
 
