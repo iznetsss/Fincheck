@@ -51,6 +51,9 @@ isset($_POST['deleteButton']) && $_POST['deleteButton'] == "Delete account" &&
             $link -> query("DELETE FROM categories WHERE username = '$username'");
             $link -> query("DELETE FROM recurring WHERE username = '$username'");
             session_destroy();
+            setcookie("PHPSESSID", "", time()-3600);
+            header("Location: index.php");
+            exit;
         }
         else {
             $error = TRUE;
