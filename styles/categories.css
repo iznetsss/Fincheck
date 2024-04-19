@@ -3,7 +3,6 @@
 
 .content {
     flex-direction: column;
-
 }
 
 .flex-zone {
@@ -26,6 +25,12 @@
     flex-direction: column;
 }
 
-#bublik {
+
+#categories_table {
+    display: none !important;
     max-height: 80%;
+}
+
+#categories_chart {
+    display: block; 
 }
