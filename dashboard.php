@@ -137,9 +137,9 @@ while($row = $result->fetch_assoc()) {
         array_push($spendingCategories, $row['category']);
     }
 }
-//EXPENSES JS FORM 
+ 
 
-
+// JS FORMS
 $amountErrorExpenses = $typeErrorExpenses = $dateErrorExpenses = $amountErrorIncome = $typeErrorIncome = $dateErrorIncome = '';
 
 function expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses) {
@@ -156,6 +156,21 @@ function expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErr
     return $output;
 }
 
+function incomeErrorsOutput($amountErrorIncome, $typeErrorIncome, $dateErrorIncome) {
+  $output = '<br>';
+  if(isset($amountErrorIncome)) {
+      $output .= $amountErrorIncome;
+  }
+  if(isset($typeErrorIncome)) {
+      $output .= $typeErrorIncome;
+  }
+  if(isset($dateErrorIncome)) {
+      $output .= $dateErrorIncome;
+  }
+  return $output;
+}
+
+// EXPENSES JS
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'])) 
 {
    
@@ -224,7 +239,76 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
         }
     }
 }
+// INCOME JS
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income'])) 
+{
+    if (isset($_POST['income-amount']) && isset($_POST['income-type']) && isset($_POST['income-date'])) 
+    {
+        $amount = $_POST['income-amount']; // Get amount
+        if(isset($amount) && preg_match("/^\d+(\.\d{2})?$/", $amount)) 
+        {
+            if(!ctype_digit($amount)) // Check if it is not a whole number...
+            {
+                if (strpos($amount, ',') !== false && strpos($amount, '.') === false) // If there is a comma and no period, change the comma to a period
+                {
+                    $amount = str_replace(',', '.', $amount);
+                }
+                elseif (strpos($amount, '.') === false) // If there is a period
+                {
+                    // Do nothing
+                    //THEN WHY EVEN HAVE THIS STATEMENT???
+                }
+            }
 
+            if(!($amount >= 0.01 && $amount <= 10000000)) // Amount must be between 0.01 and 10000000
+            {
+                $amountErrorIncome = "<span style='color:red'>Amount must be between 0.01 and 10000000</span><br>"; // Amount error message
+            }
+        }
+        else
+        {
+            $amountErrorIncome = "<span style='color:red'>Wrong number input</span><br>"; // Amount error message
+        }
+        //Converting $amount to float, rounding, and converting back to string
+        $amount = number_format(floatval($amount), 2, ".", "");
+
+        //TYPE
+        $type = $_POST['income-type']; // Get type
+        if (!in_array($type, $incomeCategories)) 
+        {
+            $typeErrorIncome = "<span style='color:red'>Invalid income type</span><br>";
+        }
+
+        // DATE
+        $date = $_POST['income-date'];
+        $dateObj = DateTime::createFromFormat('Y-m-d', $date);
+    
+        if ($dateObj && $dateObj->format('Y-m-d') === $date) 
+        {
+            // Valid date
+            $year = $dateObj->format('Y');
+            $month = $dateObj->format('m');
+            $day = $dateObj->format('d');
+        } else {
+            // Invalid date 
+            $dateErrorIncome = "<span style='color:red'>Incorrect date format.</span><br>";
+        }
+
+        //Enters are spaces in note
+        if(isset($_POST['income-note']))
+        {
+            $note = str_replace("\r\n", " ", $_POST['income-note']);
+        }
+        //Writing to db.
+        if (empty($amountErrorIncome) && empty($typeErrorIncome) && empty($dateErrorIncome)) 
+        {
+            
+            $link -> query("INSERT INTO incomes (username, income_date, category, amount, income_comment, recurring) 
+                            VALUES ('$username', '$date', '$type', '$amount', '$note', FALSE);");
+            $checkSumbissionIncome = TRUE;
+        }
+    }
+}
 
 ?>
 
@@ -248,10 +332,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
   <?php include 'includes/sidebar.php'; ?>
   
   <!--SPENDINGS FORM JS-->
-  <div id="modal" class="modal">
+  <<div id="modal-expenses" class="modal">
   <div class="modal-content">
-    <span class="close">&times;</span>
-    <form method="POST" action="">
+    <span class="close close-expenses">&times;</span>
+    <form method="POST" action="" id="expenses-form">
                 <h3>Expenses</h3>
                 <label for="expense-amount">Amount:</label><br>
                 <input class="expense-amount-input" type="number" id="expense-amount" name="expense-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?"><br>
@@ -287,41 +371,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
 </div>
 
 <!--INCOMES JS FORM-->
-<div id="modal" class="modal">
+<div id="modal-incomes" class="modal">
   <div class="modal-content">
-    <span class="close">&times;</span>
+    <span class="close close-incomes">&times;</span>
     <form method="POST" action="">
-                <h3>Expenses</h3>
-                <label for="expense-amount">Amount:</label><br>
-                <input class="expense-amount-input" type="number" id="expense-amount" name="expense-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?"><br>
-                <label class="expense-type-label" for="expense-type">Select Expense Type:</label> <br>
-                <select class="expense-type-select" id="expense-type" name="expense-type"> <br>
+                <h3>Income</h3>
+                <label for="income-amount">Amount:</label>
+                <input class="income-amount-input" type="number" id="income-amount" name="income-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?">
+                <label class="income-type-label" for="income-type">Select Income Type:</label>
+                <select class="income-type-select" id="income-type" name="income-type" >
                     <?php
-                    foreach ($spendingCategories as $category) {
-                        echo '<option value="'.$category.'">';
-                        echo $category;
-                        echo "</option>";
-                    }
+                        foreach ($incomeCategories as $category) {
+                            echo '<option value="'.$category.'">';
+                            echo $category;
+                            echo "</option>";
+                        }
                     ?>
-                </select><br>
-                <label class="expense-type-label" for="expense-date">Date:</label><br><br>
-                <input class="calender" type="date" id="expense-date" name="expense-date"><br><br>
-
-                <label for="expense-note">Note:</label> <br>
-                <input type="text" id="expense-note"  class="expense-amount-input" name="expense-note"><br>
+                </select> 
+                <label class="income-type-label" for="income-date">Date:</label>    
+                <input class="calender" type="date" id="income-date" name="income-date"><br><br>
+                <label for="income-note">Note:</label>    
+                <input type="text" id="income-note"  class="income-amount-input" name="income-note">
                 <input type="hidden" id="recurring" value="No">
-
-                <input class="btn" type="submit" id="submit-button-expense" name="submit-button-expense" value="Submit Expense">
-                <?php
-                if (!empty($amountErrorExpenses) || !empty($typeErrorExpenses) || !empty($dateErrorExpenses)) {
-                    echo expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses);
+                <input class="btn" type="submit" id="submit-button-income" name="submit-button-income" value="Submit Income">
+                <?php 
+                if (!empty($amountErrorIncome) || !empty($typeErrorIncome) || !empty($dateErrorIncome)) {
+                    echo expensesErrorsOutput($amountErrorIncome, $typeErrorIncome, $dateErrorIncome);
                 } 
-                elseif(isset($checkSumbissionExpenses))
+                elseif(isset($checkSumbissionIncome))
                 {
-                    echo '<p>Expense was added successfully</p>';
+                    echo '<p>Income was added successfully</p>';
                 }
                 ?>
-            </form>
+      </form>
   </div>
 </div>
 
@@ -340,39 +422,64 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
           <h2><a href="#" title="New spending" id="new-spending-btn">Spent<i class='bx bx-minus'></i></a></h2>
           <h1><?php echo number_format(floatval($totalSpendings), 2); ?></h1>
         </div>
+<script>
+// Expenses Modal Script
+document.addEventListener('DOMContentLoaded', function () {
+  var modalExpenses = document.getElementById("modal-expenses");
+  var newSpendingBtn = document.getElementById("new-spending-btn");
+  var closeExpenses = document.querySelector(".close-expenses");
+  var expensesForm = document.getElementById("expenses-form");
+
+  newSpendingBtn.onclick = function() {
+    modalExpenses.style.display = "block";
+    modalExpenses.style.position = "absolute";
+  };
+
+  closeExpenses.onclick = function() {
+    modalExpenses.style.display = "none";
+  };
+
+  expensesForm.onsubmit = function(event) {
+    var formData = new FormData(expensesForm);
+    fetch('', { 
+      method: 'POST',
+      body: formData
+    })
+  };
+});
+</script>
         <div class="balance-div">
-          <h2><a href="money_flow.php" title="New income">Earned<i class='bx bx-plus'></i></a></h2>
+          <h2><a href="#" title="New income" id="new-income-btn">Earned<i class='bx bx-plus'></i></a></h2>
           <h1><?php echo number_format(floatval($totalIncomes), 2); ?></h1>
         </div>
       </div>
-
-
 <script>
+// Incomes Modal Script
 document.addEventListener('DOMContentLoaded', function () {
-    var modal = document.getElementById("modal");
-    var newSpendingBtn = document.getElementById("new-spending-btn");
-    var closeSpan = document.getElementsByClassName("close")[0];
+  var modalIncomes = document.getElementById("modal-incomes");
+  var newIncomeBtn = document.getElementById("new-income-btn");
+  var closeIncomes = document.querySelector(".close-incomes");
+  var incomesForm = document.getElementById("incomes-form");
 
-    newSpendingBtn.onclick = function() {
-      modal.style.display = "block";
-      modal.style.position = "absolute";
-    }
+  newIncomeBtn.onclick = function() {
+    modalIncomes.style.display = "block";
+    modalIncomes.style.position = "absolute";
+  };
 
-    closeSpan.onclick = function() {
-      modal.style.display = "none";
-    }
+  closeIncomes.onclick = function() {
+    modalIncomes.style.display = "none";
+  };
 
-    form.onsubmit = function(event) {
-      var formData = new FormData(form);
-
-      fetch('', { 
-        method: 'POST',
-        body: formData
-      })
-    };
-    location.reload() 
+  incomesForm.onsubmit = function(event) {
+    var formData = new FormData(incomesForm);
+    fetch('', { 
+      method: 'POST',
+      body: formData
+    })
+  };
 });
 </script>
+
 
       <div class="simple">
         <span class="header2"><a href="advanced.php" title="See more">This month spendings</a></span>
