@@ -25,12 +25,7 @@
     flex-direction: column;
 }
 
-
 #categories_table {
-    display: none !important;
-    max-height: 80%;
+    display: none;
 }
 
-#categories_chart {
-    display: block; 
-}
