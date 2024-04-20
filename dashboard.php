@@ -1,7 +1,57 @@
 <?php
 require ("includes/session_check.php");
 require ("includes/sql_connect.php");
+//---Recurring update---//
+$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'recurring') as table_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$tableExists = $row['table_exists'];
+if (!$tableExists) {
+    die('Database error: no recurring table found.');
+}
+$query = ("SELECT * FROM recurring WHERE username = '$username' AND 
+           YEAR(recurring_date) <= YEAR(CURDATE()) AND
+           MONTH(recurring_date) <= MONTH(CURDATE()) AND
+           DAY(recurring_date) <= DAY(CURDATE());");
+while (mysqli_query($link, $query)->num_rows != 0) {
+  $result = mysqli_query($link, $query);
+  while($row = $result->fetch_assoc()) {
+      $id = $row['ID'];
+      $recurringDate = $row['recurring_date'];
+      $cat = $row['category'];
+      $name = $row['recurring_name'];
+      $amount = $row['amount'];
 
+      $link -> query("INSERT INTO spendings (username, spending_date, category, amount, spending_comment, recurring)
+                      VALUES ('$username', '$recurringDate', '$cat', '$amount', '$name', TRUE)");
+
+      if ($row['periodicity'] == "daily") {
+        $link -> query("UPDATE recurring 
+                        SET recurring_date = DATE_ADD(recurring_date, INTERVAL 1 DAY) 
+                        WHERE ID = '$id';");
+      }
+      else if ($row['periodicity'] == "weekly") {
+        $link -> query("UPDATE recurring 
+                        SET recurring_date = DATE_ADD(recurring_date, INTERVAL 1 WEEK) 
+                        WHERE ID = '$id';");
+      }
+      else if ($row['periodicity'] == "2weekly") {
+        $link -> query("UPDATE recurring 
+                        SET recurring_date = DATE_ADD(recurring_date, INTERVAL 2 WEEK) 
+                        WHERE ID = '$id';");
+      }
+      else if ($row['periodicity'] == "monthly") {
+        $link -> query("UPDATE recurring 
+                        SET recurring_date = DATE_ADD(recurring_date, INTERVAL 1 MONTH) 
+                        WHERE ID = '$id';");
+      }
+      else if ($row['periodicity'] == "annualy") {
+        $link -> query("UPDATE recurring 
+                        SET recurring_date = DATE_ADD(recurring_date, INTERVAL 1 YEAR) 
+                        WHERE ID = '$id';");
+      }
+  }
+}
 
 //- - - - -Graph logic.- - - - -
 $daysInMonth = date("t");

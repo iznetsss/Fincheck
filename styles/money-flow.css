@@ -26,7 +26,9 @@
     max-width: 100%;
 }
 
-.expense-amount-input, .expense-type-select, .income-amount-input, .income-type-select {
+.expense-amount-input, .expense-type-select, 
+.income-amount-input, .income-type-select, 
+.expense-type-new, .income-type-new {
     width: 100%;
     padding: 8px;
     border-radius: 5px;
@@ -41,6 +43,9 @@
 }
 .expense-type-select, .income-type-select {
     margin-top: 10px;
+    margin-bottom: 10px;
+}
+.expense-type-new, .income-type-new {
     margin-bottom: 10px;
 }
 

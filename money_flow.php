@@ -24,9 +24,10 @@ while($row = $result->fetch_assoc()) {
     }
 }
 
-$amountErrorExpenses = $typeErrorExpenses = $dateErrorExpenses = $amountErrorIncome = $typeErrorIncome = $dateErrorIncome = '';
+$amountErrorExpenses = $typeErrorExpenses = $dateErrorExpenses = $noteErrorExpenses = $newCategoryErrorExpenses = 
+$amountErrorIncome = $typeErrorIncome = $dateErrorIncome = $noteErrorIncome = $newCategoryErrorIncome = '';
 
-function expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses) {
+function expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses, $noteErrorExpenses, $newCategoryErrorExpenses) {
     $output = '<br>';
     if(isset($amountErrorExpenses)) {
         $output .= $amountErrorExpenses;
@@ -37,10 +38,16 @@ function expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErr
     if(isset($dateErrorExpenses)) {
         $output .= $dateErrorExpenses;
     }
+    if(isset($noteErrorExpenses)) {
+        $output .= $noteErrorExpenses;
+    }
+    if(isset($newCategoryErrorExpenses)) {
+        $output .= $newCategoryErrorExpenses;
+    }
     return $output;
 }
 
-function incomeErrorsOutput($amountErrorIncome, $typeErrorIncome, $dateErrorIncome) {
+function incomeErrorsOutput($amountErrorIncome, $typeErrorIncome, $dateErrorIncome, $noteErrorIncome, $newCategoryErrorIncome) {
     $output = '<br>';
     if(isset($amountErrorIncome)) {
         $output .= $amountErrorIncome;
@@ -50,6 +57,12 @@ function incomeErrorsOutput($amountErrorIncome, $typeErrorIncome, $dateErrorInco
     }
     if(isset($dateErrorIncome)) {
         $output .= $dateErrorIncome;
+    }
+    if(isset($noteErrorIncome)) {
+        $output .= $noteErrorIncome;
+    }
+    if(isset($newCategoryErrorIncome)) {
+        $output .= $newCategoryErrorIncome;
     }
     return $output;
 }
@@ -87,11 +100,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
         $amount = number_format(floatval($amount), 2, ".", "");
 
         $type = $_POST['expense-type']; // Get type
-        if (!in_array($type, $spendingCategories)) 
+        if (!in_array($type, $spendingCategories) && $type != "new") 
         {
             $typeErrorExpenses = "<span style='color:red'>Invalid expense type.<br></span>";
         }
-
+        
         // DATE
         $date = $_POST['expense-date'];
         $dateObj = DateTime::createFromFormat('Y-m-d', $date);
@@ -107,15 +120,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
             $dateErrorExpenses = "<span style='color:red'>Incorrect date format.</span><br>";
         }
 
-        //Enters are spaces in note
+        //Enters are spaces in note ADD VALIDATION!!!
         if(isset($_POST['expense-note']))
-        {
+        {   
             $note = str_replace("\r\n", " ", $_POST['expense-note']);
+            if (!preg_match('/^[a-zA-Z0-9,:;<>()."\' -]{1,100}$/', $_POST['expense-note'])) {
+                $noteErrorExpenses = "<span style='color:red'>Your note does not satisfy the required format. You can use letters, numbers and any of these symbols: ,:;<>().\"' -</span><br>";
+            }
+        }
+        //NEW CATEGORIES
+        if ($type == "new") {
+            if (empty($_POST['new_expense_category'])) {
+                $newCategoryErrorExpenses = "<span style='color:red'>Please enter the name for your new category or select an existing one.<br></span>";
+            } 
+            if (empty($newCategoryErrorExpenses)) {
+                $newCategory = str_replace("\r\n", " ", $_POST['new_expense_category']);
+                if (!preg_match('/^[a-zA-Z0-9,:;()."\' -]{1,100}$/', $newCategory)) {
+                    $newCategoryErrorExpenses = "<span style='color:red'>Your note does not satisfy the required format. You can use letters, numbers and any of these symbols: ,:;().\"' -</span><br>";
+                }
+            }
+            if (empty($newCategoryErrorExpenses)) {
+                $query = ("SELECT EXISTS (SELECT 1 FROM categories WHERE category = '$newCategory' and username = '$username' and income = FALSE) as category_exists;");
+                $result = mysqli_query($link, $query);
+                $row = mysqli_fetch_assoc($result);
+                $categoryExists = $row['category_exists'];
+                if ($categoryExists || $newCategory == "new") {
+                    $newCategoryErrorExpenses = "<span style='color:red'>This category already exists.<br></span>";
+                }
+                else {
+                    $link -> query("INSERT INTO categories (username, category, income) 
+                                    VALUES ('$username', '$newCategory', FALSE)");
+                }
+            }
+            $type = $newCategory;
+
         }
         //Writing to db
-        if (empty($amountErrorExpenses) && empty($typeErrorExpenses) && empty($dateErrorExpenses)) 
+        if (empty($amountErrorExpenses) && empty($typeErrorExpenses) && empty($dateErrorExpenses) && empty($noteErrorExpenses)) 
         {
-
             $link -> query("INSERT INTO spendings (username, spending_date, category, amount, spending_comment, recurring) 
                             VALUES ('$username', '$date', '$type', '$amount', '$note', FALSE);");
             $checkSumbissionExpenses = TRUE;
@@ -158,7 +200,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
 
         //TYPE
         $type = $_POST['income-type']; // Get type
-        if (!in_array($type, $incomeCategories)) 
+        if (!in_array($type, $incomeCategories) && $type != "new") 
         {
             $typeErrorIncome = "<span style='color:red'>Invalid income type</span><br>";
         }
@@ -180,11 +222,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
 
         //Enters are spaces in note
         if(isset($_POST['income-note']))
-        {
+        {   
             $note = str_replace("\r\n", " ", $_POST['income-note']);
+            if (!preg_match('/^[a-zA-Z0-9,:;<>()."\' -]{1,100}$/', $_POST['income-note'])) {
+                $noteErrorIncome = "<span style='color:red'>Your note does not satisfy the required format. You can use letters, numbers and any of these symbols: ,:;<>().\"' -</span><br>";
+            }
+        }
+        //NEW CATEGORIES
+        if ($type == "new") {
+            if (empty($_POST['new_income_category'])) {
+                $newCategoryErrorIncome = "<span style='color:red'>Please enter the name for your new category or select an existing one.<br></span>";
+            } 
+            if (empty($newCategoryErrorIncome)) {
+                $newCategory = str_replace("\r\n", " ", $_POST['new_income_category']);
+                if (!preg_match('/^[a-zA-Z0-9,:;()."\' -]{1,100}$/', $newCategory)) {
+                    $newCategoryErrorIncome = "<span style='color:red'>Your note does not satisfy the required format. You can use letters, numbers and any of these symbols: ,:;().\"' -</span><br>";
+                }
+            }
+            if (empty($newCategoryErrorIncome)) {
+                $query = ("SELECT EXISTS (SELECT 1 FROM categories WHERE category = '$newCategory' and username = '$username' and income = TRUE) as category_exists;");
+                $result = mysqli_query($link, $query);
+                $row = mysqli_fetch_assoc($result);
+                $categoryExists = $row['category_exists'];
+                if ($categoryExists || $newCategory == "new") {
+                    $newCategoryErrorIncome = "<span style='color:red'>This category already exists.<br></span>";
+                }
+                else {
+                    $link -> query("INSERT INTO categories (username, category, income) 
+                                    VALUES ('$username', '$newCategory', TRUE)");
+                }
+            }
+            $type = $newCategory;
         }
         //Writing to db.
-        if (empty($amountErrorIncome) && empty($typeErrorIncome) && empty($dateErrorIncome)) 
+        if (empty($amountErrorIncome) && empty($typeErrorIncome) && empty($dateErrorIncome) && empty($noteErrorIncome)) 
         {
             
             $link -> query("INSERT INTO incomes (username, income_date, category, amount, income_comment, recurring) 
@@ -290,7 +361,23 @@ else {
                         echo "</option>";
                     }
                     ?>
+                    <option value="new">New</option>
                 </select> 
+                <input type="hidden" class="expense-type-new" id="new_expense_category" name="new_expense_category" placeholder="New category name">
+                <script>
+                    var selectExpenseElement = document.getElementById("expense-type");
+                    var newExpenseCategory = document.getElementById("new_expense_category");
+
+                    selectExpenseElement.addEventListener("change", function() {
+                    if (this.value === "new") {
+                        newExpenseCategory.type = "text";
+                        newExpenseCategory.setAttribute("required", true);
+                    } else {
+                        newExpenseCategory.type = "hidden";
+                        newExpenseCategory.removeAttribute("required");
+                    }
+                    });
+                </script>
                 <label class="expense-type-label" for="expense-date">Date:</label>    
                 <input class="calender" type="date" id="expense-date" name="expense-date"><br><br>
 
@@ -335,7 +422,23 @@ else {
                             echo "</option>";
                         }
                     ?>
+                    <option value="new">New</option>
                 </select> 
+                <input type="hidden" class="income-type-new" id="new_income_category" name="new_income_category" placeholder="New category name">
+                <script>
+                    var selectIncomeElement = document.getElementById("income-type");
+                    var newIncomeCategory = document.getElementById("new_income_category");
+
+                    selectIncomeElement.addEventListener("change", function() {
+                    if (this.value === "new") {
+                        newIncomeCategory.type = "text";
+                        newIncomeCategory.setAttribute("required", true);
+                    } else {
+                        newIncomeCategory.type = "hidden";
+                        newIncomeCategory.removeAttribute("required");
+                    }
+                    });
+                </script>
                 <label class="income-type-label" for="income-date">Date:</label>    
                 <input class="calender" type="date" id="income-date" name="income-date"><br><br>
                 <label for="income-note">Note:</label>    

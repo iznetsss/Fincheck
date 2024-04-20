@@ -1,6 +1,26 @@
 <?php
 require ("includes/session_check.php");
-
+require ("includes/sql_connect.php");
+$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'categories') as table_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$tableExists = $row['table_exists'];
+if (!$tableExists) {
+    die('Database error: no categories table found.');
+}  
+$spendingCategories = [];
+$incomeCategories = [];
+$query = ("SELECT category, income FROM categories 
+           WHERE username = '$username'");
+$result = mysqli_query($link, $query);
+while($row = $result->fetch_assoc()) {
+    if ($row['income']) {
+        array_push($incomeCategories, $row['category']);
+    }
+    else {
+        array_push($spendingCategories, $row['category']);
+    }
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurring'])) 
 {
@@ -22,8 +42,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
   
 
 
-  if(isset($_POST['bill-name']) && isset($_POST['day']) && isset($_POST['bill-actual']) && isset($_POST['repeat']))
+  if(isset($_POST['bill-name']) && isset($_POST['day']) && isset($_POST['bill-actual']) && isset($_POST['repeat']) && isset($_POST['expense-type'])) 
   {
+    //CATEGORY 
+    $type = $_POST['expense-type']; // Get type
+    if (!in_array($type, $spendingCategories)) 
+    {
+        $typeErrorExpenses = "<span style='color:red'>Invalid expense type.<br></span>";
+    }
+
     //NAME INPUT
     if(isset($_POST['bill-name'])) 
     {
@@ -61,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
         $amountError = "<span style='color:red'>Wrong number input</span><br>"; // Amount error message
     }
     //Converting $amount to float, rounding, and converting back to string
-    $amount = number_format(floatval($amount), 2);
+    //$amount = number_format(floatval($amount), 2);
 
     //REPEATS
     $repeat = $_POST['repeat'];
@@ -75,21 +102,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
     //If life is good - we move forward
     if (empty($dateError) && empty($amountError) && empty($repeatError)) 
     {
-      $recurringData = array();
-      $recurringData['name'] = $name;
-      $recurringData['day'] = $date;
-      $recurringData['amount'] = $amount;
-      $recurringData['repeating'] = $repeat;
-            
-        if (!file_exists('data/recurring.csv')) {
-            touch('data/recurring.csv');
-            chmod('data/recurring.csv', 0777); 
-        }
-
-      $csv_file = fopen('data/recurring.csv', 'a');
-      fputcsv($csv_file, $recurringData, ';');
-      fclose($csv_file);
-
+        
+      $query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'recurring') as table_exists;");
+      $result = mysqli_query($link, $query);
+      $row = mysqli_fetch_assoc($result);
+      $tableExists = $row['table_exists'];
+      if (!$tableExists) {
+          die('Database error: no recurring table found.');
+      }  
+      $link -> query("INSERT INTO recurring (username, recurring_date, category, recurring_name, amount, periodicity)
+                      VALUES ('$username', '$date', '$type', '$name', '$amount', '$repeat')");         
       $checkSumbission = TRUE;
     }
   }
@@ -172,6 +194,16 @@ fclose($file);
     <div class="flex-container" id="flex-input-bill">
       <form method="POST" action="">
         <span class="header2">New recurring payment</span><br><br>
+        <label for="expense-type">Category:</label>
+        <select class="expense-type-select" id="expense-type" name="expense-type">
+            <?php
+            foreach ($spendingCategories as $category) {
+                echo '<option value="'.$category.'">';
+                echo $category;
+                echo "</option>";
+            }
+            ?>
+        </select> 
         <label for="bill-name">Name:</label>
         <input class="bill-name-input" type="text" id="bill-name" name="bill-name" maxlength="30">
         <label for="bill-due">Due:</label>

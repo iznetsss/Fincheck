@@ -32,7 +32,8 @@
 
 .bill-name-input,
 .bill-due-select,
-.bill-actual-input {
+.bill-actual-input,
+.expense-type-select {
     width: 100%;
     padding: 8px;
     border-radius: 5px;
@@ -42,7 +43,8 @@
 
 
 .bill-name-input,
-.bill-actual-input {
+.bill-actual-input,
+.expense-type-select {
     margin-bottom: 10px;
     margin-top: 10px;
 }
