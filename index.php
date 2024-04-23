@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (isset($_SESSION['user_id'])) {
+    header("Location: dashboard.php");
+    exit; 
+}
 if($_SERVER['REQUEST_METHOD'] === 'POST' && 
 isset($_POST['loginButton']) && $_POST['loginButton'] == "Login" &&
 !empty($_POST['email']) && !empty($_POST['password'])) {

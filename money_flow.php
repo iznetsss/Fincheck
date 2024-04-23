@@ -121,15 +121,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
         }
 
         //Enters are spaces in note ADD VALIDATION!!!
-        if(isset($_POST['expense-note']))
+        if(!empty($_POST['expense-note']))
         {   
             $note = str_replace("\r\n", " ", $_POST['expense-note']);
             if (!preg_match('/^[a-zA-Z0-9,:;<>()."\' -]{1,100}$/', $_POST['expense-note'])) {
                 $noteErrorExpenses = "<span style='color:red'>Your note does not satisfy the required format. You can use letters, numbers and any of these symbols: ,:;<>().\"' -</span><br>";
             }
+        } else {
+            $note = "";
         }
         //NEW CATEGORIES
-        if ($type == "new") {
+        if ($type == "new" && empty($amountErrorExpenses) && empty($typeErrorExpenses) && empty($dateErrorExpenses) && empty($noteErrorExpenses)) {
             if (empty($_POST['new_expense_category'])) {
                 $newCategoryErrorExpenses = "<span style='color:red'>Please enter the name for your new category or select an existing one.<br></span>";
             } 
@@ -156,7 +158,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'
 
         }
         //Writing to db
-        if (empty($amountErrorExpenses) && empty($typeErrorExpenses) && empty($dateErrorExpenses) && empty($noteErrorExpenses)) 
+        if (empty($amountErrorExpenses) && empty($typeErrorExpenses) && empty($dateErrorExpenses) && empty($noteErrorExpenses) && empty($newCategoryErrorExpenses)) 
         {
             $link -> query("INSERT INTO spendings (username, spending_date, category, amount, spending_comment, recurring) 
                             VALUES ('$username', '$date', '$type', '$amount', '$note', FALSE);");
@@ -221,7 +223,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         }
 
         //Enters are spaces in note
-        if(isset($_POST['income-note']))
+        if(!empty($_POST['income-note']))
         {   
             $note = str_replace("\r\n", " ", $_POST['income-note']);
             if (!preg_match('/^[a-zA-Z0-9,:;<>()."\' -]{1,100}$/', $_POST['income-note'])) {
@@ -229,7 +231,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
             }
         }
         //NEW CATEGORIES
-        if ($type == "new") {
+        if ($type == "new" && empty($amountErrorIncome) && empty($typeErrorIncome) && empty($dateErrorIncome) && empty($noteErrorIncome)) {
             if (empty($_POST['new_income_category'])) {
                 $newCategoryErrorIncome = "<span style='color:red'>Please enter the name for your new category or select an existing one.<br></span>";
             } 
@@ -255,7 +257,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
             $type = $newCategory;
         }
         //Writing to db.
-        if (empty($amountErrorIncome) && empty($typeErrorIncome) && empty($dateErrorIncome) && empty($noteErrorIncome)) 
+        if (empty($amountErrorIncome) && empty($typeErrorIncome) && empty($dateErrorIncome) && empty($noteErrorIncome) && empty($newCategoryErrorIncome)) 
         {
             
             $link -> query("INSERT INTO incomes (username, income_date, category, amount, income_comment, recurring) 
@@ -387,8 +389,8 @@ else {
 
                 <input class="btn" type="submit" id="submit-button-expense" name="submit-button-expense" value="Submit Expense">
                 <?php
-                if (!empty($amountErrorExpenses) || !empty($typeErrorExpenses) || !empty($dateErrorExpenses)) {
-                    echo expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses);
+                if (!empty($amountErrorExpenses) || !empty($typeErrorExpenses) || !empty($dateErrorExpenses) || !empty($noteErrorExpenses) || !empty($newCategoryErrorExpenses)) {
+                    echo expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses, $noteErrorExpenses, $newCategoryErrorExpenses);
                 } 
                 elseif(isset($checkSumbissionExpenses))
                 {
