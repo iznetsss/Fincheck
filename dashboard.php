@@ -111,58 +111,64 @@ else {
 }
 
 //- - - - -BALANCE LOGIC.- - - - -
+
 $totalSpendings = 0.00;
 foreach ($spendingsByDays as $spending) {
   $totalSpendings += floatval($spending);
 }
 
 $balance = $totalIncomes - $totalSpendings;
-
 //- - - - -LATEST EXPENSES TABLE.- - - - -
-$file = fopen("data/expenses.csv", "r");
-$lastExpenses = array();
-
-while (($data = fgetcsv($file, 1000, ";")) !== false) {
-  $name = $data[2];
-  $date = date('d.m', strtotime($data[1])); // Extract day and month from date
-  $amount = $data[3];
-  
-  // Add formatted data to recurring table
-  $lastExpenses[] = array($date, $amount, $name);
+$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'spendings') as table_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$tableExists = $row['table_exists'];
+if (!$tableExists) {
+    die('Database error: no spending table found.');
+}   
+$lastExpenses = [];
+$query = ("SELECT spending_date, amount, category FROM spendings WHERE username = '$username'
+          ORDER BY spending_date DESC LIMIT 5;");
+$result = mysqli_query($link, $query);
+if ($result->num_rows == 0) {
+    $noRows = TRUE;
 }
-fclose($file);
-
-//Sort data by date (from latest to earliest)
-usort($lastExpenses, function($a, $b) {
-  $dateA = DateTime::createFromFormat('d.m', $a[0]);
-  $dateB = DateTime::createFromFormat('d.m', $b[0]);
-  return $dateB <=> $dateA;
-});
-$lastExpenses = array_slice($lastExpenses, 0, 8); //8 latest spendinds
-
+else {
+    while($row = $result->fetch_assoc()) {
+        $spendingDate = date('d.m', strtotime($row['spending_date']));
+        $spendingCategory = $row['category'];
+        $spendingAmount = $row['amount'];
+        
+        $expense = [$spendingDate, $spendingAmount, $spendingCategory];
+        array_push($lastExpenses, $expense);
+    }
+} 
 
 // Upcoming payments table
-//Recurring table.
-$file = fopen("data/recurring.csv", "r");
-$recurringTable = array();
-
-while (($data = fgetcsv($file, 1000, ";")) !== false) {
-  $name = $data[0];
-  $date = date('d.m', strtotime($data[1])); // Extract day and month from date
-  $amount = $data[2];
-  
-  // Add formatted data to recurring table
-  $recurringTable[] = array($date, $amount, $name);
+$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'recurring') as table_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$tableExists = $row['table_exists'];
+if (!$tableExists) {
+    die('Database error: no recurring table found.');
+}   
+$recurringTable = [];
+$query = ("SELECT recurring_date, amount, recurring_name FROM recurring WHERE username = '$username'
+          ORDER BY recurring_date ASC LIMIT 5;");
+$result = mysqli_query($link, $query);
+if ($result->num_rows == 0) {
+    $noRows = TRUE;
 }
-fclose($file);
-//Sort data by date (from latest to earliest)
-usort($recurringTable, function($a, $b) 
-{
-  $dateA = DateTime::createFromFormat('d.m', $a[0]);
-  $dateB = DateTime::createFromFormat('d.m', $b[0]);
-  return $dateA <=> $dateB;
-});
-$recurringTable = array_slice($recurringTable, 0, 6); //7 upcoming payments
+else {
+    while($row = $result->fetch_assoc()) {
+        $recurringDate = date('d.m', strtotime($row['recurring_date']));
+        $recurringName = $row['recurring_name'];
+        $recurringAmount = $row['amount'];
+        
+        $recurring = [$recurringDate, $recurringAmount, $recurringName];
+        array_push($recurringTable, $recurring);
+    }
+} 
 
 
 //Categories.
@@ -639,13 +645,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income'])
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>29.02</td>
-              <td>5.99</td>
-              <td>Telegram premium</td>
-            </tr>
             <?php
-
             if (isset($recurringTable)) {
               foreach($recurringTable as $row) {
                 echo "<tr>";

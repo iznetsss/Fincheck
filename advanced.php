@@ -8,28 +8,41 @@ $row = mysqli_fetch_assoc($result);
 $tableExists = $row['table_exists'];
 if (!$tableExists) {
     die('Database error: no spending table found.');
-}    
+}  
+$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'incomes') as table_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$tableExists = $row['table_exists'];
+if (!$tableExists) {
+    die('Database error: no income table found.');
+}   
 //if table exists, getting all needed data
 $tableRows = [];
-$query = ("SELECT spending_date, category, amount, spending_comment, recurring FROM spendings 
-           WHERE username = '$username';");
+$query = ("SELECT spending_date AS any_date, category, amount, spending_comment AS any_comment, recurring, true AS is_spending FROM spendings 
+           WHERE username = '$username'
+           UNION ALL
+           SELECT income_date AS any_date, category, amount, income_comment AS any_comment, recurring, false AS is_spending FROM incomes 
+           WHERE username = '$username'
+           ORDER BY any_date DESC;");
 $result = mysqli_query($link, $query);
 if ($result->num_rows == 0) {
     $noRows = TRUE;
 }
 else {
     while($row = $result->fetch_assoc()) {
-        $spendingDate = date('d.m.Y', strtotime($row['spending_date']));
-        $spendingCategory = $row['category'];
-        $spendingAmount = $row['amount'];
-        $spendingComment = $row['spending_comment'];
+        $date = date('d.m.Y', strtotime($row['any_date']));
+        $category = $row['category'];
+        $amount = $row['amount'];
+        $comment = $row['any_comment'];
         if ($row['recurring']) {
-          $spendingRecurring = 'Yes';
+          $recurring = 'Yes';
         }
         else {
-          $spendingRecurring = 'No';
+          $recurring = 'No';
         }
-        $tableRow = [$spendingDate, $spendingCategory, $spendingAmount, $spendingComment, $spendingRecurring];
+        $isSpending = $row['is_spending'];
+
+        $tableRow = [$date, $category, $amount, $comment, $recurring, $isSpending];
         array_push($tableRows, $tableRow);
     }
 }
@@ -69,8 +82,13 @@ else {
           <?php
           if (isset($tableRows)) {
             foreach($tableRows as $row) {
-              echo "<tr>";
-              foreach($row as $cell) {
+              if (end($row) == 1) {
+                echo '<tr class="spending-row">';
+              }
+              else {
+                echo '<tr class="income-row">';
+              }
+              foreach(array_slice($row, 0, -1) as $cell) {
                 echo "<td>";
                 echo $cell;
                 echo "</td>";

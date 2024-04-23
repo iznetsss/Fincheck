@@ -11,3 +11,9 @@
 .cell-right {
     float: right;
 }
+.spending-row {
+    background-color:rgb(255, 215, 215);
+}
+.income-row {
+    background-color: rgb(215, 255, 215)
+}
