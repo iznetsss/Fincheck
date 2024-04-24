@@ -32,7 +32,7 @@ else {
     while($row = $result->fetch_assoc()) {
         $date = date('d.m.Y', strtotime($row['any_date']));
         $category = $row['category'];
-        $amount = $row['amount'];
+        $amount = number_format($row['amount'], 2, ".", ",");
         $comment = $row['any_comment'];
         if ($row['recurring']) {
           $recurring = 'Yes';
@@ -82,16 +82,36 @@ else {
           <?php
           if (isset($tableRows)) {
             foreach($tableRows as $row) {
+              echo "<tr>";
               if (end($row) == 1) {
-                echo '<tr class="spending-row">';
+                foreach(array_slice($row, 0, -1) as $key => $cell) {
+                  if ($key == 2) {
+                    $cell = "-".$cell;
+                    echo '<td class="spending-cell">';
+                    echo $cell;
+                    echo "</td>";
+                  }
+                  else {
+                    echo "<td>";
+                    echo $cell;
+                    echo "</td>";
+                  }
+                }
               }
               else {
-                echo '<tr class="income-row">';
-              }
-              foreach(array_slice($row, 0, -1) as $cell) {
-                echo "<td>";
-                echo $cell;
-                echo "</td>";
+                foreach(array_slice($row, 0, -1) as $key => $cell) {
+                  if ($key == 2) {
+                    $cell = "+".$cell;
+                    echo '<td class="income-cell">';
+                    echo $cell;
+                    echo "</td>";
+                  }
+                  else {
+                    echo "<td>";
+                    echo $cell;
+                    echo "</td>";
+                  }
+                }
               }
               echo "</tr>";
             }
