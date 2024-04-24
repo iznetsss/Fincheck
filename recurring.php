@@ -155,22 +155,45 @@ foreach ($arrRecurring as $payment) {
 
 
 //Recurring table.
-$file = fopen("data/recurring.csv", "r");
-$recurringTable = array();
-
-while (($data = fgetcsv($file, 1000, ";")) !== false) {
-    // Check if the row has at least four elements (name, day, amount, repeating)
-    if (count($data) >= 4) {
-        $name = $data[0];
-        $day = date('d', strtotime($data[1])); // Extract day from date
-        $amount = $data[2];
-        
-        // Add formatted data to recurring table
-        $recurringTable[] = array($name, $day, $amount);
-    }
-
+$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'recurring') as table_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$tableExists = $row['table_exists'];
+if (!$tableExists) {
+    die('Database error: no recurring table found.');
+}   
+$recurringTable = [];
+$query = ("SELECT recurring_date, amount, recurring_name, periodicity FROM recurring WHERE username = '$username'
+          ORDER BY recurring_date ASC;");
+$result = mysqli_query($link, $query);
+if ($result->num_rows == 0) {
+    $noRows = TRUE;
 }
-fclose($file);
+else {
+    while($row = $result->fetch_assoc()) {
+        $recurringDate = date('d.m.Y', strtotime($row['recurring_date']));
+        $recurringName = $row['recurring_name'];
+        $recurringAmount = number_format($row['amount'], 2, ".", ",");
+        if ($row['periodicity'] == "annualy") {
+          $periodicity = "Every year";
+        }
+        else if ($row['periodicity'] == "monthly") {
+          $periodicity = "Every month";
+        }
+        else if ($row['periodicity'] == "2weekly") {
+          $periodicity = "Every 2 weeks";
+        }
+        else if ($row['periodicity'] == "weekly") {
+          $periodicity = "Every week";
+        }
+        else if ($row['periodicity'] == "daily") {
+          $periodicity = "Every day";
+        }
+        
+        $recurring = [$recurringName, $recurringDate, $recurringAmount, $periodicity];
+        array_push($recurringTable, $recurring);
+    }
+}
 
 ?>
 
@@ -242,7 +265,8 @@ fclose($file);
           <tr>
             <th>Name</th>
             <th>Due</th>
-            <th>Actual</th>
+            <th>Amount</th>
+            <th>Repeat</th>
           </tr>
         </thead>
         <tbody>
