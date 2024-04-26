@@ -59,13 +59,13 @@ while($row = $result->fetch_assoc()) {
 
     toggleButton.onclick = function() {
       if (chart.style.display === 'none') {
-        chart.style.display = 'block';
+        chart.style.display = 'flex';
         chart.style.position = 'static';
         table.style.display = 'none';
         table.style.position = 'fixed';
       } else {
         chart.style.display = 'none';
-        table.style.display = 'block';
+        table.style.display = 'flex';
         chart.style.position = 'fixed';
         table.style.position = 'static';
       }
@@ -104,8 +104,6 @@ while($row = $result->fetch_assoc()) {
         });
       </script>
     </div>
-  </div>
-    <div class="content">
         <div class="flex-zone" id="categories_table">
             <table class="expenses-table">
                 <thead>
@@ -133,7 +131,7 @@ while($row = $result->fetch_assoc()) {
                 </tbody>
             </table>
         </div>
-      </div>
+</div>
 
 
 </body>
