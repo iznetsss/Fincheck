@@ -1,4 +1,8 @@
 <?php
+// report all errors
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require ("includes/session_check.php");
 require ("includes/sql_connect.php");
 //---Recurring update---//
