@@ -593,10 +593,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income'])
                   display: false,
                 }
               },
-              aspectRatio: 2,
+              scales: {
+                x: {
+                  grid: {
+                    display: false
+                  }
+                },
+                y: {
+                  grid: {
+                    display: false 
+                  }
+                }
+              },
+              aspectRatio: 1.5,
               title: {
                 display: true,
-                text: 'line graph example'
+                text: 'line graph'
               }
             }
           });

@@ -489,6 +489,18 @@ else {
                                 display: false,
                             }
                         },
+                        scales: {
+                          x: {
+                            grid: {
+                              display: false
+                            }
+                          },
+                          y: {
+                            grid: {
+                              display: false 
+                            }
+                          }
+                        },
                         aspectRatio: 2,
                         maintainAspectRatio: true,
                         title : {
@@ -514,6 +526,18 @@ else {
                             legend : {
                                 display: false,
                             }
+                        },
+                        scales: {
+                          x: {
+                            grid: {
+                              display: false
+                            }
+                          },
+                          y: {
+                            grid: {
+                              display: false 
+                            }
+                          }
                         },
                         aspectRatio: 2,
                         maintainAspectRatio: true,
