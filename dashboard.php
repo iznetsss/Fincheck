@@ -59,6 +59,7 @@ while (mysqli_query($link, $query)->num_rows != 0) {
 
 //- - - - -Graph logic.- - - - -
 $daysInMonth = date("t");
+$currentMonth = date("F");
 $spendingsByDays = [];
 //Array with all days in current month as keys. Values are set to 0 by default.
 for ($i = 1; $i <= $daysInMonth; $i++) {
@@ -575,114 +576,143 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income'])
 
       <div class="simple">
         <div class="month-navigation">
-          <a class="month-button" id="previous-month-button" onclick="decreaseClicks()">&#60;Previous month</a>
-          <a class="month-button" id="next-month-button" onclick="increaseClicks()" style="display:none">Next month&#62;</a>
       
           <script>
             var numberClicks = 0; // Declare numberClicks outside any function
-      
-            window.increaseClicks = function() {
+            var jsonGraphData;
+            function getData(monthOffset) {
+              fetch('process_graph.php?monthOffset=' + monthOffset)
+                .then(response => response.json())
+                .then(data => {
+                  updateChart(data.spendings);
+                  changeGraphTitle(data.month);
+                });
+            };
+
+            function changeGraphTitle(month) {
+              var graphTitle = document.getElementById("graph-title");
+              graphTitle.textContent = month + " spendings";
+            };
+
+            function increaseClicks() {
               numberClicks += 1;
+              getData(numberClicks);
               // Show the button if numberClicks is less than 0
               if (numberClicks < 0) {
                 document.getElementById("next-month-button").style.display = "block";
               } else {
                 document.getElementById("next-month-button").style.display = "none";
               }
-              console.log(numberClicks);
             };
           
-            window.decreaseClicks = function() {
+            function decreaseClicks() {
               numberClicks -= 1;
+              getData(numberClicks);
               // Show the button if numberClicks is less than 0
               if (numberClicks < 0) {
                 document.getElementById("next-month-button").style.display = "block";
               } else {
                 document.getElementById("next-month-button").style.display = "none";
               }
-              console.log(numberClicks);
             };
-          
+
+            function updateChart(data) {
+              lineGraph.data = {
+                  datasets: [
+                    {
+                      data: data,
+                      label: "Spendings",
+                      borderColor: "#0072ce",
+                      backgroundColor: "#0072ce",
+                    }]
+                };
+              lineGraph.update();
+            };
+
+            
           </script>
-        
+          <a class="month-button" id="previous-month-button" onclick="decreaseClicks()">&#60;Previous month</a>
+          <a class="month-button" id="next-month-button" onclick="increaseClicks()" style="display:none">Next month&#62;</a>
       </div>
-        <span class="header2"><a href="advanced.php" title="See more">This month spendings</a></span>
+        <span class="header2" id="graph-title"><a href="advanced.php" title="See more"></a><?php echo $currentMonth ?> spendings</span>
         </label>
         <canvas id="line-chart"></canvas>
         <!--Hide recurring payments-->
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.umd.min.js"></script>
         <script>
-          new Chart(document.getElementById("line-chart"), {
-            type: 'line',
-            data: {
-              datasets: [
-                {
-                  data: <?php echo json_encode($spendingsByDays); ?>,
-                  label: "Spendings",
-                  borderColor: "#0072ce",
-                  backgroundColor: "#0072ce",
-                }]
-            },
-            options: {
-              plugins: {
-                legend: {
-                  display: false,
-                }
+          
+          
+          var lineGraph = new Chart(document.getElementById("line-chart"), {
+              type: 'line',
+              data: {
+                datasets: [
+                  {
+                    data: <?php echo json_encode($spendingsByDays); ?>,
+                    label: "Spendings",
+                    borderColor: "#0072ce",
+                    backgroundColor: "#0072ce",
+                  }]
               },
-              scales: {
-                x: {
-                  grid: {
-                    display: false
+              options: {
+                plugins: {
+                  legend: {
+                    display: false,
                   }
                 },
-                y: {
-                  grid: {
-                    display: false 
+                scales: {
+                  x: {
+                    grid: {
+                      display: false
+                    }
+                  },
+                  y: {
+                    grid: {
+                      display: false 
+                    }
                   }
+                },
+                aspectRatio: 1.65,
+                title: {
+                  display: true,
+                  text: 'line graph'
                 }
-              },
-              aspectRatio: 1.65,
-              title: {
-                display: true,
-                text: 'line graph'
               }
-            }
-          });
+            });
         </script>
+        </div>
       </div>
-    </div>
-    <div class="flex-zone flex-zone-right">
-      <div class="flex-container flex-container-right" id="latestSpendings">
-        <h2><a href="advanced.php">Latest spendings</a></h2>
-        <?php if (isset($noSpendingRows)) {?>
-        <span>No spendings has been made yet.</span>
-        <script>
-          var FlexContainerRight = document.getElementById("latestSpendings");
-          FlexContainerRight.style.justifyContent = "center";
-        </script>
-        <?php } else {?>
-        <table class="right-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Amount</th>
-              <th>Category</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php
+      <div class="flex-zone flex-zone-right">
+        <div class="flex-container flex-container-right" id="latestSpendings">
+          <h2><a href="advanced.php">Latest spendings</a></h2>
+          <?php if (isset($noSpendingRows)) {?>
+          <span>No spendings has been made yet.</span>
+          <script>
+            var FlexContainerRight = document.getElementById("latestSpendings");
+            FlexContainerRight.style.justifyContent = "center";
+          </script>
+          <?php } else {?>
+          <table class="right-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Category</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
 
-            if (isset($lastExpenses)) {
-              foreach($lastExpenses as $row) {
-                echo "<tr>";
-                foreach($row as $cell) {
-                  echo "<td>";
-                  echo $cell;
-                  echo "</td>";
+              if (isset($lastExpenses)) {
+                foreach($lastExpenses as $row) {
+                  echo "<tr>";
+                  foreach($row as $cell) {
+                    echo "<td>";
+                    echo $cell;
+                    echo "</td>";
+                  }
+                  echo "</tr>";
                 }
-                echo "</tr>";
               }
-            }
 
             ?>
           </tbody>
