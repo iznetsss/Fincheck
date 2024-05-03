@@ -1,8 +1,9 @@
 <?php 
 require ("includes/session_check.php");
 require ("includes/sql_connect.php");
-$monthOffset = isset($_GET['monthOffset']) ? (int) $_GET['monthOffset'] : 0;
+$monthOffset = isset($_GET['monthOffset']) ? (int) $_GET['monthOffset'] : 0; 
 $month = strtotime("-".$monthOffset." month");
+$monthFormat = $monthOffset > -12 ? date('F', $month) : date("F Y", $month);
 $daysInMonth = date('t', $month);
 $spendingsByDays = [];
 
@@ -48,7 +49,7 @@ $balance = $totalIncomes - $totalSpendings;
 $result = ["balance"=>number_format($balance, 2, ".", ","),
            "totalSpendings"=>number_format($totalSpendings, 2, ".", ","),
            "totalIncomes"=>number_format($totalIncomes, 2, ".", ","),
-           "month"=>date('F', $month), 
+           "month"=>$monthFormat, 
            "spendings"=>$spendingsByDays];
 echo json_encode($result);
 ?>
