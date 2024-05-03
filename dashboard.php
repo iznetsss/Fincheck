@@ -109,12 +109,12 @@ if ($result->num_rows == 0) {
 }
 else {
     while($row = $result->fetch_assoc()) {
-        $incomeAmount = number_format($row['amount'], 2, ".", ",");
+        $incomeAmount = $row['amount'];
         $totalIncomes += floatval($incomeAmount);
     }
 }
 
- //- - - - -BALANCE LOGIC.- - - - -
+//- - - - -BALANCE LOGIC.- - - - -
 
 $totalSpendings = 0.00;
 foreach ($spendingsByDays as $spending) {
@@ -135,13 +135,13 @@ $query = ("SELECT spending_date, amount, category FROM spendings WHERE username 
           ORDER BY spending_date DESC LIMIT 5;");
 $result = mysqli_query($link, $query);
 if ($result->num_rows == 0) {
-    $noSpendingRows = TRUE;
+    $noRows = TRUE;
 }
 else {
     while($row = $result->fetch_assoc()) {
         $spendingDate = date('d.m', strtotime($row['spending_date']));
         $spendingCategory = $row['category'];
-        $spendingAmount = number_format($row['amount'], 2, ".", ",");
+        $spendingAmount = $row['amount'];
         
         $expense = [$spendingDate, $spendingAmount, $spendingCategory];
         array_push($lastExpenses, $expense);
@@ -161,18 +161,18 @@ $query = ("SELECT recurring_date, amount, recurring_name FROM recurring WHERE us
           ORDER BY recurring_date ASC LIMIT 5;");
 $result = mysqli_query($link, $query);
 if ($result->num_rows == 0) {
-    $noRecurringRows = TRUE;
+    $noRows = TRUE;
 }
 else {
     while($row = $result->fetch_assoc()) {
         $recurringDate = date('d.m', strtotime($row['recurring_date']));
         $recurringName = $row['recurring_name'];
-        $recurringAmount = number_format($row['amount'], 2, ".", ",");
+        $recurringAmount = $row['amount'];
         
         $recurring = [$recurringDate, $recurringAmount, $recurringName];
         array_push($recurringTable, $recurring);
     }
-}
+} 
 
 
 //Categories.
