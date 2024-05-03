@@ -109,7 +109,9 @@
   }
   
 /*SPENDING JS FORM*/
-  .expense-amount-input, .expense-type-select, .income-amount-input, .income-type-select {
+.expense-amount-input, .expense-type-select, 
+.income-amount-input, .income-type-select, 
+.expense-type-new, .income-type-new {
     width: 100%;
     padding: 8px;
     border-radius: 5px;
@@ -117,14 +119,15 @@
     box-sizing: border-box;
   }
 
-  .expense-amount-input, .income-amount-input {
+
+.expense-amount-input, .income-amount-input, .expense-type-select, .income-type-select {
     margin-bottom: 10px;
     margin-top: 10px;
 }
-.expense-type-select, .income-type-select {
-    margin-top: 10px;
+.expense-type-new, .income-type-new {
     margin-bottom: 10px;
 }
+
 .month-navigation {
     display: flex;
     justify-content: space-between;
