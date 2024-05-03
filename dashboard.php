@@ -24,7 +24,7 @@ while (mysqli_query($link, $query)->num_rows != 0) {
       $recurringDate = $row['recurring_date'];
       $cat = $row['category'];
       $name = $row['recurring_name'];
-      $amount = $row['amount'];
+      $amount = number_format($row['amount'], 2, ".", ",");
 
       $link -> query("INSERT INTO spendings (username, spending_date, category, amount, spending_comment, recurring)
                       VALUES ('$username', '$recurringDate', '$cat', '$amount', '$name', TRUE)");
@@ -109,7 +109,7 @@ if ($result->num_rows == 0) {
 }
 else {
     while($row = $result->fetch_assoc()) {
-        $incomeAmount = $row['amount'];
+        $incomeAmount = number_format($row['amount'], 2, ".", ",");
         $totalIncomes += floatval($incomeAmount);
     }
 }
@@ -141,7 +141,7 @@ else {
     while($row = $result->fetch_assoc()) {
         $spendingDate = date('d.m', strtotime($row['spending_date']));
         $spendingCategory = $row['category'];
-        $spendingAmount = $row['amount'];
+        $spendingAmount = number_format($row['amount'], 2, ".", ",");
         
         $expense = [$spendingDate, $spendingAmount, $spendingCategory];
         array_push($lastExpenses, $expense);
@@ -167,7 +167,7 @@ else {
     while($row = $result->fetch_assoc()) {
         $recurringDate = date('d.m', strtotime($row['recurring_date']));
         $recurringName = $row['recurring_name'];
-        $recurringAmount = $row['amount'];
+        $recurringAmount = number_format($row['amount'], 2, ".", ",");
         
         $recurring = [$recurringDate, $recurringAmount, $recurringName];
         array_push($recurringTable, $recurring);
@@ -574,6 +574,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income'])
 
 
       <div class="simple">
+        <div class="month-navigation">
+          <a class="month-button">&#60;Previous month</a>
+          <a class="month-button">Next month&#62;</a>
+        </div>  
         <span class="header2"><a href="advanced.php" title="See more">This month spendings</a></span>
         </label>
         <canvas id="line-chart"></canvas>
@@ -609,7 +613,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income'])
                   }
                 }
               },
-              aspectRatio: 1.5,
+              aspectRatio: 1.65,
               title: {
                 display: true,
                 text: 'line graph'

@@ -125,7 +125,10 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
-
+.month-navigation {
+    display: flex;
+    justify-content: space-between;
+}
 
 @media screen and (max-width: 970px) {
     .content {
