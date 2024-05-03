@@ -114,7 +114,65 @@ else {
     }
 }
 
- 
+ //- - - - -BALANCE LOGIC.- - - - -
+
+$totalSpendings = 0.00;
+foreach ($spendingsByDays as $spending) {
+  $totalSpendings += floatval($spending);
+}
+
+$balance = $totalIncomes - $totalSpendings;
+//- - - - -LATEST EXPENSES TABLE.- - - - -
+$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'spendings') as table_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$tableExists = $row['table_exists'];
+if (!$tableExists) {
+    die('Database error: no spending table found.');
+}   
+$lastExpenses = [];
+$query = ("SELECT spending_date, amount, category FROM spendings WHERE username = '$username'
+          ORDER BY spending_date DESC LIMIT 5;");
+$result = mysqli_query($link, $query);
+if ($result->num_rows == 0) {
+    $noSpendingRows = TRUE;
+}
+else {
+    while($row = $result->fetch_assoc()) {
+        $spendingDate = date('d.m', strtotime($row['spending_date']));
+        $spendingCategory = $row['category'];
+        $spendingAmount = number_format($row['amount'], 2, ".", ",");
+        
+        $expense = [$spendingDate, $spendingAmount, $spendingCategory];
+        array_push($lastExpenses, $expense);
+    }
+} 
+
+// Upcoming payments table
+$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'recurring') as table_exists;");
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
+$tableExists = $row['table_exists'];
+if (!$tableExists) {
+    die('Database error: no recurring table found.');
+}   
+$recurringTable = [];
+$query = ("SELECT recurring_date, amount, recurring_name FROM recurring WHERE username = '$username'
+          ORDER BY recurring_date ASC LIMIT 5;");
+$result = mysqli_query($link, $query);
+if ($result->num_rows == 0) {
+    $noRecurringRows = TRUE;
+}
+else {
+    while($row = $result->fetch_assoc()) {
+        $recurringDate = date('d.m', strtotime($row['recurring_date']));
+        $recurringName = $row['recurring_name'];
+        $recurringAmount = number_format($row['amount'], 2, ".", ",");
+        
+        $recurring = [$recurringDate, $recurringAmount, $recurringName];
+        array_push($recurringTable, $recurring);
+    }
+}
 
 
 //Categories.
@@ -311,67 +369,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         }
     }
 }
-
-//- - - - -BALANCE LOGIC.- - - - -
-
-$totalSpendings = 0.00;
-foreach ($spendingsByDays as $spending) {
-  $totalSpendings += floatval($spending);
-}
-
-$balance = $totalIncomes - $totalSpendings;
-//- - - - -LATEST EXPENSES TABLE.- - - - -
-$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'spendings') as table_exists;");
-$result = mysqli_query($link, $query);
-$row = mysqli_fetch_assoc($result);
-$tableExists = $row['table_exists'];
-if (!$tableExists) {
-    die('Database error: no spending table found.');
-}   
-$lastExpenses = [];
-$query = ("SELECT spending_date, amount, category FROM spendings WHERE username = '$username'
-          ORDER BY spending_date DESC LIMIT 5;");
-$result = mysqli_query($link, $query);
-if ($result->num_rows == 0) {
-    $noSpendingRows = TRUE;
-}
-else {
-    while($row = $result->fetch_assoc()) {
-        $spendingDate = date('d.m', strtotime($row['spending_date']));
-        $spendingCategory = $row['category'];
-        $spendingAmount = number_format($row['amount'], 2, ".", ",");
-        
-        $expense = [$spendingDate, $spendingAmount, $spendingCategory];
-        array_push($lastExpenses, $expense);
-    }
-} 
-
-// Upcoming payments table
-$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'recurring') as table_exists;");
-$result = mysqli_query($link, $query);
-$row = mysqli_fetch_assoc($result);
-$tableExists = $row['table_exists'];
-if (!$tableExists) {
-    die('Database error: no recurring table found.');
-}   
-$recurringTable = [];
-$query = ("SELECT recurring_date, amount, recurring_name FROM recurring WHERE username = '$username'
-          ORDER BY recurring_date ASC LIMIT 5;");
-$result = mysqli_query($link, $query);
-if ($result->num_rows == 0) {
-    $noRecurringRows = TRUE;
-}
-else {
-    while($row = $result->fetch_assoc()) {
-        $recurringDate = date('d.m', strtotime($row['recurring_date']));
-        $recurringName = $row['recurring_name'];
-        $recurringAmount = number_format($row['amount'], 2, ".", ",");
-        
-        $recurring = [$recurringDate, $recurringAmount, $recurringName];
-        array_push($recurringTable, $recurring);
-    }
-}
-
 
 ?>
 
