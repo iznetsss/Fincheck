@@ -36,8 +36,13 @@ $query = ("SELECT category, amount FROM spendings
            YEAR(spending_date) = YEAR(CURDATE()) AND
            MONTH(spending_date) = MONTH(CURDATE());");
 $result = mysqli_query($link, $query);
-while($row = $result->fetch_assoc()) {
-  $spendingsByCategories[$row['category']] += floatval($row['amount']);
+if ($result->num_rows == 0) {
+  $noSpendingRows = TRUE;
+}
+else {
+  while($row = $result->fetch_assoc()) {
+    $spendingsByCategories[$row['category']] += floatval($row['amount']);
+  }
 }
 
 ?>
@@ -79,7 +84,7 @@ while($row = $result->fetch_assoc()) {
   <?php include 'includes/header.php'; ?>
   <?php include 'includes/sidebar.php'; ?>
   <div class="content">
-    <h1><a href="#" id="toggle">Change view</a></h1>
+    <h1><a id="toggle">Change view</a></h1>
     <div class="flex-zone" id="categories_chart">
       <canvas id="pie-chart"></canvas>
       <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.umd.min.js"></script>
@@ -91,6 +96,7 @@ while($row = $result->fetch_assoc()) {
             datasets: [{
               borderColor: ["#6fb7a0", "#746fb7", "#B76f70", "#A7b76f", "#6fb7b6", "#B7956f", "#D45950", "#c7c7c7"],
               backgroundColor: ["#6fb7a0", "#746fb7", "#B76f70", "#A7b76f", "#6fb7b6", "#B7956f", "#D45950", "#c7c7c7"],
+
               data: <?php echo json_encode(array_values($spendingsByCategories)); ?>, 
             }]
           },

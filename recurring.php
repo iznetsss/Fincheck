@@ -116,42 +116,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
     }
   }
 }
-/*
-$file = fopen("data/recurring.csv", "r");
-$arrRecurring = [];
-while (($data = fgetcsv($file, 1000, ";")) !== false) {
-  array_push($arrRecurring, $data);
-fclose($file);
-foreach ($arrRecurring as $payment) {
-  if (strtotime($payment[1]) <= strtotime('today')) {
-    $arrPayment = [
-      ['Date'] = 
-    ]
-    $paymentDate = $payment[1];
-    $pamentName = $payment[0];
-    $paymentAmount = $payment[2];
-    $paymentRegular = $payment[3];
-    
-  }
-}
-    if ($data[3] == "monthly") {
-        $date = $data[1];
-        $name = $data[0];
-        $amount = $data[2];
-
-        $expenseDate = new DateTime($date);
-        $today = new DateTime();
-
-        if ($expenseDate < $today) {
-            // Add to file if its less than today
-            $expensesFile = fopen("data/expenses.csv", "a");
-            fputcsv($expensesFile, array('', $date, $name, $amount, '', 'Yes'), ';');
-            fclose($expensesFile);
-        }
-    }
-}
-*/
-
 
 
 //Recurring table.
@@ -167,7 +131,7 @@ $query = ("SELECT recurring_date, amount, recurring_name, periodicity FROM recur
           ORDER BY recurring_date ASC;");
 $result = mysqli_query($link, $query);
 if ($result->num_rows == 0) {
-    $noRows = TRUE;
+    $noRecurringRows = TRUE;
 }
 else {
     while($row = $result->fetch_assoc()) {
@@ -241,7 +205,7 @@ else {
           <option value="2weekly">Every 2 Weeks</option>
           <option value="daily">Every Day</option>
         </select>
-        <input class="btn" type="submit" id="submit-button-recurring" name="submit-button-recurring" value="Sumbit">
+        <input class="btn" type="submit" id="submit-button-recurring" name="submit-button-recurring" value="Add payment">
 
         <?php
         //Error expense message
@@ -258,37 +222,40 @@ else {
       </form>
     </div>
     <div class="flex-container" id="flex-table-bills">
-    
-    <table class="bills-table">
       <span class="bills-table-name header2">Recurring payments</span>
-      <thead>
-          <tr>
-            <th>Name</th>
-            <th>Due</th>
-            <th>Amount</th>
-            <th>Repeat</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-
-            if (isset($recurringTable)) {
-              foreach($recurringTable as $row) {
-                echo "<tr>";
-                foreach($row as $cell) {
-                  echo "<td>";
-                  echo $cell;
-                  echo "</td>";
+      <?php if (isset($noRecurringRows)) {?>
+        <span>No recurring payments has been added yet.</span>
+        <script>
+          var FlexContainer = document.getElementById("flex-table-bills");
+          FlexContainer.style.justifyContent = "center";
+        </script>
+      <?php } else {?>
+        <table class="bills-table">
+          <thead>
+              <tr>
+                <th>Name</th>
+                <th>Due</th>
+                <th>Amount</th>
+                <th>Repeat</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+                if (isset($recurringTable)) {
+                  foreach($recurringTable as $row) {
+                    echo "<tr>";
+                    foreach($row as $cell) {
+                      echo "<td>";
+                      echo $cell;
+                      echo "</td>";
+                    }
+                    echo "</tr>";
+                  }
                 }
-                echo "</tr>";
-              }
-            }
-
-            ?>
-          
-        </tbody>
-
-    </table>
+                ?>
+            </tbody>
+        </table>
+    <?php } ?>
     </div>
 
   </div>
