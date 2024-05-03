@@ -574,38 +574,37 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income'])
 
 
       <div class="simple">
-      <div class="month-navigation">
-        <a class="month-button" id="previous-month-button" onclick="decreaseClicks()">&#60;Previous month</a>
-        <a class="month-button" id="next-month-button" onclick="increaseClicks()" style="display:none">Next month&#62;</a>
-
-        <script>
-          document.addEventListener("DOMContentLoaded", function() {
-            var numberClicks = 0;
-            var increaseButton = document.getElementById("next-month-button");
-          
+        <div class="month-navigation">
+          <a class="month-button" id="previous-month-button" onclick="decreaseClicks()">&#60;Previous month</a>
+          <a class="month-button" id="next-month-button" onclick="increaseClicks()" style="display:none">Next month&#62;</a>
+      
+          <script>
+            var numberClicks = 0; // Declare numberClicks outside any function
+      
             window.increaseClicks = function() {
               numberClicks += 1;
               // Show the button if numberClicks is less than 0
-              if(numberClicks < 0) {
-                increaseButton.style.display = "block";
+              if (numberClicks < 0) {
+                document.getElementById("next-month-button").style.display = "block";
               } else {
-                increaseButton.style.display = "none";
+                document.getElementById("next-month-button").style.display = "none";
               }
-              console.log(numberClicks); 
+              console.log(numberClicks);
             };
           
             window.decreaseClicks = function() {
               numberClicks -= 1;
               // Show the button if numberClicks is less than 0
-              if(numberClicks < 0) {
-                increaseButton.style.display = "block";
+              if (numberClicks < 0) {
+                document.getElementById("next-month-button").style.display = "block";
               } else {
-                increaseButton.style.display = "none";
+                document.getElementById("next-month-button").style.display = "none";
               }
-              console.log(numberClicks); 
+              console.log(numberClicks);
             };
-          });
-        </script>
+          
+          </script>
+        
       </div>
         <span class="header2"><a href="advanced.php" title="See more">This month spendings</a></span>
         </label>
