@@ -110,7 +110,7 @@ if ($result->num_rows == 0) {
 }
 else {
     while($row = $result->fetch_assoc()) {
-        $incomeAmount = number_format($row['amount'], 2, ".", ",");
+        $incomeAmount = $row['amount'];
         $totalIncomes += floatval($incomeAmount);
     }
 }
@@ -136,13 +136,13 @@ $query = ("SELECT spending_date, amount, category FROM spendings WHERE username 
           ORDER BY spending_date DESC LIMIT 5;");
 $result = mysqli_query($link, $query);
 if ($result->num_rows == 0) {
-    $noSpendingRows = TRUE;
+    $noRows = TRUE;
 }
 else {
     while($row = $result->fetch_assoc()) {
         $spendingDate = date('d.m', strtotime($row['spending_date']));
         $spendingCategory = $row['category'];
-        $spendingAmount = number_format($row['amount'], 2, ".", ",");
+        $spendingAmount = $row['amount'];
         
         $expense = [$spendingDate, $spendingAmount, $spendingCategory];
         array_push($lastExpenses, $expense);
@@ -162,13 +162,13 @@ $query = ("SELECT recurring_date, amount, recurring_name FROM recurring WHERE us
           ORDER BY recurring_date ASC LIMIT 5;");
 $result = mysqli_query($link, $query);
 if ($result->num_rows == 0) {
-    $noRecurringRows = TRUE;
+    $noRows = TRUE;
 }
 else {
     while($row = $result->fetch_assoc()) {
         $recurringDate = date('d.m', strtotime($row['recurring_date']));
         $recurringName = $row['recurring_name'];
-        $recurringAmount = number_format($row['amount'], 2, ".", ",");
+        $recurringAmount = $row['amount'];
         
         $recurring = [$recurringDate, $recurringAmount, $recurringName];
         array_push($recurringTable, $recurring);
@@ -418,15 +418,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
                 <input type="hidden" id="recurring" value="No">
 
                 <input class="btn" type="submit" id="submit-button-expense" name="submit-button-expense" value="Submit Expense">
-                <?php
-                if (!empty($amountErrorExpenses) || !empty($typeErrorExpenses) || !empty($dateErrorExpenses)) {
-                    echo expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses);
-                } 
-                elseif(isset($checkSumbissionExpenses))
-                {
-                    echo '<p>Expense was added successfully</p>';
-                }
-                ?>
+            
             </form>
   </div>
 </div>
@@ -455,15 +447,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
                 <input type="text" id="income-note"  class="income-amount-input" name="income-note">
                 <input type="hidden" id="recurring" value="No">
                 <input class="btn" type="submit" id="submit-button-income" name="submit-button-income" value="Submit Income">
-                <?php 
-                if (!empty($amountErrorIncome) || !empty($typeErrorIncome) || !empty($dateErrorIncome)) {
-                    echo expensesErrorsOutput($amountErrorIncome, $typeErrorIncome, $dateErrorIncome);
-                } 
-                elseif(isset($checkSumbissionIncome))
-                {
-                    echo '<p>Income was added successfully</p>';
-                }
-                ?>
+                
       </form>
   </div>
 </div>
@@ -491,6 +475,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var closeExpenses = document.querySelector(".close-expenses");
   var expensesForm = document.getElementById("expenses-form");
 
+  var messageDiv = document.getElementById("messageJsDiv");
+
   newSpendingBtn.onclick = function() {
     modalExpenses.style.display = "block";
     modalExpenses.style.position = "absolute";
@@ -498,6 +484,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   closeExpenses.onclick = function() {
     modalExpenses.style.display = "none";
+    messageDiv.style.display = 'block'; 
   };
 
   expensesForm.onsubmit = function(event) {
@@ -509,27 +496,67 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 });
 </script>
-<!--DO NOT TOUCH THIS-->
-<?php
-if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense']))
-{
-?>
- <script>
-  document.addEventListener('DOMContentLoaded', function () 
-  {
-    var modalExpenses = document.getElementById("modal-expenses");
-    modalExpenses.style.display = "block";
-    modalExpenses.style.position = "absolute";
-  });
- </script>
-<?php
-}
-?>
+
         <div class="balance-div">
           <h2><a title="New income" id="new-income-btn">Earned<i class='bx bx-plus'></i></a></h2>
           <h1><?php echo number_format(floatval($totalIncomes), 2); ?></h1>
         </div>
       </div>
+      <?php
+        if (!empty($amountErrorExpenses) || !empty($typeErrorExpenses) || !empty($dateErrorExpenses)) {
+          echo "<div class='messageJsDiv' id='messageJsDiv'>";
+          echo expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses);
+          echo "</div>";
+        } 
+        ?><script>
+            setTimeout(function() {
+                var element = document.getElementById('messageJsDiv');
+                if (element) {
+                    element.parentNode.removeChild(element);
+                }
+            }, 10000); // 10000 milliseconds = 10 seconds
+        </script><?php
+        if(isset($checkSumbissionExpenses))
+        {
+          echo "<div class='messageJsDiv' id='messageJsDiv'>";
+          echo '<p>Expense was added successfully</p>';
+          echo "</div>";
+        }
+        ?><script>
+            setTimeout(function() {
+                var element = document.getElementById('messageJsDiv');
+                if (element) {
+                    element.parentNode.removeChild(element);
+                }
+            }, 10000); // 10000 milliseconds = 10 seconds
+        </script><?php
+        if (!empty($amountErrorIncome) || !empty($typeErrorIncome) || !empty($dateErrorIncome)) {
+          echo "<div class='messageJsDiv' id='messageJsDiv'>";
+          echo expensesErrorsOutput($amountErrorIncome, $typeErrorIncome, $dateErrorIncome);
+          echo "</div>";
+        } 
+        ?><script>
+            setTimeout(function() {
+                var element = document.getElementById('messageJsDiv');
+                if (element) {
+                    element.parentNode.removeChild(element);
+                }
+            }, 10000); // 10000 milliseconds = 10 seconds
+        </script><?php
+        if(isset($checkSumbissionIncome))
+        {
+          echo "<div class='messageJsDiv' id='messageJsDiv'>";
+          echo '<p>Income was added successfully</p>';
+          echo "</div>";
+        }
+        ?><script>
+            setTimeout(function() {
+                var element = document.getElementById('messageJsDiv');
+                if (element) {
+                    element.parentNode.removeChild(element);
+                }
+            }, 5000); // 5 sec
+        </script>
 <script>
 // Incomes Modal Script
 document.addEventListener('DOMContentLoaded', function () {
@@ -538,6 +565,9 @@ document.addEventListener('DOMContentLoaded', function () {
   var closeIncomes = document.querySelector(".close-incomes");
   var incomesForm = document.getElementById("incomes-form");
 
+  var messageDiv = document.getElementById("messageJsDiv");
+
+
   newIncomeBtn.onclick = function() {
     modalIncomes.style.display = "block";
     modalIncomes.style.position = "absolute";
@@ -545,6 +575,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   closeIncomes.onclick = function() {
     modalIncomes.style.display = "none";
+    messageDiv.style.display = 'block';
   };
 
   incomesForm.onsubmit = function(event) {
@@ -556,22 +587,6 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 });
 </script>
-<?php
-if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']))
-{
-  /////////////////////////CHECKTHIS/////////////////////////////////////////////////////////////
-?>
- <script>
-  document.addEventListener('DOMContentLoaded', function () 
-  {
-    var modalIncomes = document.getElementById("modal-incomes");
-    modalIncomes.style.display = "block";
-    modalIncomes.style.position = "absolute";
-  });
- </script>
-<?php
-}
-?>
 
 
       <div class="simple">
