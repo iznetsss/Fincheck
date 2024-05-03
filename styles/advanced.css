@@ -2,7 +2,8 @@
 @import url(main.css);
 
 .content {
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 .cell-left {
@@ -17,6 +18,16 @@
 .income-cell {
     color: rgb(0, 150, 0);
 }
-tr:hover {
+tbody tr:hover {
     background-color: rgb(240, 240, 240);
+}
+.flex-zone {
+    background-color: rgb(250, 250, 250);
+    box-shadow: 0 0 5px grey;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
 }
