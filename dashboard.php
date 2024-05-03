@@ -491,7 +491,23 @@ while($row = $result->fetch_assoc()) {
                         echo "</option>";
                     }
                     ?>
+                    <option value="new">New</option><br>
                 </select><br>
+                <input type="hidden" class="expense-type-new" id="new_expense_category" name="new_expense_category" placeholder="New category name">
+                <script>
+                    var selectExpenseElement = document.getElementById("expense-type");
+                    var newExpenseCategory = document.getElementById("new_expense_category");
+
+                    selectExpenseElement.addEventListener("change", function() {
+                    if (this.value === "new") {
+                        newExpenseCategory.type = "text";
+                        newExpenseCategory.setAttribute("required", true);
+                    } else {
+                        newExpenseCategory.type = "hidden";
+                        newExpenseCategory.removeAttribute("required");
+                    }
+                    });
+                </script>
                 <label class="expense-type-label" for="expense-date">Date:</label><br><br>
                 <input class="calender" type="date" id="expense-date" name="expense-date"><br><br>
 
@@ -522,7 +538,23 @@ while($row = $result->fetch_assoc()) {
                             echo "</option>";
                         }
                     ?>
+                    <option value="new">New</option>
                 </select> 
+                <input type="hidden" class="income-type-new" id="new_income_category" name="new_income_category" placeholder="New category name">
+                <script>
+                    var selectIncomeElement = document.getElementById("income-type");
+                    var newIncomeCategory = document.getElementById("new_income_category");
+
+                    selectIncomeElement.addEventListener("change", function() {
+                    if (this.value === "new") {
+                        newIncomeCategory.type = "text";
+                        newIncomeCategory.setAttribute("required", true);
+                    } else {
+                        newIncomeCategory.type = "hidden";
+                        newIncomeCategory.removeAttribute("required");
+                    }
+                    });
+                </script>
                 <label class="income-type-label" for="income-date">Date:</label>    
                 <input class="calender" type="date" id="income-date" name="income-date"><br><br>
                 <label for="income-note">Note:</label>    
@@ -589,7 +621,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (element) {
                     element.parentNode.removeChild(element);
                 }
-            }, 10000); // 10000 milliseconds = 10 seconds
+            }, 4000); // 4 sec
         </script><?php
         if(isset($checkSumbissionExpenses))
         {
@@ -603,7 +635,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (element) {
                     element.parentNode.removeChild(element);
                 }
-            }, 10000); // 10000 milliseconds = 10 seconds
+            }, 4000); // 4 sec
         </script><?php
         if (!empty($amountErrorIncome) || !empty($typeErrorIncome) || !empty($dateErrorIncome)) {
           echo "<div class='messageJsDiv' id='messageJsDiv'>";
@@ -616,7 +648,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (element) {
                     element.parentNode.removeChild(element);
                 }
-            }, 10000); // 10000 milliseconds = 10 seconds
+            }, 4000); // 4 sec
         </script><?php
         if(isset($checkSumbissionIncome))
         {
@@ -630,7 +662,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (element) {
                     element.parentNode.removeChild(element);
                 }
-            }, 5000); // 5 sec
+            }, 4000); // 4 sec
         </script>
 <script>
 // Incomes Modal Script
