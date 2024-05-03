@@ -46,7 +46,6 @@ else {
         array_push($tableRows, $tableRow);
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,52 +75,37 @@ else {
             <th>Amount</th>
             <th>Note</th>
             <th>Recurring</th>
+            <th>Delete Transaction</th>
           </tr>
         </thead>
         <tbody>
-          <?php
-          if (isset($tableRows)) {
-            foreach($tableRows as $row) {
-              echo "<tr>";
-              if (end($row) == 1) {
-                foreach(array_slice($row, 0, -1) as $key => $cell) {
-                  if ($key == 2) {
-                    $cell = "-".$cell;
-                    echo '<td class="spending-cell">';
-                    echo $cell;
-                    echo "</td>";
-                  }
-                  else {
-                    echo "<td>";
-                    echo $cell;
-                    echo "</td>";
-                  }
-                }
-              }
-              else {
-                foreach(array_slice($row, 0, -1) as $key => $cell) {
-                  if ($key == 2) {
-                    $cell = "+".$cell;
-                    echo '<td class="income-cell">';
-                    echo $cell;
-                    echo "</td>";
-                  }
-                  else {
-                    echo "<td>";
-                    echo $cell;
-                    echo "</td>";
-                  }
-                }
-              }
-              echo "</tr>";
+          <script>
+            function displayRowNumber(rowId) {
+                var rowIndex = rowId.split('-')[1];
+                alert("You clicked on row " + (parseInt(rowIndex) + 1));
             }
-          }
-          ?>
+          </script>
+            <?php
+              if (isset($tableRows)) {
+                  foreach ($tableRows as $index => $row) {
+                      echo "<tr id='row-$index' onclick='displayRowNumber(this.id)'>";
+                      foreach (array_slice($row, 0, -1) as $key => $cell) {
+                          echo "<td>";
+                          echo $cell;
+                          echo "</td>";
+                      }
+                      // Only add the button if is_spending is defined //without smth not working
+                      if (isset($row[5])) {
+                          echo '<td><button>Delete</button></td>';
+                      }
+                      echo "</tr>";
+                  }
+              }
+            ?>
         </tbody>
     </table>
     <?php } ?>
   </div>
-
 
   <footer>
     <span>Copyright © 2024 FinCheck OÜ. All rights reserved.</span>
