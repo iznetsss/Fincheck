@@ -64,7 +64,7 @@ isset($_POST['registerButton']) && $_POST['registerButton'] == "Register" &&
             array_push($arrErrors, $userExistsError);
         } else {
             // User does not exist, add the user to the database
-            $query = "INSERT INTO users (email, username, pass) VALUES (?, ?, ?)";
+            $query = "INSERT INTO users (email, username, pass, includeRecurring, carryOver) VALUES (?, ?, ?, TRUE, TRUE)";
             $stmt = $link->prepare($query);
             $stmt->bind_param("sss", $email, $username, $hashed_password);
             if ($stmt->execute()) {
