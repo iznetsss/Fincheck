@@ -461,11 +461,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         <!--Hide Balance-->
         <div class="balance-div">
           <h2>Balance</h2>
-          <h1><?php echo number_format(floatval($balance), 2); ?></h1>
+          <h1 id="balance"><?php echo number_format(floatval($balance), 2); ?></h1>
         </div>
         <div class="balance-div">
           <h2><a title="New spending" id="new-spending-btn">Spent<i class='bx bx-minus'></i></a></h2>
-          <h1><?php echo number_format(floatval($totalSpendings), 2); ?></h1>
+          <h1 id="total-spendings"><?php echo number_format(floatval($totalSpendings), 2); ?></h1>
         </div>
 <script>
 // Expenses Modal Script
@@ -499,7 +499,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         <div class="balance-div">
           <h2><a title="New income" id="new-income-btn">Earned<i class='bx bx-plus'></i></a></h2>
-          <h1><?php echo number_format(floatval($totalIncomes), 2); ?></h1>
+          <h1 id="total-incomes"><?php echo number_format(floatval($totalIncomes), 2); ?></h1>
         </div>
       </div>
       <?php
@@ -587,8 +587,6 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 });
 </script>
-
-
       <div class="simple">
         <div class="month-navigation">
       
@@ -600,13 +598,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.json())
                 .then(data => {
                   updateChart(data.spendings);
-                  changeGraphTitle(data.month);
+                  changeData(data.month, data.balance, data.totalIncomes, data.totalSpendings);
                 });
             };
 
-            function changeGraphTitle(month) {
+            function changeData(month, newBalance, newIncomes, newSpendings) {
               var graphTitle = document.getElementById("graph-title");
+              var balance = document.getElementById("balance");
+              var incomes = document.getElementById("total-incomes");
+              var spendings = document.getElementById("total-spendings");
               graphTitle.textContent = month + " spendings";
+              balance.textContent = newBalance;
+              incomes.textContent = newIncomes;
+              spendings.textContent = newSpendings;
+
             };
 
             function increaseClicks() {
