@@ -163,7 +163,8 @@ table thead tr {
     border: none;
     border-radius: 10px;
     font-size: 20px;
-    margin: 4%;
+    margin-bottom: 10px;
+    margin-top: 10px;
     cursor: pointer;
     box-shadow: 0px 0px 5px grey;
     padding: 10px;

@@ -83,43 +83,24 @@ isset($_POST['deleteButton']) && $_POST['deleteButton'] == "Delete account" &&
     <div class="content">
         <div class="flex-zone">
             <form method="post" id="settingsForm" name="settingsForm" action="settings.php">
-                <select id="selectCurrency" name="selectCurrency">
-                    <option>&#8364; EUR</option>
-                    <option>&#36; USD</option>
-                    <option>&#163; GBR</option>
-                    <option>&#165; CNY</option>
-                    <option>&#8377; INR</option>
-                    <option>&#8361; KRW</option>
-                    <option>&#165; JPY</option>
-                </select>
-                <label for="selectCurrency">Change currency</label>
-                <br>
+                <h1>Settings:</h1>
                 <input type="checkbox" id="includeRecurring" name="includeRecurring" value="checked" checked>
                 <label for="includeRecurring">Include recurring payments in spendings graph</label>
                 <br>
-                <input type="checkbox" id="includeRecurring" name="includeRecurring" value="checked">
-                <label for="includeRecurring">Include recurring payments in spendings graph</label>
-                <br>
-                <input type="checkbox" id="includeRecurring" name="includeRecurring" value="checked">
-                <label for="includeRecurring">Include recurring payments in spendings graph</label>
-                <br>
-                <input type="checkbox" id="includeRecurring" name="includeRecurring" value="checked">
-                <label for="includeRecurring">Include recurring payments in spendings graph</label>
-                <br>
-                <input type="checkbox" id="includeRecurring" name="includeRecurring" value="checked">
-                <label for="includeRecurring">Include recurring payments in spendings graph</label>
+                <input type="checkbox" id="carryOver" name="carryOver" value="checked" checked>
+                <label for="includeRecurring">Carry over</label>
                 <br>
 
             </form>     
         </div>
         <div class="flex-zone">
             <form method="post" id="deleteForm" name="deleteForm" action="settings.php">
-                <h1 class="welcome-txt">Delete account:</h1>
-                <input class="form_field" type="email" id="email" name="email" placeholder="email" <?php if (isset($error) && $error == TRUE) {echo 'value="'.$_POST['email'].'"';} ?> required>
+                <h1>Delete account:</h1>
+                <input class="form-field" type="email" id="email" name="email" placeholder="email" <?php if (isset($error) && $error == TRUE) {echo 'value="'.$_POST['email'].'"';} ?> required>
                 <br>
-                <input class="form_field" type="password" id="password" name="password" placeholder="password" required>
+                <input class="form-field" type="password" id="password" name="password" placeholder="password" required>
                 <br>
-                <input class="form_field" type="password" id="passwordConfirm" name="passwordConfirm" placeholder="confirm password" required>
+                <input class="form-field" type="password" id="passwordConfirm" name="passwordConfirm" placeholder="confirm password" required>
                 <br>
                 <input type="checkbox" id="deleteConfirm" name="deleteConfirm" value="confirm" required>
                 <label for="deleteConfirm">I am sure I want to delete my account</label>

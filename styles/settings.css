@@ -2,7 +2,7 @@
 @import url(main.css);
 
 .content {
-  align-items: flex-start;
+  align-items: center;
   flex-direction: column;
 }
 .flex-zone {
@@ -11,4 +11,15 @@
   border-radius: 5px;
   padding: 5px;
   margin: 5px;
+  width: 40%;
+}
+
+.form-field {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
