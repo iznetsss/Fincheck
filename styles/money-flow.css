@@ -37,21 +37,15 @@
   }
 
 
-.expense-amount-input, .income-amount-input {
+.expense-amount-input, .income-amount-input, .expense-type-select, .income-type-select {
     margin-bottom: 10px;
     margin-top: 10px;
-}
-.expense-type-select, .income-type-select {
-    margin-top: 10px;
-    margin-bottom: 10px;
 }
 .expense-type-new, .income-type-new {
     margin-bottom: 10px;
 }
 
-.graph-btn {
-    display: none;
-}
+
 
 #spending-graph-start, #spending-graph-end, #income-graph-start, #income-graph-end {
     width: 5vw;

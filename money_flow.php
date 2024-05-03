@@ -351,10 +351,10 @@ else {
       <div class="flex-zone", id="flex-zone-expenses">
         <div class="flex-container", id="expenses-input">
             <form method="POST" action="">
-                <h3>Expenses</h3>
+                <h3>New spending</h3>
                 <label for="expense-amount">Amount:</label>
                 <input class="expense-amount-input" type="number" id="expense-amount" name="expense-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?">
-                <label class="expense-type-label" for="expense-type">Select Expense Type:</label>
+                <label class="expense-type-label" for="expense-type">Category:</label>
                 <select class="expense-type-select" id="expense-type" name="expense-type">
                     <?php
                     foreach ($spendingCategories as $category) {
@@ -387,7 +387,7 @@ else {
                 <input type="text" id="expense-note"  class="expense-amount-input" name="expense-note">
                 <input type="hidden" id="recurring" value="No">
 
-                <input class="btn" type="submit" id="submit-button-expense" name="submit-button-expense" value="Submit Expense">
+                <input class="btn" type="submit" id="submit-button-expense" name="submit-button-expense" value="Add spending">
                 <?php
                 if (!empty($amountErrorExpenses) || !empty($typeErrorExpenses) || !empty($dateErrorExpenses) || !empty($noteErrorExpenses) || !empty($newCategoryErrorExpenses)) {
                     echo expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErrorExpenses, $noteErrorExpenses, $newCategoryErrorExpenses);
@@ -400,22 +400,17 @@ else {
             </form>
         </div>
         <div class="flex-container", id="expenses-table">
-            <h4>The Chart of Expenses</h4>
-            <label class="spending-container">
-            <input class="calender" type="date" id="spending-graph-start"/>
-            <input class="calender" type="date" id="spending-graph-end"/>
-            <button class="graph-btn icon-search" aria-label="graph-btn"></button>
-            </label>
+            <h4>Spendings</h4>
             <canvas id="line-chart-expenses"></canvas>
         </div>
       </div>
       <div class="flex-zone", id="flex-zone-income">
         <div class="flex-container", id="income-input">
             <form method="POST" action="">
-                <h3>Income</h3>
+                <h3>New income</h3>
                 <label for="income-amount">Amount:</label>
                 <input class="income-amount-input" type="number" id="income-amount" name="income-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?">
-                <label class="income-type-label" for="income-type">Select Income Type:</label>
+                <label class="income-type-label" for="income-type">Category:</label>
                 <select class="income-type-select" id="income-type" name="income-type" >
                     <?php
                         foreach ($incomeCategories as $category) {
@@ -446,7 +441,7 @@ else {
                 <label for="income-note">Note:</label>    
                 <input type="text" id="income-note"  class="income-amount-input" name="income-note">
                 <input type="hidden" id="recurring" value="No">
-                <input class="btn" type="submit" id="submit-button-income" name="submit-button-income" value="Submit Income">
+                <input class="btn" type="submit" id="submit-button-income" name="submit-button-income" value="Add income">
                 <?php 
                 if (!empty($amountErrorIncome) || !empty($typeErrorIncome) || !empty($dateErrorIncome)) {
                     echo expensesErrorsOutput($amountErrorIncome, $typeErrorIncome, $dateErrorIncome);
@@ -459,12 +454,7 @@ else {
             </form>
         </div>
         <div class="flex-container", id="income-table">
-          <h4>The Chart of Incomes</h4>
-          <label class="income-container">
-            <input class="calender" type="date" id="income-graph-start"/>
-            <input class="calender" type="date" id="income-graph-end"/>
-            <button class="graph-btn icon-search" aria-label="graph-btn"></button>
-            </label>
+          <h4>Incomes</h4>
             <canvas id="line-chart-income"></canvas>
             
 
