@@ -2,6 +2,52 @@
 require ("includes/session_check.php");
 require ("includes/sql_connect.php");
 
+// checking includeRecurring and carryOver values and set checkboxes 
+$query = "SELECT includeRecurring, carryOver FROM users WHERE username = ?";
+$stmt = $link->prepare($query); 
+
+if ($stmt === false) {
+    die('MySQL prepare error: ' . $link->error);
+}
+$stmt->bind_param('s', $username); 
+$stmt->execute();
+$stmt->bind_result($includeRecurring, $carryOver);
+if ($stmt->fetch()) {
+    $recurringChecked = $includeRecurring ? "checked" : "";
+    $carryOverChecked = $carryOver ? "checked" : "";
+} else {
+    //If smth went totally wrong...
+    $recurringChecked = "";
+    $carryOverChecked = "";
+}
+$stmt->close();
+
+// sending into DB includeRecurring and carryOver values
+if($_SERVER['REQUEST_METHOD'] === 'POST' && 
+isset($_POST['updateSettings']) && $_POST['updateSettings'] == "Update Settings")
+{
+    $newIncludeRecurring = isset($_POST['includeRecurring']) ? 1 : 0; 
+    $newCarryOver = isset($_POST['carryOver']) ? 1 : 0;
+
+    $updateQuery = "UPDATE users SET includeRecurring = ?, carryOver = ? WHERE username = ?";
+    $updateStmt = $link->prepare($updateQuery);
+    if ($updateStmt === false) {
+        die('MySQL prepare error: ' . $link->error);
+    }
+
+    $updateStmt->bind_param('iis', $newIncludeRecurring, $newCarryOver, $username);
+    $updateStmt->execute();
+    $updateStmt->close();
+
+    $recurringChecked = $newIncludeRecurring ? "checked" : "";
+    $carryOverChecked = $newCarryOver ? "checked" : "";
+
+    $updatedSettings = "<br><span>Settings updated successfully!</span>";
+}
+
+
+
+
 $arrErrors = [];
 if($_SERVER['REQUEST_METHOD'] === 'POST' && 
 isset($_POST['deleteButton']) && $_POST['deleteButton'] == "Delete account" &&
@@ -62,6 +108,9 @@ isset($_POST['deleteButton']) && $_POST['deleteButton'] == "Delete account" &&
     }
         
 }
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -87,13 +136,19 @@ isset($_POST['deleteButton']) && $_POST['deleteButton'] == "Delete account" &&
         <div class="flex-zone">
             <form method="post" id="settingsForm" name="settingsForm" action="settings.php">
                 <h1>Settings:</h1>
-                <input type="checkbox" id="includeRecurring" name="includeRecurring" value="checked" checked>
+                <input type="checkbox" id="includeRecurring" name="includeRecurring" <?php echo $recurringChecked; ?>>
                 <label for="includeRecurring">Include recurring payments in spendings graph</label>
                 <br>
-                <input type="checkbox" id="carryOver" name="carryOver" value="checked" checked>
+                <input type="checkbox" id="carryOver" name="carryOver" <?php echo $carryOverChecked; ?>>
                 <label for="includeRecurring">Carry over</label>
                 <br>
-
+                <input type="submit" class="btn" id="updateSettings" name="updateSettings" value="Update Settings">
+                <?php
+                if(isset($updatedSettings))
+                {
+                    echo $updatedSettings;
+                }
+                ?>
             </form>     
         </div>
         <div class="flex-zone">

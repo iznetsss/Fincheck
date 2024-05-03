@@ -308,72 +308,154 @@ while (mysqli_query($link, $query)->num_rows != 0) {
   }
 }
 
-//- - - - -Graph logic.- - - - -
-$daysInMonth = date("t");
-$currentMonth = date("F");
+// NOT CARRY OVER
+function getUserFinancialSummary($link, $username) {
+  // Check if the 'spendings' table exists
+  $query = "SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'spendings') as table_exists;";
+  $result = mysqli_query($link, $query);
+  $row = mysqli_fetch_assoc($result);
+  if (!$row['table_exists']) {
+      die('Database error: no spending table found.');
+  }
+
+  // Retrieve spendings by days for the current month and year
+  $query = "SELECT DAY(spending_date) as day, SUM(amount) as amount FROM spendings 
+            WHERE username = '$username' AND YEAR(spending_date) = YEAR(CURDATE()) AND MONTH(spending_date) = MONTH(CURDATE())
+            GROUP BY DAY(spending_date);";
+  $result = mysqli_query($link, $query);
+  $spendingsByDays = [];
+  while ($row = $result->fetch_assoc()) {
+      $spendingsByDays[$row['day']] = floatval($row['amount']);
+  }
+
+  // Check if the 'incomes' table exists
+  $query = "SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'incomes') as table_exists;";
+  $result = mysqli_query($link, $query);
+  $row = mysqli_fetch_assoc($result);
+  if (!$row['table_exists']) {
+      die('Database error: no income table found.');
+  }
+
+  // Retrieve incomes for the current month and year
+  $query = "SELECT SUM(amount) as amount FROM incomes 
+            WHERE username = '$username' AND YEAR(income_date) = YEAR(CURDATE()) AND MONTH(income_date) = MONTH(CURDATE());";
+  $result = mysqli_query($link, $query);
+  $totalIncomes = 0.0;
+  if ($row = $result->fetch_assoc()) {
+      $totalIncomes = floatval($row['amount']);
+  }
+
+  // Calculate total spendings
+  $totalSpendings = array_sum($spendingsByDays);
+
+  // Calculate balance
+  $balance = $totalIncomes - $totalSpendings;
+
+  // Return a summary of financial data
+  return [
+      'spendingsByDays' => $spendingsByDays,
+      'totalIncomes' => $totalIncomes,
+      'totalSpendings' => $totalSpendings,
+      'balance' => $balance
+  ];
+}
+// CARRY OVER
+function getUserFinancialALLSummary($link, $username) {
+  // Check if the 'spendings' table exists
+  $query = "SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'spendings') as table_exists;";
+  $result = mysqli_query($link, $query);
+  $row = mysqli_fetch_assoc($result);
+  if (!$row['table_exists']) {
+      die('Database error: no spending table found.');
+  }
+
+  // Retrieve all spendings grouped by day
+  $query = "SELECT DAY(spending_date) as day, SUM(amount) as amount FROM spendings 
+            WHERE username = '$username'
+            GROUP BY DAY(spending_date);";
+  $result = mysqli_query($link, $query);
+  $spendingsByDays = [];
+  while ($row = $result->fetch_assoc()) {
+      $spendingsByDays[$row['day']] = floatval($row['amount']);
+  }
+
+  // Check if the 'incomes' table exists
+  $query = "SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'incomes') as table_exists;";
+  $result = mysqli_query($link, $query);
+  $row = mysqli_fetch_assoc($result);
+  if (!$row['table_exists']) {
+      die('Database error: no income table found.');
+  }
+
+  // Retrieve all incomes
+  $query = "SELECT SUM(amount) as amount FROM incomes 
+            WHERE username = '$username';";
+  $result = mysqli_query($link, $query);
+  $totalIncomes = 0.0;
+  if ($row = $result->fetch_assoc()) {
+      $totalIncomes = floatval($row['amount']);
+  }
+
+  // Calculate total spendings
+  $totalSpendings = array_sum($spendingsByDays);
+
+  // Calculate balance
+  $balance = $totalIncomes - $totalSpendings;
+
+  // Return a summary of financial data
+  return [
+      'spendingsByDays' => $spendingsByDays,
+      'totalIncomes' => $totalIncomes,
+      'totalSpendings' => $totalSpendings,
+      'balance' => $balance
+  ];
+}
+
+$daysInMonth = date("t"); // Number of days in the current month
+$currentMonth = date("F"); // Current month name
 $spendingsByDays = [];
-//Array with all days in current month as keys. Values are set to 0 by default.
+
+$financialSummary = getUserFinancialSummary($link, $username);
+
+// Initialize arrays with all days in the current month as keys. Values are set to 0 by default.
 for ($i = 1; $i <= $daysInMonth; $i++) {
     $spendingsByDays[$i] = 0;
-    $incomesByDays[$i] = 0;
 }
-//Checking if the table exists.
-$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'spendings') as table_exists;");
-$result = mysqli_query($link, $query);
-$row = mysqli_fetch_assoc($result);
-$tableExists = $row['table_exists'];
-if (!$tableExists) {
-    die('Database error: no spending table found.');
-}    
-//if table exists, getting spendings by days
-$query = ("SELECT DAY(spending_date), amount FROM spendings 
-           WHERE username = '$username' AND 
-           YEAR(spending_date) = YEAR(CURDATE()) AND
-           MONTH(spending_date) = MONTH(CURDATE());");
 
-$result = mysqli_query($link, $query);
-if ($result->num_rows == 0) {
-
-}
-else {
-    while($row = $result->fetch_assoc()) {
-        $spendingDate = (int) $row['DAY(spending_date)'];
-        $spendingAmount = $row['amount'];
-        $spendingsByDays[$spendingDate] += floatval($spendingAmount);
-    }
-}
-$query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'incomes') as table_exists;");
-$result = mysqli_query($link, $query);
-$row = mysqli_fetch_assoc($result);
-$tableExists = $row['table_exists'];
-if (!$tableExists) {
-    die('Database error: no income table found.');
-}    
-$totalIncomes = 0.0;
-$query = ("SELECT amount FROM incomes 
-           WHERE username = '$username' AND 
-           YEAR(income_date) = YEAR(CURDATE()) AND
-           MONTH(income_date) = MONTH(CURDATE());");
-
-$result = mysqli_query($link, $query);
-if ($result->num_rows == 0) {
-
-}
-else {
-    while($row = $result->fetch_assoc()) {
-        $incomeAmount = $row['amount'];
-        $totalIncomes += floatval($incomeAmount);
+// Check if there are existing spending data and merge it
+if (!empty($financialSummary['spendingsByDays'])) {
+    foreach ($financialSummary['spendingsByDays'] as $day => $amount) {
+        if (isset($spendingsByDays[$day])) {
+            $spendingsByDays[$day] += $amount; // Add to the existing amount
+        }
     }
 }
 
-//- - - - -BALANCE LOGIC.- - - - -
 
-$totalSpendings = 0.00;
-foreach ($spendingsByDays as $spending) {
-  $totalSpendings += floatval($spending);
+$query = "SELECT carryOver FROM users WHERE username = ?";
+$stmt = $link->prepare($query); 
+
+if ($stmt === false) {
+    die('MySQL prepare error: ' . $link->error);
+}
+$stmt->bind_param('s', $username); 
+$stmt->execute();
+$stmt->bind_result($carryOver);
+$stmt->fetch();
+$stmt->close();
+
+// If not carry over
+if ($carryOver == 0) {
+  $totalIncomes = $financialSummary['totalIncomes'];
+  $totalSpendings = $financialSummary['totalSpendings'];
+  $balance = $financialSummary['balance'];
+} else if ($carryOver == 1) { // If carry over
+  $financialALLSummary = getUserFinancialALLSummary($link, $username);
+  $totalIncomes = $financialSummary['totalIncomes'];
+  $totalSpendings = $financialSummary['totalSpendings'];
+  $balance = $financialALLSummary['balance'];
 }
 
-$balance = $totalIncomes - $totalSpendings;
 //- - - - -LATEST EXPENSES TABLE.- - - - -
 $query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'spendings') as table_exists;");
 $result = mysqli_query($link, $query);
