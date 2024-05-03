@@ -135,7 +135,7 @@ $query = ("SELECT spending_date, amount, category FROM spendings WHERE username 
           ORDER BY spending_date DESC LIMIT 5;");
 $result = mysqli_query($link, $query);
 if ($result->num_rows == 0) {
-    $noRows = TRUE;
+    $noSpendingRows = TRUE;
 }
 else {
     while($row = $result->fetch_assoc()) {
@@ -161,7 +161,7 @@ $query = ("SELECT recurring_date, amount, recurring_name FROM recurring WHERE us
           ORDER BY recurring_date ASC LIMIT 5;");
 $result = mysqli_query($link, $query);
 if ($result->num_rows == 0) {
-    $noRows = TRUE;
+    $noRecurringRows = TRUE;
 }
 else {
     while($row = $result->fetch_assoc()) {
@@ -479,7 +479,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
           <h1><?php echo number_format(floatval($balance), 2); ?></h1>
         </div>
         <div class="balance-div">
-          <h2><a href="#" title="New spending" id="new-spending-btn">Spent<i class='bx bx-minus'></i></a></h2>
+          <h2><a title="New spending" id="new-spending-btn">Spent<i class='bx bx-minus'></i></a></h2>
           <h1><?php echo number_format(floatval($totalSpendings), 2); ?></h1>
         </div>
 <script>
@@ -525,7 +525,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense']
 }
 ?>
         <div class="balance-div">
-          <h2><a href="#" title="New income" id="new-income-btn">Earned<i class='bx bx-plus'></i></a></h2>
+          <h2><a title="New income" id="new-income-btn">Earned<i class='bx bx-plus'></i></a></h2>
           <h1><?php echo number_format(floatval($totalIncomes), 2); ?></h1>
         </div>
       </div>
@@ -624,8 +624,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income'])
       </div>
     </div>
     <div class="flex-zone flex-zone-right">
-      <div class="flex-container flex-container-right">
+      <div class="flex-container flex-container-right" id="latestSpendings">
         <h2><a href="advanced.php">Latest spendings</a></h2>
+        <?php if (isset($noSpendingRows)) {?>
+        <span>No spendings has been made yet.</span>
+        <script>
+          var FlexContainerRight = document.getElementById("latestSpendings");
+          FlexContainerRight.style.justifyContent = "center";
+        </script>
+        <?php } else {?>
         <table class="right-table">
           <thead>
             <tr>
@@ -652,10 +659,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income'])
             ?>
           </tbody>
         </table>
-        <span class="header2-invisible">Invisible text</span>
+        <?php } ?>
       </div>
-      <div class="flex-container flex-container-right">
+      <div class="flex-container flex-container-right" id="upcomingPayments">
         <h2><a href="recurring.php">Upcoming payments</a></h2>
+        <?php if (isset($noRecurringRows)) {?>
+        <span>No recurring payments has been added yet.</span>
+        <script>
+          var FlexContainerRight = document.getElementById("upcomingPayments");
+          FlexContainerRight.style.justifyContent = "center";
+        </script>
+        <?php } else {?>
         <table class="right-table">
           <thead>
             <tr>
@@ -681,7 +695,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income'])
             ?>
           </tbody>
         </table>
-        <span class="header2-invisible">Invisible text</span>
+        <?php } ?>
       </div>
     </div>
   </div>

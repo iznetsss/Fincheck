@@ -65,7 +65,10 @@ else {
   <?php require 'includes/sidebar.php'; ?>
   <div class="content">
     <?php if (isset($noRows)) {?>
-      <span>No spendings has been made yet.</span>
+      <span>No spendings has been made yet.</span>\
+      <script>
+        //var flexZone = document.getElementById();
+      </script>
     <?php } else {?>
     <table>
         <thead>
