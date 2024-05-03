@@ -82,6 +82,9 @@ isset($_POST['deleteButton']) && $_POST['deleteButton'] == "Delete account" &&
     <?php include 'includes/sidebar.php'; ?>
     <div class="content">
         <div class="flex-zone">
+            <h1>Username: <?php echo $username ?></h1>
+        </div>
+        <div class="flex-zone">
             <form method="post" id="settingsForm" name="settingsForm" action="settings.php">
                 <h1>Settings:</h1>
                 <input type="checkbox" id="includeRecurring" name="includeRecurring" value="checked" checked>

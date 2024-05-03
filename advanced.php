@@ -63,11 +63,12 @@ else {
 <body>
   <?php require 'includes/header.php'; ?>
   <?php require 'includes/sidebar.php'; ?>
-  <div class="content">
+  <div class="content" id="content">
     <?php if (isset($noRows)) {?>
-      <span>No spendings has been made yet.</span>\
+      <span>No spendings has been made yet.</span>
       <script>
-        //var flexZone = document.getElementById();
+        var content = document.getElementById("content");
+          content.style.alignItems = "center";
       </script>
     <?php } else {?>
     <table>
