@@ -469,7 +469,7 @@ $query = ("SELECT spending_date, amount, category FROM spendings WHERE username 
           ORDER BY spending_date DESC LIMIT 5;");
 $result = mysqli_query($link, $query);
 if ($result->num_rows == 0) {
-    $noRows = TRUE;
+    $noSpendingRows = TRUE;
 }
 else {
     while($row = $result->fetch_assoc()) {
@@ -495,7 +495,7 @@ $query = ("SELECT recurring_date, amount, recurring_name FROM recurring WHERE us
           ORDER BY recurring_date ASC LIMIT 5;");
 $result = mysqli_query($link, $query);
 if ($result->num_rows == 0) {
-    $noRows = TRUE;
+    $noRecurringRows = TRUE;
 }
 else {
     while($row = $result->fetch_assoc()) {
