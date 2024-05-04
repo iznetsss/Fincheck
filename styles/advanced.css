@@ -20,6 +20,7 @@
 }
 tbody tr:hover {
     background-color: rgb(240, 240, 240);
+    cursor: pointer;
 }
 .flex-zone {
     background-color: rgb(250, 250, 250);

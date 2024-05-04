@@ -119,47 +119,6 @@ else {
           </tr>
         </thead>
         <tbody id="table">
-        
-        <?php
-        /*
-          if (isset($tableRows)) {
-            foreach($tableRows as $row) {
-              echo "<tr>";
-              if (end($row) == 1) {
-                foreach(array_slice($row, 0, -1) as $key => $cell) {
-                  if ($key == 2) {
-                    $cell = "-".$cell;
-                    echo '<td class="spending-cell">';
-                    echo $cell;
-                    echo "</td>";
-                  }
-                  else {
-                    echo "<td>";
-                    echo $cell;
-                    echo "</td>";
-                  }
-                }
-              }
-              else {
-                foreach(array_slice($row, 0, -1) as $key => $cell) {
-                  if ($key == 2) {
-                    $cell = "+".$cell;
-                    echo '<td class="income-cell">';
-                    echo $cell;
-                    echo "</td>";
-                  }
-                  else {
-                    echo "<td>";
-                    echo $cell;
-                    echo "</td>";
-                  }
-                }
-              }
-              echo "</tr>";
-            }
-          }
-          */
-        ?>
         </tbody>
     </table>
     <script>
@@ -180,7 +139,7 @@ else {
           
           var tableSize = table.rows.length;
           var newRow = table.insertRow(tableSize);
-          newRow.id = row.id + "-" + row.isSpending;
+          newRow.id = row.id + row.isSpending;
 
           var cellDate = newRow.insertCell(0);
           var cellCategory = newRow.insertCell(1);
@@ -205,8 +164,17 @@ else {
           cellNote.innerHTML = row.comment;
           cellRecurring.innerHTML = row.recurring;
         }); 
-    }
+      }
     loadTable(<?php echo json_encode($tableRows); ?>);
+    table.addEventListener("click", function(event) {
+      var clickedElement = event.target;
+
+      if (clickedElement.tagName === "TD") {
+        var clickedRow = clickedElement.parentNode;
+        var rowId = clickedRow.id;
+        alert("You clicked on row: " + rowId);
+      }
+    });
     </script>
     <?php } ?>
   </div>
