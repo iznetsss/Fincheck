@@ -554,7 +554,7 @@ while($row = $result->fetch_assoc()) {
   <?php include 'includes/sidebar.php'; ?>
   
   <!--SPENDINGS FORM JS-->
-  <<div id="modal-expenses" class="modal">
+  <div id="modal-expenses" class="modal">
   <div class="modal-content">
     <span class="close close-expenses">&times;</span>
     <form method="POST" action="" id="expenses-form">
@@ -743,29 +743,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }, 4000); // 4 sec
         </script>
-<script>
-// Incomes Modal Script
-document.addEventListener('DOMContentLoaded', function () {
-  var modalIncomes = document.getElementById("modal-incomes");
-  var newIncomeBtn = document.getElementById("new-income-btn");
-  var closeIncomes = document.querySelector(".close-incomes");
-  var incomesForm = document.getElementById("incomes-form");
-
-  var messageDiv = document.getElementById("messageJsDiv");
-
-
-  newIncomeBtn.onclick = function() {
-    modalIncomes.style.display = "block";
-    modalIncomes.style.position = "absolute";
-  };
-
-  closeIncomes.onclick = function() {
-    modalIncomes.style.display = "none";
-    messageDiv.style.display = 'block';
-  };
-
-});
-</script>
       <div class="simple">
         <div class="month-navigation">
       
