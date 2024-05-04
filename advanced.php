@@ -476,6 +476,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         var clickedRow = clickedElement.parentNode;
         var rowId = clickedRow.id;
 
+
+
+
         if(rowId[rowId.length - 1] == 1)
         {
           // Expenses Modal Script
@@ -486,7 +489,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         
           closeExpenses.onclick = function() {
             modalExpenses.style.display = "none";
-            messageDiv.style.display = 'block'; 
           };
           
 
@@ -502,7 +504,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         
           closeIncomes.onclick = function() {
             modalIncomes.style.display = "none";
-            messageDiv.style.display = 'block';
           };
         
         }
