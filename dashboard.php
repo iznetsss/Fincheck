@@ -268,9 +268,7 @@ if (!$tableExists) {
     die('Database error: no recurring table found.');
 }
 $query = ("SELECT * FROM recurring WHERE username = '$username' AND 
-           YEAR(recurring_date) <= YEAR(CURDATE()) AND
-           MONTH(recurring_date) <= MONTH(CURDATE()) AND
-           DAY(recurring_date) <= DAY(CURDATE());");
+           recurring_date <= CURDATE();");
 while (mysqli_query($link, $query)->num_rows != 0) {
   $result = mysqli_query($link, $query);
   while($row = $result->fetch_assoc()) {
@@ -279,7 +277,6 @@ while (mysqli_query($link, $query)->num_rows != 0) {
       $cat = $row['category'];
       $name = $row['recurring_name'];
       $amount = number_format($row['amount'], 2, ".", ",");
-
       $link -> query("INSERT INTO spendings (username, spending_date, category, amount, spending_comment, recurring)
                       VALUES ('$username', '$recurringDate', '$cat', '$amount', '$name', TRUE)");
 

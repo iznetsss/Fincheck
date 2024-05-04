@@ -18,10 +18,10 @@ if (!$tableExists) {
 }   
 //if table exists, getting all needed data
 $tableRows = [];
-$query = ("SELECT spending_date AS any_date, category, amount, spending_comment AS any_comment, recurring, true AS is_spending FROM spendings 
+$query = ("SELECT ID, spending_date AS any_date, category, amount, spending_comment AS any_comment, recurring, true AS is_spending FROM spendings 
            WHERE username = '$username'
            UNION ALL
-           SELECT income_date AS any_date, category, amount, income_comment AS any_comment, recurring, false AS is_spending FROM incomes 
+           SELECT ID, income_date AS any_date, category, amount, income_comment AS any_comment, recurring, false AS is_spending FROM incomes 
            WHERE username = '$username'
            ORDER BY any_date DESC;");
 $result = mysqli_query($link, $query);
@@ -30,6 +30,7 @@ if ($result->num_rows == 0) {
 }
 else {
     while($row = $result->fetch_assoc()) {
+        $id = $row['ID'];
         $date = date('d.m.Y', strtotime($row['any_date']));
         $category = $row['category'];
         $amount = number_format($row['amount'], 2, ".", ",");
@@ -42,7 +43,14 @@ else {
         }
         $isSpending = $row['is_spending'];
 
-        $tableRow = [$date, $category, $amount, $comment, $recurring, $isSpending];
+        $tableRow = ["id"=>$id,
+                     "date"=>$date, 
+                     "category"=>$category, 
+                     "amount"=>$amount, 
+                     "comment"=>$comment, 
+                     "recurring"=>$recurring, 
+                     "isSpending"=>$isSpending];
+
         array_push($tableRows, $tableRow);
     }
 }
@@ -64,6 +72,35 @@ else {
   <?php require 'includes/header.php'; ?>
   <?php require 'includes/sidebar.php'; ?>
   <div class="content" id="content">
+    <div class="flex-zone">
+      <a id="week">Week</a>
+      <a id="month">Month</a>
+      <a id="year">Year</a>
+      <a id="all">All</a>
+      <form id="filter-by-date">
+        <input type="date">
+        <input type="date">
+        <input type="submit" value="Filter">
+      </form>
+      <script>
+        var week = document.getElementById("week");
+        var month = document.getElementById("month");
+        var year = document.getElementById("year");
+        var all = document.getElementById("all");
+        week.addEventListener("click", function() {
+          fetchData("week");
+        });
+        month.addEventListener("click", function() {
+          fetchData("month");
+        });
+        year.addEventListener("click", function() {
+          fetchData("year");
+        });
+        all.addEventListener("click", function() {
+          fetchData("all");
+        });
+      </script>
+    </div>
     <?php if (isset($noRows)) {?>
       <span>No spendings has been made yet.</span>
       <script>
@@ -79,35 +116,66 @@ else {
             <th>Amount</th>
             <th>Note</th>
             <th>Recurring</th>
-            <th>Delete Transaction</th>
           </tr>
         </thead>
-        <tbody>
-          <script>
-            function displayRowNumber(rowId) {
-                var rowIndex = rowId.split('-')[1];
-                alert("You clicked on row " + (parseInt(rowIndex) + 1));
-            }
-          </script>
-            <?php
-              if (isset($tableRows)) {
-                  foreach ($tableRows as $index => $row) {
-                      echo "<tr id='row-$index' onclick='displayRowNumber(this.id)'>";
-                      foreach (array_slice($row, 0, -1) as $key => $cell) {
-                          echo "<td>";
-                          echo $cell;
-                          echo "</td>";
-                      }
-                      // Only add the button if is_spending is defined //without smth not working
-                      if (isset($row[5])) {
-                          echo '<td><button>Delete</button></td>';
-                      }
-                      echo "</tr>";
-                  }
-              }
-            ?>
+        <tbody id="table">
         </tbody>
     </table>
+    <script>
+      function fetchData(period) {
+        fetch('process_table.php?period=' + period)
+          .then(response => response.json())
+          .then(data => {
+            loadTable(data);
+        });
+      }
+
+      function loadTable(jsonTableData) {
+        var table = document.getElementById("table");
+        while (table.rows.length > 0) {
+            table.deleteRow(0);
+        }
+        jsonTableData.forEach(function(row) {
+          
+          var tableSize = table.rows.length;
+          var newRow = table.insertRow(tableSize);
+          newRow.id = row.id + row.isSpending;
+
+          var cellDate = newRow.insertCell(0);
+          var cellCategory = newRow.insertCell(1);
+          var cellAmount = newRow.insertCell(2);
+          if (row.isSpending == 1) {
+            cellAmount.classList.add('spending-cell');
+          }
+          else {
+            cellAmount.classList.add('income-cell');
+          }
+          var cellNote = newRow.insertCell(3);
+          var cellRecurring = newRow.insertCell(4);
+
+          cellDate.innerHTML = row.date;
+          cellCategory.innerHTML = row.category;
+          if (row.isSpending == 1) {
+            cellAmount.innerHTML = "-" + row.amount;
+          }
+          else {
+            cellAmount.innerHTML = "+" + row.amount;
+          }
+          cellNote.innerHTML = row.comment;
+          cellRecurring.innerHTML = row.recurring;
+        }); 
+      }
+    loadTable(<?php echo json_encode($tableRows); ?>);
+    table.addEventListener("click", function(event) {
+      var clickedElement = event.target;
+
+      if (clickedElement.tagName === "TD") {
+        var clickedRow = clickedElement.parentNode;
+        var rowId = clickedRow.id;
+        alert("You clicked on row: " + rowId);
+      }
+    });
+    </script>
     <?php } ?>
   </div>
 
