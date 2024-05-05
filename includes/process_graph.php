@@ -49,6 +49,7 @@ function financialSummary($link, $username, $monthOffset) {
     ];
 }
 
+
 function carryOverBalance($link, $username, $monthOffset) {
     $totalIncomes = 0.0;
     $totalSpendings = 0.0;
