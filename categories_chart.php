@@ -94,8 +94,10 @@ else {
           data: {
             labels: <?php echo json_encode(array_keys($spendingsByCategories)); ?>,
             datasets: [{
-              borderColor: ["#6fb7a0", "#746fb7", "#B76f70", "#A7b76f", "#6fb7b6", "#B7956f", "#D45950", "#c7c7c7"],
-              backgroundColor: ["#6fb7a0", "#746fb7", "#B76f70", "#A7b76f", "#6fb7b6", "#B7956f", "#D45950", "#c7c7c7"],
+              borderColor: ["#FAFAFA"],
+              backgroundColor: ["#922B21", "#1E8449", "#B03A2E", "#239B56", "#76448A",
+                                "#B7950B", "#6C3483", "#B9770E", "#1F618D", "#AF601A",
+                                "#148F77", "#A04000", "#117A65", "#283747", "#5DADE2"],
 
               data: <?php echo json_encode(array_values($spendingsByCategories)); ?>, 
             }]

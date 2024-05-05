@@ -40,7 +40,7 @@ function expensesErrorsOutput($amountErrorExpenses, $typeErrorExpenses, $dateErr
     }
     return $output;
 }
-
+//skibidi sigma pomni digital fortnite Chamba free gigachad rizz omaigod floo xxxtentacion hotmail lionel ronaldo junior mewing tercero hikibay xocas etesech golden toy pupet ohio ruben tuesta youtube pro insano globo de texto 51 decadencia 777
 function incomeErrorsOutput($amountErrorIncome, $typeErrorIncome, $dateErrorIncome) {
   $output = '<br>';
   if(isset($amountErrorIncome)) {
@@ -431,7 +431,6 @@ if (!empty($financialSummary['spendingsByDays'])) {
     }
 }
 
-
 $query = "SELECT carryOver FROM users WHERE username = ?";
 $stmt = $link->prepare($query); 
 
@@ -508,9 +507,7 @@ else {
     }
 } 
 
-
 //Categories.
-
 $query = ("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'categories') as table_exists;");
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_assoc($result);
@@ -531,11 +528,7 @@ while($row = $result->fetch_assoc()) {
         array_push($spendingCategories, $row['category']);
     }
 }
- 
 ?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 

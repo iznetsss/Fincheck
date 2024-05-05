@@ -9,19 +9,19 @@ if ($period == "all") {
            UNION ALL
            SELECT ID, income_date AS any_date, category, amount, income_comment AS any_comment, recurring, false AS is_spending FROM incomes 
            WHERE username = '$username'
-           ORDER BY any_date DESC;");
+           ORDER BY any_date DESC, ID DESC;");
 }
 else if ($period == "week") {
     $query = ("SELECT ID, spending_date AS any_date, category, amount, spending_comment AS any_comment, recurring, true AS is_spending FROM spendings 
-           WHERE username = '$username' 
-           AND spending_date >= CURDATE() - INTERVAL (DAYOFWEEK(CURDATE()) - 2) DAY
-           AND spending_date <= CURDATE() + INTERVAL (1 - DAYOFWEEK(CURDATE())) DAY + INTERVAL 7 DAY
-           UNION ALL
-           SELECT ID, income_date AS any_date, category, amount, income_comment AS any_comment, recurring, false AS is_spending FROM incomes 
-           WHERE username = '$username'
-           AND income_date >= CURDATE() - INTERVAL (DAYOFWEEK(CURDATE()) - 2) DAY
-           AND income_date <= CURDATE() + INTERVAL (1 - DAYOFWEEK(CURDATE())) DAY + INTERVAL 7 DAY
-           ORDER BY any_date DESC;");
+               WHERE username = '$username' 
+               AND WEEK(spending_date - INTERVAL 1 DAY) = WEEK(CURDATE() - INTERVAL 1 DAY)
+               AND YEAR(spending_date - INTERVAL 1 DAY) = YEAR(CURDATE() - INTERVAL 1 DAY)
+               UNION ALL
+               SELECT ID, income_date AS any_date, category, amount, income_comment AS any_comment, recurring, false AS is_spending FROM incomes 
+               WHERE username = '$username'
+               AND WEEK(income_date - INTERVAL 1 DAY) = WEEK(CURDATE() - INTERVAL 1 DAY)
+               AND YEAR(income_date - INTERVAL 1 DAY) = YEAR(CURDATE() - INTERVAL 1 DAY)
+               ORDER BY any_date DESC, ID DESC;");
 }
 else if ($period == "month") {
     $query = ("SELECT ID, spending_date AS any_date, category, amount, spending_comment AS any_comment, recurring, true AS is_spending FROM spendings 
@@ -33,7 +33,7 @@ else if ($period == "month") {
            WHERE username = '$username'
            AND YEAR(income_date) = YEAR(CURDATE())
            AND MONTH(income_date) = MONTH(CURDATE())
-           ORDER BY any_date DESC;");
+           ORDER BY any_date DESC, ID DESC;");
 }
 else if ($period == "year") {
     $query = ("SELECT ID, spending_date AS any_date, category, amount, spending_comment AS any_comment, recurring, true AS is_spending FROM spendings 
@@ -43,7 +43,27 @@ else if ($period == "year") {
            SELECT ID, income_date AS any_date, category, amount, income_comment AS any_comment, recurring, false AS is_spending FROM incomes 
            WHERE username = '$username'
            AND YEAR(income_date) = YEAR(CURDATE())
-           ORDER BY any_date DESC;");
+           ORDER BY any_date DESC, ID DESC;");
+}
+else if ($period == "custom") {
+    $from = $_GET['from']; 
+    $to = $_GET['to'];
+    $dateObj1 = DateTime::createFromFormat('Y-m-d', $from);
+    $dateObj2 = DateTime::createFromFormat('Y-m-d', $to);
+    if ($dateObj1 && $dateObj2 && $dateObj1->format('Y-m-d') === $from && $dateObj2->format('Y-m-d') === $to) {
+        $query = ("SELECT ID, spending_date AS any_date, category, amount, spending_comment AS any_comment, recurring, true AS is_spending FROM spendings 
+                   WHERE username = '$username' 
+                   AND spending_date >= '$from' AND spending_date <= '$to'
+                   UNION ALL
+                   SELECT ID, income_date AS any_date, category, amount, income_comment AS any_comment, recurring, false AS is_spending FROM incomes 
+                   WHERE username = '$username'
+                   AND income_date >= '$from' AND income_date <= '$to'
+                   ORDER BY any_date DESC, ID DESC;");
+    }
+        
+}
+if (!isset($query)) {
+    die("IDID NAHUI");
 }
 
 $result = mysqli_query($link, $query);

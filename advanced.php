@@ -16,44 +16,7 @@ $tableExists = $row['table_exists'];
 if (!$tableExists) {
     die('Database error: no income table found.');
 }   
-//if table exists, getting all needed data
-$tableRows = [];
-$query = ("SELECT ID, spending_date AS any_date, category, amount, spending_comment AS any_comment, recurring, true AS is_spending FROM spendings 
-           WHERE username = '$username'
-           UNION ALL
-           SELECT ID, income_date AS any_date, category, amount, income_comment AS any_comment, recurring, false AS is_spending FROM incomes 
-           WHERE username = '$username'
-           ORDER BY any_date DESC;");
-$result = mysqli_query($link, $query);
-if ($result->num_rows == 0) {
-    $noRows = TRUE;
-}
-else {
-    while($row = $result->fetch_assoc()) {
-        $id = $row['ID'];
-        $date = date('d.m.Y', strtotime($row['any_date']));
-        $category = $row['category'];
-        $amount = number_format($row['amount'], 2, ".", ",");
-        $comment = $row['any_comment'];
-        if ($row['recurring']) {
-          $recurring = 'Yes';
-        }
-        else {
-          $recurring = 'No';
-        }
-        $isSpending = $row['is_spending'];
 
-        $tableRow = ["id"=>$id,
-                     "date"=>$date, 
-                     "category"=>$category, 
-                     "amount"=>$amount, 
-                     "comment"=>$comment, 
-                     "recurring"=>$recurring, 
-                     "isSpending"=>$isSpending];
-
-        array_push($tableRows, $tableRow);
-    }
-}
 
 // EXPENSES JS
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-expense'])) 
@@ -282,7 +245,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
 
 <!--SPENDINGS FORM JS-->
     <div id="modal-expenses" class="modal">
-  <div class="modal-content">
+    <div class="modal-content">
     <span class="close close-expenses">&times;</span>
     <form method="POST" action="" id="expenses-form">
                 <h3>Expenses</h3>
@@ -381,15 +344,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
       <a id="year">Year</a>
       <a id="all">All</a>
       <form id="filter-by-date">
-        <input type="date">
-        <input type="date">
+        <input type="date" id="date-input-from" required>
+        <input type="date" id="date-input-to" required>
         <input type="submit" value="Filter">
       </form>
       <script>
+
         var week = document.getElementById("week");
         var month = document.getElementById("month");
         var year = document.getElementById("year");
         var all = document.getElementById("all");
+        var filter = document.getElementById("filter-by-date")
+        filter.addEventListener("submit", function() {
+          event.preventDefault();
+          var dateInputFrom = document.getElementById("date-input-from");
+          var dateFrom = dateInputFrom.value;
+          var dateInputTo = document.getElementById("date-input-to");
+          var dateTo = dateInputTo.value;
+          if (dateFrom != "" && dateTo != "") {
+            fetch('process_table.php?period=custom&from=' + dateFrom + "&to=" + dateTo)
+              .then(response => response.json())
+              .then(data => {
+                loadTable(data);
+            });
+          }
+        });
         week.addEventListener("click", function() {
           fetchData("week");
         });
@@ -468,7 +447,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
           cellRecurring.innerHTML = row.recurring;
         }); 
       }
-    loadTable(<?php echo json_encode($tableRows); ?>);
+    fetchData("all");
     table.addEventListener("click", function(event) {
       var clickedElement = event.target;
 
