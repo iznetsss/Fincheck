@@ -12,8 +12,9 @@ Our financial tracker is created for individuals of all backgrounds, including y
 
 ## Team
 
-Ivan Kuznetsov: co-founder
-Kirill Sevtsov: co-founder
+- 1. Ivan Kuznetsov: 233767IVSB
+- 1. Kirill Sevtsov: 233735IVSB
+
 
 ## Goals, Objectives and Phases
 
