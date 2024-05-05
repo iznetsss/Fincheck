@@ -262,7 +262,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
             
             $link -> query("INSERT INTO incomes (username, income_date, category, amount, income_comment, recurring) 
                             VALUES ('$username', '$date', '$type', '$amount', '$note', FALSE);");
-            $checkSumbissionExpenses = TRUE;
+            $checkSumbissionIncome = TRUE;
         }
     }
 }
