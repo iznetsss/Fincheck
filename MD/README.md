@@ -1,105 +1,106 @@
-# SPECIFICATION FOR A WEBSITE
+# SPECIFICATION FOR FINCKECK
 
 ## Overview
 
-Provide a general summary of the web project. Must include:
+### General summary
 
-* The "problem" your web project is trying to fix.
-* The target audience of your web project.
+#### Problem
+Managing personal finances is often complex and time-consuming, with existing tools lacking user-friendly interfaces. Our web project addresses this by offering an intuitive, efficient, and holistic financial tracking solution, making budgeting and goal-setting easier for users.
+
+#### Target Audience
+Our financial tracker is created for individuals of all backgrounds, including young professionals, families, elders, and freelancers. The user-friendly interface caters to both beginners and experienced users, providing a comprehensive solution for effective financial management.
 
 ## Team
 
-Ivan Kuznetsov (ikuzne/233767IVSB)
-Kirill Sevtsov (kiseft/233735IVSB)
+Ivan Kuznetsov: co-founder
+Kirill Sevtsov: co-founder
 
 ## Goals, Objectives and Phases
 
-### Objective
+### Objecive
 
-What is YOUR (not users) objective? What is the website supposed to achieve?
+We are striving to create a user-friendly but at the same time powerful too for managing personal finances. Considering the disadvantages of tools that we have been using it the past, we are trying to create a solution that will be convinient for everyone.
 
 ### Goals
 
-List goals that can be used to measure if your website has reached its objective. The goals should be "SMART":
+1. Security-First Design
+Goal: Implement robust security measures at every layer of the application.
+Objectives: 
+- Use secure coding practices to prevent common vulnerabilities such as SQL injection, cross-site scripting (XSS) and etc.
+- Implement proper authentication and authorization checks.
 
-* specific
-* measurable
-* assignable
-* realistic
-* time-related
+2. User-Centric Features
+Goal: Design the application with a strong focus on user experience and functionality.
+Objectives:
+- Develop a clean, intuitive user interface that is responsive and accessible on various devices.
+- Allow users to track expenses, income, investments, and savings.
+- Offer customizable categories for budgeting.
+- Provide visual reports (charts, graphs) to help users analyze their financial data.
+
+3. Data Integrity and Privacy
+Goal: Ensure data integrity and maintain user privacy.
+Objectives:
+- Ensure the protection of user privacy and data accuracy by securing sensitive data when stored and during transmission.
+
+4. Testing and Validation
+Goal: Thoroughly test the application to ensure reliability and security.
+Objectives:
+- Conduct unit and integration testing to identify and fix bugs early in the development process.
+- Perform security testing, including penetration testing and vulnerability assessments, to identify and mitigate risks.
+
 
 ### Phases
 
-1. Until 27 Feb 2024 - Structure & Design (HTML, CSS)
-2. Until 26 Mar 2024 - Back-end server-side scripting (PHP)
-3. Until 23 Apr 2024 - Data and UI interactions (MySQL, JS)
-4. Until 30 Apr 2024 - ready project in Gitlab
+1. HTML/CSS
+2. PHP
+3. JS/SQL
 
-## Content Structure
+## Content structure
 
 ### Site map
-
-
-```text
-  +--LOGIN
-  +--REGISTRATION
-  +--DASHBOARD
-        +--Balance Overview
-        +--Month spendings
-        +--Latest spendings
-        +--Upcoming payments
-  +--CATEGORIES
-        +--Categories table
-        +--Categories chart
-  +--MONEY FLOW
-        +--Add Expenses
-        +--Expenses chart
-        +--Add income
-        +--Income chart
-  +--TABLE
-  +--SETTINGS
+```
+HOME (index.php - login)
+  +--REGISTRATION (registration.php)
+  |
+  +--DASHBOARD (dashboard.php)
+       +--CATEGORIES CHART (categories_chart.php)
+       +--RECURRING (recurring.php)
+       +--MONEY FLOW (money_flow.php)
+       +--ADVANCED (advanced.php)
+       +--SETTINGS (settings.php)
 
 ```
+### Content types
+**Forms**
+Purpose: Gather and update financial data in a structured way.
+Aims:
+- Data Entry: Allow input of transactions and financial goals efficiently.
+- Customization: Enable users to tailor categories and budget plans.
+- Search and Filter: Offer tools to filter financial data easily.
 
-### Content Types
 
-Describe what kind of data types each page contains:
+**Tables**
+Purpose: Organize detailed data for easy review and analysis.
+Aims:
+- Itemization: Display transactions and budgets for easy viewing and editing.
+- Comparison: Compare spending across categories or time periods.
 
-* new?
-* blogs?
-* images?
-* people?
-* products?
-* comments?
-* etc
 
-Are these data types hierarchical? etc.
+**Charts**
+Purpose: Visualize data to uncover trends and relationships.
+Aims:
+- Trend Analysis: Show financial growth or spending patterns over time.
+- Distribution: Illustrate how expenses split across different categories.
 
-### Page Templates
-
-Before the first milestone you should have "page templates", i.e., HTML pages that illustrate what info and data each page will contain. You can use mock content.
-
-Make sure you include navigation menus, etc.
 
 ## Design
-
-The page templates should come with CSS to give a good idea what the pages will look like when all components (`PHP`, `SQL` and `JavaScript`) are added.
+Simplicity: The interface has been designed to be clear and straightforward, with easy navigation and interaction facilitated for users of all levels.
 
 ## Functionality
+Consistency: Consistent design elements are maintained throughout the application, aiding users in quickly adapting and feeling comfortable with our layout and functionality.
 
-How does your website work? What are the specific parts that each of your page require?
-
-* What fields are required for sign-up?
-* What happens if user leaves a comment?
-* What are the user roles?
-* What are performance requirements?
-
-## Browser Support
-
-* Chrome/Chromium
-* Firefox
-* mobile browsers (Chrome, Firefox, Safari, etc)
+## Browser support
+Supporting all browsers ensures that users can access "Fincheck" regardless of their preferred technology, whether they're using mainstream browsers like Chrome, Firefox, and Safari, or less common ones.
 
 ## Hosting
-
-ENOS.
+**ENOS.**
