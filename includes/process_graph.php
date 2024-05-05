@@ -1,6 +1,6 @@
 <?php 
-require("includes/session_check.php");
-require("includes/sql_connect.php");
+require("session_check.php");
+require("sql_connect.php");
 $monthOffset = isset($_GET['monthOffset']) ? (int)$_GET['monthOffset'] : 0;
 
 function financialSummary($link, $username, $monthOffset) {

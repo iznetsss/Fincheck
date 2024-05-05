@@ -766,7 +766,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var numberClicks = 0; // Declare numberClicks outside any function
             var jsonGraphData;
             function getData(monthOffset) {
-              fetch('process_graph.php?monthOffset=' + monthOffset)
+              fetch('includes/process_graph.php?monthOffset=' + monthOffset)
                 .then(response => response.json())
                 .then(data => {
                   updateChart(data.spendings);

@@ -362,7 +362,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
           var dateInputTo = document.getElementById("date-input-to");
           var dateTo = dateInputTo.value;
           if (dateFrom != "" && dateTo != "") {
-            fetch('process_table.php?period=custom&from=' + dateFrom + "&to=" + dateTo)
+            fetch('includes/process_table.php?period=custom&from=' + dateFrom + "&to=" + dateTo)
               .then(response => response.json())
               .then(data => {
                 loadTable(data);
@@ -405,7 +405,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
     </table>
     <script>
       function fetchData(period) {
-        fetch('process_table.php?period=' + period)
+        fetch('includes/process_table.php?period=' + period)
           .then(response => response.json())
           .then(data => {
             loadTable(data);

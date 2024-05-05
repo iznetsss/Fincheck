@@ -1,6 +1,6 @@
 <?php 
-require ("includes/session_check.php");
-require ("includes/sql_connect.php");
+require ("session_check.php");
+require ("sql_connect.php");
 $period = isset($_GET['period']) ? $_GET['period'] : "all"; 
 $tableRows = [];
 if ($period == "all") {
