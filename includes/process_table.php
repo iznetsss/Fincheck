@@ -75,7 +75,7 @@ else {
         $id = $row['ID'];
         $date = date('d.m.Y', strtotime($row['any_date']));
         $category = $row['category'];
-        $amount = number_format($row['amount'], 2, ".", ",");
+        $amount = number_format($row['amount'], 2, ".", "");
         $comment = $row['any_comment'];
         if ($row['recurring']) {
           $recurring = 'Yes';
