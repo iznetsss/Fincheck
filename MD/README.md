@@ -1,5 +1,5 @@
-# SPECIFICATION FOR FINCKECK
-
+# SPECIFICATION FOR FINCHECK
+[https://enos.itcollege.ee/~ikuzne/fincheck](url)
 ## Overview
 
 ### General summary
