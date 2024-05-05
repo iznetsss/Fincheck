@@ -244,49 +244,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
 
 
 <!--SPENDINGS FORM JS-->
-    <div id="modal-expenses" class="modal">
-    <div class="modal-content">
+<div id="modal-expenses" class="modal">
+  <div class="modal-content">
     <span class="close close-expenses">&times;</span>
     <form method="POST" action="" id="expenses-form">
-                <h3>Expenses</h3>
-                <label for="expense-amount">Amount:</label><br>
-                <input class="expense-amount-input" type="number" id="expense-amount" name="expense-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?"><br>
-                <label class="expense-type-label" for="expense-type">Select Expense Type:</label> <br>
-                <select class="expense-type-select" id="expense-type" name="expense-type"> <br>
-                    <?php
-                    foreach ($spendingCategories as $category) {
-                        echo '<option value="'.$category.'">';
-                        echo $category;
-                        echo "</option>";
-                    }
-                    ?>
-                    <option value="new">New</option><br>
-                </select><br>
-                <input type="hidden" class="expense-type-new" id="new_expense_category" name="new_expense_category" placeholder="New category name">
-                <script>
-                    var selectExpenseElement = document.getElementById("expense-type");
-                    var newExpenseCategory = document.getElementById("new_expense_category");
+      <h3>Expenses</h3>
+      <label for="expense-amount">Amount:</label><br>
+      <input class="expense-amount-input" type="number" id="expense-amount" name="expense-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?"><br>
+      <label class="expense-type-label" for="expense-type">Select Expense Type:</label> <br>
+      <select class="expense-type-select" id="expense-type" name="expense-type"> <br>
+          <?php
+          foreach ($spendingCategories as $category) {
+              echo '<option value="'.$category.'">';
+              echo $category;
+              echo "</option>";
+          }
+          ?>
+          <option value="new">New</option><br>
+      </select><br>
+      <input type="hidden" class="expense-type-new" id="new_expense_category" name="new_expense_category" placeholder="New category name">
+      <script>
+          var selectExpenseElement = document.getElementById("expense-type");
+          var newExpenseCategory = document.getElementById("new_expense_category");
 
-                    selectExpenseElement.addEventListener("change", function() {
-                    if (this.value === "new") {
-                        newExpenseCategory.type = "text";
-                        newExpenseCategory.setAttribute("required", true);
-                    } else {
-                        newExpenseCategory.type = "hidden";
-                        newExpenseCategory.removeAttribute("required");
-                    }
-                    });
-                </script>
-                <label class="expense-type-label" for="expense-date">Date:</label><br><br>
-                <input class="calender" type="date" id="expense-date" name="expense-date"><br><br>
+          selectExpenseElement.addEventListener("change", function() {
+          if (this.value === "new") {
+              newExpenseCategory.type = "text";
+              newExpenseCategory.setAttribute("required", true);
+          } else {
+              newExpenseCategory.type = "hidden";
+              newExpenseCategory.removeAttribute("required");
+          }
+          });
+      </script>
+      <label class="expense-type-label" for="expense-date">Date:</label><br><br>
+      <input class="calender" type="date" id="expense-date" name="expense-date"><br><br>
 
-                <label for="expense-note">Note:</label> <br>
-                <input type="text" id="expense-note"  class="expense-amount-input" name="expense-note"><br>
-                <input type="hidden" id="recurring" value="No">
+      <label for="expense-note">Note:</label> <br>
+      <input type="text" id="expense-note"  class="expense-amount-input" name="expense-note"><br>
+      <input type="hidden" id="recurring" value="No">
 
-                <input class="btn" type="submit" id="submit-button-expense" name="submit-button-expense" value="Submit Expense">
-            
-            </form>
+      <input class="btn" type="submit" id="submit-button-expense" name="submit-button-expense" value="Submit Expense">
+  
+    </form>
   </div>
 </div>
 
@@ -295,43 +295,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
   <div class="modal-content">
     <span class="close close-incomes">&times;</span>
     <form method="POST" action="">
-                <h3>Income</h3>
-                <label for="income-amount">Amount:</label>
-                <input class="income-amount-input" type="number" id="income-amount" name="income-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?">
-                <label class="income-type-label" for="income-type">Select Income Type:</label>
-                <select class="income-type-select" id="income-type" name="income-type" >
-                    <?php
-                        foreach ($incomeCategories as $category) {
-                            echo '<option value="'.$category.'">';
-                            echo $category;
-                            echo "</option>";
-                        }
-                    ?>
-                    <option value="new">New</option>
-                </select> 
-                <input type="hidden" class="income-type-new" id="new_income_category" name="new_income_category" placeholder="New category name">
-                <script>
-                    var selectIncomeElement = document.getElementById("income-type");
-                    var newIncomeCategory = document.getElementById("new_income_category");
+      <h3>Income</h3>
+      <label for="income-amount">Amount:</label>
+      <input class="income-amount-input" type="number" id="income-amount" name="income-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?">
+      <label class="income-type-label" for="income-type">Select Income Type:</label>
+      <select class="income-type-select" id="income-type" name="income-type" >
+          <?php
+              foreach ($incomeCategories as $category) {
+                  echo '<option value="'.$category.'">';
+                  echo $category;
+                  echo "</option>";
+              }
+          ?>
+          <option value="new">New</option>
+      </select> 
+      <input type="hidden" class="income-type-new" id="new_income_category" name="new_income_category" placeholder="New category name">
+      <script>
+          var selectIncomeElement = document.getElementById("income-type");
+          var newIncomeCategory = document.getElementById("new_income_category");
 
-                    selectIncomeElement.addEventListener("change", function() {
-                    if (this.value === "new") {
-                        newIncomeCategory.type = "text";
-                        newIncomeCategory.setAttribute("required", true);
-                    } else {
-                        newIncomeCategory.type = "hidden";
-                        newIncomeCategory.removeAttribute("required");
-                    }
-                    });
-                </script>
-                <label class="income-type-label" for="income-date">Date:</label>    
-                <input class="calender" type="date" id="income-date" name="income-date"><br><br>
-                <label for="income-note">Note:</label>    
-                <input type="text" id="income-note"  class="income-amount-input" name="income-note">
-                <input type="hidden" id="recurring" value="No">
-                <input class="btn" type="submit" id="submit-button-income" name="submit-button-income" value="Submit Income">
-                
-      </form>
+          selectIncomeElement.addEventListener("change", function() {
+          if (this.value === "new") {
+              newIncomeCategory.type = "text";
+              newIncomeCategory.setAttribute("required", true);
+          } else {
+              newIncomeCategory.type = "hidden";
+              newIncomeCategory.removeAttribute("required");
+          }
+          });
+      </script>
+      <label class="income-type-label" for="income-date">Date:</label>    
+      <input class="calender" type="date" id="income-date" name="income-date"><br><br>
+      <label for="income-note">Note:</label>    
+      <input type="text" id="income-note"  class="income-amount-input" name="income-note">
+      <input type="hidden" id="recurring" value="No">
+      <input class="btn" type="submit" id="submit-button-income" name="submit-button-income" value="Submit Income">
+      
+    </form>
   </div>
 </div>
 
@@ -349,12 +349,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         <input type="submit" value="Filter">
       </form>
       <script>
+        function fetchData(period) {
+          fetch('includes/process_table.php?period=' + period)
+            .then(response => response.json())
+            .then(data => {
+              loadTable(data);
+          });
+        };
+
+        function loadTable(jsonTableData) {
+          var table = document.getElementById("table");
+          while (table.rows.length > 0) {
+              table.deleteRow(0);
+          }
+          jsonTableData.forEach(function(row) {
+            
+            var tableSize = table.rows.length;
+            var newRow = table.insertRow(tableSize);
+            newRow.id = row.id + row.isSpending;
+
+            var cellDate = newRow.insertCell(0);
+            var cellCategory = newRow.insertCell(1);
+            var cellAmount = newRow.insertCell(2);
+            if (row.isSpending == 1) {
+              cellAmount.classList.add('spending-cell');
+            }
+            else {
+              cellAmount.classList.add('income-cell');
+            }
+            var cellNote = newRow.insertCell(3);
+            var cellRecurring = newRow.insertCell(4);
+
+            cellDate.innerHTML = row.date;
+            cellCategory.innerHTML = row.category;
+            if (row.isSpending == 1) {
+              cellAmount.innerHTML = "-" + row.amount;
+            }
+            else {
+              cellAmount.innerHTML = "+" + row.amount;
+            }
+            cellNote.innerHTML = row.comment;
+            cellRecurring.innerHTML = row.recurring;
+          }); 
+        };
 
         var week = document.getElementById("week");
         var month = document.getElementById("month");
         var year = document.getElementById("year");
         var all = document.getElementById("all");
         var filter = document.getElementById("filter-by-date")
+
         filter.addEventListener("submit", function() {
           event.preventDefault();
           var dateInputFrom = document.getElementById("date-input-from");
@@ -404,91 +448,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
         </tbody>
     </table>
     <script>
-      function fetchData(period) {
-        fetch('includes/process_table.php?period=' + period)
-          .then(response => response.json())
-          .then(data => {
-            loadTable(data);
-        });
-      }
+      
 
-      function loadTable(jsonTableData) {
-        var table = document.getElementById("table");
-        while (table.rows.length > 0) {
-            table.deleteRow(0);
-        }
-        jsonTableData.forEach(function(row) {
+      fetchData("all");
+
+      table.addEventListener("click", function(event) {
+        var clickedElement = event.target;
+
+        if (clickedElement.tagName === "TD") {
+          var clickedRow = clickedElement.parentNode;
+          var rowId = clickedRow.id;
+          if(rowId[rowId.length - 1] == 1) {
+            // Expenses Modal Script
+            var modalExpenses = document.getElementById("modal-expenses");
+            var closeExpenses = document.querySelector(".close-expenses");
+            modalExpenses.style.display = "block";
+            modalExpenses.style.position = "fixed";
           
-          var tableSize = table.rows.length;
-          var newRow = table.insertRow(tableSize);
-          newRow.id = row.id + row.isSpending;
+            closeExpenses.onclick = function() {
+              modalExpenses.style.display = "none";
+            };
+            
 
-          var cellDate = newRow.insertCell(0);
-          var cellCategory = newRow.insertCell(1);
-          var cellAmount = newRow.insertCell(2);
-          if (row.isSpending == 1) {
-            cellAmount.classList.add('spending-cell');
-          }
-          else {
-            cellAmount.classList.add('income-cell');
-          }
-          var cellNote = newRow.insertCell(3);
-          var cellRecurring = newRow.insertCell(4);
-
-          cellDate.innerHTML = row.date;
-          cellCategory.innerHTML = row.category;
-          if (row.isSpending == 1) {
-            cellAmount.innerHTML = "-" + row.amount;
-          }
-          else {
-            cellAmount.innerHTML = "+" + row.amount;
-          }
-          cellNote.innerHTML = row.comment;
-          cellRecurring.innerHTML = row.recurring;
-        }); 
-      }
-    fetchData("all");
-    table.addEventListener("click", function(event) {
-      var clickedElement = event.target;
-
-      if (clickedElement.tagName === "TD") {
-        var clickedRow = clickedElement.parentNode;
-        var rowId = clickedRow.id;
-
-
-
-
-        if(rowId[rowId.length - 1] == 1)
-        {
-          // Expenses Modal Script
-          var modalExpenses = document.getElementById("modal-expenses");
-          var closeExpenses = document.querySelector(".close-expenses");
-          modalExpenses.style.display = "block";
-          modalExpenses.style.position = "absolute";
-        
-          closeExpenses.onclick = function() {
-            modalExpenses.style.display = "none";
-          };
+          } 
+          else if(rowId[rowId.length - 1] == 0) {
+            //Incomes Modal Script
+            var modalIncomes = document.getElementById("modal-incomes");
+            var closeIncomes = document.querySelector(".close-incomes");
           
-
-        } 
-        else if(rowId[rowId.length - 1] == 0) 
-        {
-          //Incomes Modal Script
-          var modalIncomes = document.getElementById("modal-incomes");
-          var closeIncomes = document.querySelector(".close-incomes");
-        
-          modalIncomes.style.display = "block";
-          modalIncomes.style.position = "absolute";
-        
-          closeIncomes.onclick = function() {
-            modalIncomes.style.display = "none";
-          };
-        
+            modalIncomes.style.display = "block";
+            modalIncomes.style.position = "fixed";
+          
+            closeIncomes.onclick = function() {
+              modalIncomes.style.display = "none";
+            };
+          }
         }
-
-      }
-    });
+      });
     </script>
     <?php } ?>
   </div>
