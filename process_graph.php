@@ -3,7 +3,7 @@ require("includes/session_check.php");
 require("includes/sql_connect.php");
 $monthOffset = isset($_GET['monthOffset']) ? (int)$_GET['monthOffset'] : 0;
 
-function financialSummary($link, $username, $monthOffset = 0) {
+function financialSummary($link, $username, $monthOffset) {
     $month = strtotime($monthOffset." month");
     $monthFormat = $monthOffset > -12 ? date('F', $month) : date("F Y", $month);
     $daysInMonth = date('t', $month);
@@ -49,7 +49,7 @@ function financialSummary($link, $username, $monthOffset = 0) {
     ];
 }
 
-function carryOverBalance($link, $username, $monthOffset = 0) {
+function carryOverBalance($link, $username, $monthOffset) {
     $totalIncomes = 0.0;
     $totalSpendings = 0.0;
 
@@ -96,28 +96,36 @@ function carryOverBalance($link, $username, $monthOffset = 0) {
     ];
 }
 
+function getCarryOver($link, $username) {
+    $query = "SELECT carryOver FROM users WHERE username = ?";
+    $stmt = $link->prepare($query);
+    if ($stmt === false) {
+        die('MySQL prepare error: ' . $link->error);
+    }
+    $stmt->bind_param('s', $username);
+    $stmt->execute();
+    $stmt->bind_result($carryOver);
+    $stmt->fetch();
+    $stmt->close();
+
+    if ($carryOver == 1) {
+        $carryOver = 1;
+    } else {
+        $carryOver = 0;
+    }
 
 
-
-// Query user settings for carryOver
-$query = "SELECT carryOver FROM users WHERE username = ?";
-$stmt = $link->prepare($query);
-if ($stmt === false) {
-    die('MySQL prepare error: ' . $link->error);
+    return $carryOver;
 }
-$stmt->bind_param('s', $username);
-$stmt->execute();
-$stmt->bind_result($carryOver);
-$stmt->fetch();
-$stmt->close();
 
-if ($monthOffset == 1) {
+$carryOver = getCarryOver($link, $username);
+
+if ($carryOver == 1) {
     $carryOverBalance = carryOverBalance($link, $username, $monthOffset);
     $summary = financialSummary($link, $username, $monthOffset);
     
-    // Use all-time balance if carryOver is true and monthOffset is 1
     $result = [
-        "balance" => ($carryOver == 1) ? $allSummary['balance'] : $summary['balance'],
+        "balance" => ($carryOver == 1) ? $carryOverBalance['balance'] : $summary['balance'],
         "totalSpendings" => $summary['totalSpendings'],
         "totalIncomes" => $summary['totalIncomes'],
         "month" => $summary['month'],
