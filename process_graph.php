@@ -3,7 +3,6 @@ require("includes/session_check.php");
 require("includes/sql_connect.php");
 $monthOffset = isset($_GET['monthOffset']) ? (int)$_GET['monthOffset'] : 0;
 
-
 function financialSummary($link, $username, $monthOffset = 0) {
     $month = strtotime($monthOffset." month");
     $monthFormat = $monthOffset > -12 ? date('F', $month) : date("F Y", $month);
@@ -50,7 +49,7 @@ function financialSummary($link, $username, $monthOffset = 0) {
     ];
 }
 
-function financialALLSummary($link, $username, $monthOffset = 0) {
+function carryOverBalance($link, $username, $monthOffset = 0) {
     $totalIncomes = 0.0;
     $totalSpendings = 0.0;
 
@@ -100,7 +99,6 @@ function financialALLSummary($link, $username, $monthOffset = 0) {
 
 
 
-
 // Query user settings for carryOver
 $query = "SELECT carryOver FROM users WHERE username = ?";
 $stmt = $link->prepare($query);
@@ -113,18 +111,27 @@ $stmt->bind_result($carryOver);
 $stmt->fetch();
 $stmt->close();
 
-$summary = financialSummary($link, $username, $monthOffset);
-$result = [
-    "balance" => $summary['balance'],
-    "totalSpendings" => $summary['totalSpendings'],
-    "totalIncomes" => $summary['totalIncomes'],
-    "month" => $summary['month'],
-    "spendings" => $summary['spendings']
-];
-
-if ($carryOver == 1) {
-    $allSummary = financialALLSummary($link, $username);
-    $result['balance'] = $allSummary['balance']; // Update only the balance if carry over is true
+if ($monthOffset == 1) {
+    $carryOverBalance = carryOverBalance($link, $username, $monthOffset);
+    $summary = financialSummary($link, $username, $monthOffset);
+    
+    // Use all-time balance if carryOver is true and monthOffset is 1
+    $result = [
+        "balance" => ($carryOver == 1) ? $allSummary['balance'] : $summary['balance'],
+        "totalSpendings" => $summary['totalSpendings'],
+        "totalIncomes" => $summary['totalIncomes'],
+        "month" => $summary['month'],
+        "spendings" => $summary['spendings']
+    ];
+} else {
+    $summary = financialSummary($link, $username, $monthOffset);
+    $result = [
+        "balance" => $summary['balance'],
+        "totalSpendings" => $summary['totalSpendings'],
+        "totalIncomes" => $summary['totalIncomes'],
+        "month" => $summary['month'],
+        "spendings" => $summary['spendings']
+    ];
 }
 
 echo json_encode($result);
