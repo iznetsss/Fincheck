@@ -5,7 +5,7 @@ $monthOffset = isset($_GET['monthOffset']) ? (int)$_GET['monthOffset'] : 0;
 
 
 function financialSummary($link, $username, $monthOffset = 0) {
-    $month = strtotime("-".$monthOffset." month");
+    $month = strtotime($monthOffset." month");
     $monthFormat = $monthOffset > -12 ? date('F', $month) : date("F Y", $month);
     $daysInMonth = date('t', $month);
     $spendingsByDays = array_fill(1, $daysInMonth, 0);
