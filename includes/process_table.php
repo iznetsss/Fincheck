@@ -63,7 +63,7 @@ else if ($period == "custom") {
         
 }
 if (!isset($query)) {
-    die("IDID NAHUI");
+    die();
 }
 
 $result = mysqli_query($link, $query);
