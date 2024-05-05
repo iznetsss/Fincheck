@@ -681,6 +681,29 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 
 });
+// Incomes Modal Script
+document.addEventListener('DOMContentLoaded', function () {
+  var modalIncomes = document.getElementById("modal-incomes");
+  var newIncomeBtn = document.getElementById("new-income-btn");
+  var closeIncomes = document.querySelector(".close-incomes");
+  var incomesForm = document.getElementById("incomes-form");
+
+  var messageDiv = document.getElementById("messageJsDiv");
+
+
+  newIncomeBtn.onclick = function() {
+    modalIncomes.style.display = "block";
+    modalIncomes.style.position = "absolute";
+  };
+
+  closeIncomes.onclick = function() {
+    modalIncomes.style.display = "none";
+    messageDiv.style.display = 'block';
+  };
+
+});
+
+
 </script>
 
         <div class="balance-div">
