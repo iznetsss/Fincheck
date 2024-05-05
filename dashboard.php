@@ -528,6 +528,61 @@ while($row = $result->fetch_assoc()) {
         array_push($spendingCategories, $row['category']);
     }
 }
+
+
+function getIncludeRecurring($link, $username) {
+  $query = "SELECT includeRecurring FROM users WHERE username = ?";
+  $stmt = $link->prepare($query);
+  if ($stmt === false) {
+      die('MySQL prepare error: ' . $link->error);
+  }
+  $stmt->bind_param('s', $username);
+  $stmt->execute();
+  $stmt->bind_result($includeRecurring);
+  $stmt->fetch();
+  $stmt->close();
+
+  if ($includeRecurring == 1) {
+      $includeRecurring = 1;
+  } else {
+      $includeRecurring = 0;
+  }
+  return $includeRecurring;
+}
+
+$includeRecurring = getIncludeRecurring($link, $username);
+
+if ($includeRecurring == 1) {
+    $spendingGraph = [];
+    $spendingGraph = $spendingsByDays; 
+} elseif ($includeRecurring == 0) {
+  $daysInMonth = date("t");
+    for ($i = 1; $i <= $daysInMonth; $i++) {
+      $spendingGraph[$i] = 0;
+    }
+
+
+
+    $query = "SELECT DAY(spending_date) as day, SUM(amount) as amount 
+    FROM spendings 
+    WHERE username = ? AND recurring = 0 AND 
+          YEAR(spending_date) = YEAR(CURDATE()) AND 
+          MONTH(spending_date) = MONTH(CURDATE()) 
+    GROUP BY DAY(spending_date);";
+    $stmt = $link->prepare($query);
+    if ($stmt === false) {
+        die('MySQL prepare error: ' . $link->error);
+    }
+    $stmt->bind_param('s', $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $spendingGraph[$row['day']] = floatval($row['amount']);
+    }
+    $stmt->close();
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -839,7 +894,7 @@ document.addEventListener('DOMContentLoaded', function () {
               data: {
                 datasets: [
                   {
-                    data: <?php echo json_encode($spendingsByDays); ?>,
+                    data: <?php echo json_encode($spendingGraph); ?>,
                     label: "Spendings",
                     borderColor: "#0072ce",
                     backgroundColor: "#0072ce",
