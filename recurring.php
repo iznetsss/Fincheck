@@ -162,7 +162,7 @@ else {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <link rel="stylesheet" href="styles/recurring.css">
@@ -179,7 +179,7 @@ else {
 
   <div class="content">
     <div class="flex-container" id="flex-input-bill">
-      <form method="POST" action="">
+      <form method="POST">
         <span class="header2">New recurring payment</span><br><br>
         <label for="expense-type">Category:</label>
         <select class="expense-type-select" id="expense-type" name="expense-type">
@@ -193,11 +193,11 @@ else {
         </select> 
         <label for="bill-name">Name:</label>
         <input class="bill-name-input" type="text" id="bill-name" name="bill-name" maxlength="30">
-        <label for="bill-due">Due:</label>
+        <label for="day">Due:</label>
         <input type="date" class="bill-due-select" id="day" name="day">
         <label for="bill-actual">Amount:</label>
-        <input class="bill-actual-input" type="number" id="bill-actual" name="bill-actual" min="0" step="0.01" pattern="\d+(\.\d{2})?">
-        <label for="bill-due">Repeat:</label>
+        <input class="bill-actual-input" type="number" id="bill-actual" name="bill-actual" min="0" step="0.01">
+        <label for="repeat">Repeat:</label>
         <select class="bill-due-select" id="repeat" name="repeat">
           <option value="monthly">Every Month</option>
           <option value="annualy">Every Year</option>

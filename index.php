@@ -47,7 +47,7 @@ isset($_POST['loginButton']) && $_POST['loginButton'] == "Login" &&
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <link rel="stylesheet" href="styles/log_reg.css">
@@ -59,7 +59,7 @@ isset($_POST['loginButton']) && $_POST['loginButton'] == "Login" &&
 
 <body class="content-center">
     <header>
-        <img src="img/logo.png" width="200px">
+        <img src="img/logo.png" width="200" alt="FinCheck">
     </header>
     <div class="flex-container">
         <form method="post" action="index.php" id="loginForm" name="loginForm">

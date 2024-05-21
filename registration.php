@@ -100,7 +100,7 @@ isset($_POST['registerButton']) && $_POST['registerButton'] == "Register" &&
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <link rel="stylesheet" href="styles/log_reg.css">
@@ -112,7 +112,7 @@ isset($_POST['registerButton']) && $_POST['registerButton'] == "Register" &&
 
 <body class="content-center">
     <header>
-        <img src="img/logo.png" width="200px">
+        <img src="img/logo.png" width="200" alt="FinCheck">
     </header>
     <div class="flex-container">
         <form method="post" id="registrationForm" name="registrationForm" action="registration.php">

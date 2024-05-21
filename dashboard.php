@@ -605,12 +605,13 @@ if ($includeRecurring == 1) {
   <div id="modal-expenses" class="modal">
   <div class="modal-content">
     <span class="close close-expenses">&times;</span>
-    <form method="POST" action="" id="expenses-form">
+    <form method="POST" id="expenses-form">
                 <h3>Expenses</h3>
                 <label for="expense-amount">Amount:</label><br>
-                <input class="expense-amount-input" type="number" id="expense-amount" name="expense-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?"><br>
-                <label class="expense-type-label" for="expense-type">Select Expense Type:</label> <br>
-                <select class="expense-type-select" id="expense-type" name="expense-type"> <br>
+                <input class="expense-amount-input" type="number" id="expense-amount" name="expense-amount" min="0" step="0.01"><br>
+                <label class="expense-type-label" for="expense-type">Select Expense Type:</label>
+                <br>
+                <select class="expense-type-select" id="expense-type" name="expense-type">
                     <?php
                     foreach ($spendingCategories as $category) {
                         echo '<option value="'.$category.'">';
@@ -618,9 +619,9 @@ if ($includeRecurring == 1) {
                         echo "</option>";
                     }
                     ?>
-                    <option value="new">New</option><br>
+                    <option value="new">New</option>
                 </select><br>
-                <input type="hidden" class="expense-type-new" id="new_expense_category" name="new_expense_category" placeholder="New category name">
+                <input type="hidden" class="expense-type-new" id="new_expense_category" name="new_expense_category">
                 <script>
                     var selectExpenseElement = document.getElementById("expense-type");
                     var newExpenseCategory = document.getElementById("new_expense_category");
@@ -629,6 +630,7 @@ if ($includeRecurring == 1) {
                     if (this.value === "new") {
                         newExpenseCategory.type = "text";
                         newExpenseCategory.setAttribute("required", true);
+                        newExpenseCategory.placeholder = "New category name";
                     } else {
                         newExpenseCategory.type = "hidden";
                         newExpenseCategory.removeAttribute("required");
@@ -640,8 +642,6 @@ if ($includeRecurring == 1) {
 
                 <label for="expense-note">Note:</label> <br>
                 <input type="text" id="expense-note"  class="expense-amount-input" name="expense-note"><br>
-                <input type="hidden" id="recurring" value="No">
-
                 <input class="btn" type="submit" id="submit-button-expense" name="submit-button-expense" value="Submit Expense">
             
             </form>
@@ -652,10 +652,10 @@ if ($includeRecurring == 1) {
 <div id="modal-incomes" class="modal">
   <div class="modal-content">
     <span class="close close-incomes">&times;</span>
-    <form method="POST" action="">
+    <form method="POST">
                 <h3>Income</h3>
                 <label for="income-amount">Amount:</label>
-                <input class="income-amount-input" type="number" id="income-amount" name="income-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?">
+                <input class="income-amount-input" type="number" id="income-amount" name="income-amount" min="0" step="0.01">
                 <label class="income-type-label" for="income-type">Select Income Type:</label>
                 <select class="income-type-select" id="income-type" name="income-type" >
                     <?php
@@ -667,7 +667,7 @@ if ($includeRecurring == 1) {
                     ?>
                     <option value="new">New</option>
                 </select> 
-                <input type="hidden" class="income-type-new" id="new_income_category" name="new_income_category" placeholder="New category name">
+                <input type="hidden" class="income-type-new" id="new_income_category" name="new_income_category">
                 <script>
                     var selectIncomeElement = document.getElementById("income-type");
                     var newIncomeCategory = document.getElementById("new_income_category");
@@ -676,6 +676,7 @@ if ($includeRecurring == 1) {
                     if (this.value === "new") {
                         newIncomeCategory.type = "text";
                         newIncomeCategory.setAttribute("required", true);
+                        newIncomeCategory.placeholder = "New category name";
                     } else {
                         newIncomeCategory.type = "hidden";
                         newIncomeCategory.removeAttribute("required");
@@ -686,7 +687,6 @@ if ($includeRecurring == 1) {
                 <input class="calender" type="date" id="income-date" name="income-date"><br><br>
                 <label for="income-note">Note:</label>    
                 <input type="text" id="income-note"  class="income-amount-input" name="income-note">
-                <input type="hidden" id="recurring" value="No">
                 <input class="btn" type="submit" id="submit-button-income" name="submit-button-income" value="Submit Income">
                 
       </form>
@@ -882,7 +882,6 @@ document.addEventListener('DOMContentLoaded', function () {
           <a class="month-button" id="next-month-button" onclick="increaseClicks()" style="display:none">Next month&#62;</a>
       </div>
         <span class="header2" id="graph-title"><a href="advanced.php" title="See more"></a><?php echo $currentMonth ?> spendings</span>
-        </label>
         <canvas id="line-chart"></canvas>
         <!--Hide recurring payments-->
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.umd.min.js"></script>

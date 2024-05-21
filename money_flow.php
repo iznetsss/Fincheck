@@ -334,7 +334,7 @@ else {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <link rel="stylesheet" href="styles/money-flow.css">
     <link rel="icon" href="img/icon.PNG">
@@ -348,12 +348,12 @@ else {
     <?php include 'includes/sidebar.php'; ?>
 
     <div class="content">
-      <div class="flex-zone", id="flex-zone-expenses">
-        <div class="flex-container", id="expenses-input">
-            <form method="POST" action="">
+      <div class="flex-zone" id="flex-zone-expenses">
+        <div class="flex-container" id="expenses-input">
+            <form method="POST">
                 <h3>New spending</h3>
                 <label for="expense-amount">Amount:</label>
-                <input class="expense-amount-input" type="number" id="expense-amount" name="expense-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?">
+                <input class="expense-amount-input" type="number" id="expense-amount" name="expense-amount" min="0" step="0.01">
                 <label class="expense-type-label" for="expense-type">Category:</label>
                 <select class="expense-type-select" id="expense-type" name="expense-type">
                     <?php
@@ -365,7 +365,7 @@ else {
                     ?>
                     <option value="new">New</option>
                 </select> 
-                <input type="hidden" class="expense-type-new" id="new_expense_category" name="new_expense_category" placeholder="New category name">
+                <input type="hidden" class="expense-type-new" id="new_expense_category" name="new_expense_category">
                 <script>
                     var selectExpenseElement = document.getElementById("expense-type");
                     var newExpenseCategory = document.getElementById("new_expense_category");
@@ -374,9 +374,11 @@ else {
                     if (this.value === "new") {
                         newExpenseCategory.type = "text";
                         newExpenseCategory.setAttribute("required", true);
+                        newExpenseCategory.placeholder = "New category name";
                     } else {
                         newExpenseCategory.type = "hidden";
                         newExpenseCategory.removeAttribute("required");
+                        newExpenseCategory.removeAttribute("placeholder");
                     }
                     });
                 </script>
@@ -385,8 +387,6 @@ else {
 
                 <label for="expense-note">Note:</label>    
                 <input type="text" id="expense-note"  class="expense-amount-input" name="expense-note">
-                <input type="hidden" id="recurring" value="No">
-
                 <input class="btn" type="submit" id="submit-button-expense" name="submit-button-expense" value="Add spending">
                 <?php
                 if (!empty($amountErrorExpenses) || !empty($typeErrorExpenses) || !empty($dateErrorExpenses) || !empty($noteErrorExpenses) || !empty($newCategoryErrorExpenses)) {
@@ -399,17 +399,17 @@ else {
                 ?>
             </form>
         </div>
-        <div class="flex-container", id="expenses-table">
+        <div class="flex-container" id="expenses-table">
             <h4>Spendings</h4>
             <canvas id="line-chart-expenses"></canvas>
         </div>
       </div>
-      <div class="flex-zone", id="flex-zone-income">
-        <div class="flex-container", id="income-input">
-            <form method="POST" action="">
+      <div class="flex-zone" id="flex-zone-income">
+        <div class="flex-container" id="income-input">
+            <form method="POST">
                 <h3>New income</h3>
                 <label for="income-amount">Amount:</label>
-                <input class="income-amount-input" type="number" id="income-amount" name="income-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?">
+                <input class="income-amount-input" type="number" id="income-amount" name="income-amount" min="0" step="0.01">
                 <label class="income-type-label" for="income-type">Category:</label>
                 <select class="income-type-select" id="income-type" name="income-type" >
                     <?php
@@ -421,7 +421,7 @@ else {
                     ?>
                     <option value="new">New</option>
                 </select> 
-                <input type="hidden" class="income-type-new" id="new_income_category" name="new_income_category" placeholder="New category name">
+                <input type="hidden" class="income-type-new" id="new_income_category" name="new_income_category">
                 <script>
                     var selectIncomeElement = document.getElementById("income-type");
                     var newIncomeCategory = document.getElementById("new_income_category");
@@ -430,9 +430,11 @@ else {
                     if (this.value === "new") {
                         newIncomeCategory.type = "text";
                         newIncomeCategory.setAttribute("required", true);
+                        newIncomeCategory.placeholder = "New category name";
                     } else {
                         newIncomeCategory.type = "hidden";
                         newIncomeCategory.removeAttribute("required");
+                        newIncomeCategory.removeAttribute("placeholder");
                     }
                     });
                 </script>
@@ -440,7 +442,6 @@ else {
                 <input class="calender" type="date" id="income-date" name="income-date"><br><br>
                 <label for="income-note">Note:</label>    
                 <input type="text" id="income-note"  class="income-amount-input" name="income-note">
-                <input type="hidden" id="recurring" value="No">
                 <input class="btn" type="submit" id="submit-button-income" name="submit-button-income" value="Add income">
                 <?php 
                 if (!empty($amountErrorIncome) || !empty($typeErrorIncome) || !empty($dateErrorIncome)) {
@@ -453,7 +454,7 @@ else {
                 ?>
             </form>
         </div>
-        <div class="flex-container", id="income-table">
+        <div class="flex-container" id="income-table">
           <h4>Incomes</h4>
             <canvas id="line-chart-income"></canvas>
             

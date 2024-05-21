@@ -303,12 +303,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
   <div id="modal-expenses" class="modal">
     <div class="modal-content">
       <span class="close close-expenses">&times;</span>
-      <form method="POST" action="" id="expenses-form">
+      <form method="POST" id="expenses-form">
         <h3>Expenses</h3>
         <label for="expense-amount">Amount:</label><br>
-        <input class="expense-amount-input" type="number" id="expense-amount" name="expense-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?"><br>
+        <input class="expense-amount-input" type="number" id="expense-amount" name="expense-amount" min="0" step="0.01"><br>
         <label class="expense-type-label" for="expense-type">Select Expense Type:</label> <br>
-        <select class="expense-type-select" id="expense-type" name="expense-type"> <br>
+        <select class="expense-type-select" id="expense-type" name="expense-type">
             <?php
             foreach ($spendingCategories as $category) {
                 echo '<option value="'.$category.'" id="'.$category.'-spending">';
@@ -316,9 +316,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
                 echo "</option>";
             }
             ?>
-            <option value="new">New</option><br>
+            <option value="new">New</option>
         </select><br>
-        <input type="hidden" class="expense-type-new" id="new_expense_category" name="new_expense_category" placeholder="New category name">
+        <input type="hidden" class="expense-type-new" id="new_expense_category" name="new_expense_category">
         <script>
             var selectExpenseElement = document.getElementById("expense-type");
             var newExpenseCategory = document.getElementById("new_expense_category");
@@ -327,9 +327,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
             if (this.value === "new") {
                 newExpenseCategory.type = "text";
                 newExpenseCategory.setAttribute("required", true);
+                newExpenseCategory.placeholder = "New category name";
             } else {
                 newExpenseCategory.type = "hidden";
                 newExpenseCategory.removeAttribute("required");
+                newExpenseCategory.removeAttribute("placeholder");
             }
             });
         </script>
@@ -350,10 +352,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
   <div id="modal-incomes" class="modal">
     <div class="modal-content">
       <span class="close close-incomes">&times;</span>
-      <form method="POST" action="">
+      <form method="POST">
         <h3>Income</h3>
         <label for="income-amount">Amount:</label>
-        <input class="income-amount-input" type="number" id="income-amount" name="income-amount" min="0" step="0.01" pattern="\d+(\.\d{2})?">
+        <input class="income-amount-input" type="number" id="income-amount" name="income-amount" min="0" step="0.01">
         <label class="income-type-label" for="income-type">Select Income Type:</label>
         <select class="income-type-select" id="income-type" name="income-type" >
             <?php
@@ -365,7 +367,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
             ?>
             <option value="new">New</option>
         </select> 
-        <input type="hidden" class="income-type-new" id="new_income_category" name="new_income_category" placeholder="New category name">
+        <input type="hidden" class="income-type-new" id="new_income_category" name="new_income_category">
         <script>
             var selectIncomeElement = document.getElementById("income-type");
             var newIncomeCategory = document.getElementById("new_income_category");
@@ -374,9 +376,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-income']
             if (this.value === "new") {
                 newIncomeCategory.type = "text";
                 newIncomeCategory.setAttribute("required", true);
+                newIncomeCategory.placeholder = "New category name";
             } else {
                 newIncomeCategory.type = "hidden";
                 newIncomeCategory.removeAttribute("required");
+                newIncomeCategory.removeAttribute("placeholder");
             }
             });
         </script>

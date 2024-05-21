@@ -56,7 +56,7 @@ foreach ($spendingsByCategories as $category => $amount) {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <link rel="stylesheet" href="styles/categories.css">
     <link rel="icon" href="img/icon.PNG">
