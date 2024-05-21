@@ -135,7 +135,7 @@ foreach ($spendingsByCategories as $category => $amount) {
                     <?php
                     if ($total_spent > 0) {
                         foreach ($spendingsByCategories as $cat => $sum) {
-                            echo "<tr><td>$cat</td><td>$" . number_format($sum, 2) . "</td><td>" . number_format($spendingsPercentages[$cat], 2) . "%</td></tr>";
+                            echo "<tr><td>$cat</td><td>" . number_format($sum, 2) . "</td><td>" . number_format($spendingsPercentages[$cat], 2) . "%</td></tr>";
                         }
                     } else {
                         echo "<tr><td colspan='3'>No spending records found for this month.</td></tr>";

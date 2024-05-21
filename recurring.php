@@ -99,6 +99,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
         $repeatError = "<span style='color:red'>Invalid payment repeating type</span><br>";
     }
 
+    //NEW CATEGORIES
+    if ($type == "new" && empty($amountError) && empty($typeError) && empty($dateError) && empty($noteErrorIncome)) 
+    {
+      if (empty($_POST['new_recurring_category'])) {
+        $newCategoryError = "<span style='color:red'>Please enter the name for your new category or select an existing one.<br></span>";
+      } 
+      if (empty($newCategoryError)) {
+        $newCategory = str_replace("\r\n", " ", $_POST['new_recurring_category']);
+        if (!preg_match('/^[a-zA-Z0-9,:;()."\' -]{1,100}$/', $newCategory)) {
+            $newCategoryError = "<span style='color:red'>Your note does not satisfy the required format. You can use letters, numbers and any of these symbols: ,:;().\"' -</span><br>";
+        }
+      
+      if (empty($newCategoryError)) {
+        $query = ("SELECT EXISTS (SELECT 1 FROM categories WHERE category = '$newCategory' and username = '$username' and income = TRUE) as category_exists;");
+        $result = mysqli_query($link, $query);
+        $row = mysqli_fetch_assoc($result);
+        $categoryExists = $row['category_exists'];
+        if ($categoryExists || $newCategory == "new") {
+            $newCategoryError = "<span style='color:red'>This category already exists.<br></span>";
+        }
+        else {
+            $link -> query("INSERT INTO categories (username, category, income) 
+                            VALUES ('$username', '$newCategory', false)");
+        }
+      }
+      $type = $newCategory;
+    }
+  }
+
     //If life is good - we move forward
     if (empty($dateError) && empty($amountError) && empty($repeatError)) 
     {
@@ -114,7 +143,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit-button-recurrin
                       VALUES ('$username', '$date', '$type', '$name', '$amount', '$repeat')");         
       $checkSumbission = TRUE;
     }
-  }
+
+  
+}
 }
 
 
@@ -190,6 +221,8 @@ else {
                 echo "</option>";
             }
             ?>
+          <option value="new">New</option>
+          <input type="hidden" class="expense-type-new" id="new_recurring_category" name="new_recurring_category" placeholder="New category name">
         </select> 
         <label for="bill-name">Name:</label>
         <input class="bill-name-input" type="text" id="bill-name" name="bill-name" maxlength="30">
@@ -205,6 +238,19 @@ else {
           <option value="2weekly">Every 2 Weeks</option>
           <option value="daily">Every Day</option>
         </select>
+        <script>
+            var selectExpenseElement = document.getElementById("expense-type");
+            var newExpenseCategory = document.getElementById("new_recurring_category");
+            selectExpenseElement.addEventListener("change", function() {
+            if (this.value === "new") {
+                newExpenseCategory.type = "text";
+                newExpenseCategory.setAttribute("required", true);
+            } else {
+                newExpenseCategory.type = "hidden";
+                newExpenseCategory.removeAttribute("required");
+            }
+            });
+        </script>
         <input class="btn" type="submit" id="submit-button-recurring" name="submit-button-recurring" value="Add payment">
 
         <?php
