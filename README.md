@@ -1,7 +1,10 @@
 # FinCheck
 
 ## Overview
-FinCheck is a web-based personal financial tracking solution designed to simplify budgeting, manage expenses, and provide detailed insights into personal finances. It aims to address the complexities of managing finances by offering an intuitive and user-friendly interface for tracking spending, categorizing transactions, and generating visual reports. This project was developed as part of a university course in Web Technologies, created by a team of two students. The primary goal was to gain hands-on experience in both front-end and back-end development, utilizing technologies such as HTML, CSS, PHP, JavaScript, and MySQL. Additionally, the project provided an opportunity to explore and implement security measures to prevent common vulnerabilities like Cross-Site Scripting (XSS) and SQL Injection, ensuring a secure and robust application. Through this project, we aimed to deepen our understanding of full-stack development while creating a practical tool for personal financial management.
+FinCheck is a web-based tool designed to make personal finance management easier by simplifying budgeting, tracking expenses, and providing clear insights into financial habits. It helps users monitor their spending, categorize transactions, and view detailed visual reports.
+
+This project was part of a university Web Technologies course and was developed by a team of two students. The goal was to gain practical experience in front-end and back-end development using HTML, CSS, PHP, JavaScript, and MySQL. The project also focused on implementing security features to protect against common vulnerabilities like Cross-Site Scripting (XSS) and SQL Injection, ensuring the application is both secure and reliable. Overall, it was an opportunity to enhance our skills in full-stack development while creating a functional financial management tool.
+
 
 ## Features
 - User registration and login.
@@ -13,14 +16,27 @@ FinCheck is a web-based personal financial tracking solution designed to simplif
 ## Project Structure
 
 ### Root Files
-- **`index.php`**: Landing page and login functionality.
 - **`dashboard.php`**: Main dashboard for user financial summaries.
-- **`advanced.php`**: Advanced financial analytics and reporting.
-- **`categories_chart.php`**: Displays categorized spending in chart format.
+![image](https://github.com/user-attachments/assets/f2bfeb42-b253-4f70-b4fc-29121b0f71e1)
+
+- **`categories_chart.php`**: Displays categorized spending in table or chart format.
+![image](https://github.com/user-attachments/assets/fbbd10c5-a7b6-4eee-8e5d-558aadcde7ca)
+
 - **`money_flow.php`**: Handles cash flow tracking.
+![image](https://github.com/user-attachments/assets/486aa8dc-c82b-4108-a338-8279221fcf96)
+
 - **`recurring.php`**: Manages recurring transactions.
-- **`registration.php`**: User registration functionality.
+![image](https://github.com/user-attachments/assets/a8fd6364-0334-4777-a08d-abecfb713b95)
+  
+- **`advanced.php`**: Advanced financial analytics and reporting.
+![image](https://github.com/user-attachments/assets/c91925c2-4e15-41aa-b345-10492fdbf75e)
+
 - **`settings.php`**: User-specific settings.
+![image](https://github.com/user-attachments/assets/4bfa8ec4-847f-4abf-9636-c038f851b989)
+
+- **`index.php`**: Landing page and login functionality.
+- **`registration.php`**: User registration functionality.
+
 
 ### `includes/`
 - **`header.php`**: Reusable header component with branding.
@@ -44,6 +60,10 @@ FinCheck is a web-based personal financial tracking solution designed to simplif
 
 
 ## Technologies Used
-- **Frontend**: HTML, CSS (with custom styles for each page), JavaScript for interactive and dynamic functionalities.
+- **Frontend**: HTML, CSS (with custom styles for each page), JavaScript for interactive and dynamic functionalities. We also utilized the Chart.js library to create visually appealing and interactive graphs for financial data visualization.
 - **Backend**: PHP for server-side logic and MySQL for database operations.
 - **Database**: MySQL database.
+
+## FinCheck
+
+For more details, visit the project live at [FinCheck](https://enos.itcollege.ee/~ikuzne/fincheck/)
