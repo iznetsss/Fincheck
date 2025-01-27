@@ -1,4 +1,5 @@
-# SPECIFICATION FOR FINCHECK
+# OUTDATED VERSION OF MD 
+## SPECIFICATION FOR FINCHECK
 [https://enos.itcollege.ee/~ikuzne/fincheck](url)
 ## Overview
 
